@@ -44,8 +44,7 @@ a.tag.article-tag {
     border-bottom-color: black; }
 
 .article .article-meta {
-  font-size: .9rem;
-  text-transform: uppercase; }
+  font-size: .9rem; }
   @media screen and (max-width: 768px) {
     .article .article-meta {
       margin-top: 0.75rem; }
@@ -56,6 +55,9 @@ a.tag.article-tag {
     margin: 0 0.3rem; }
 
 .article .article-entry {
+  text-align: justify;
+  font-size: 1.1rem;
+  line-height: 1.7rem;
   margin-bottom: 3rem; }
   .article .article-entry h1, .article .article-entry h2, .article .article-entry h3, .article .article-entry h4, .article .article-entry h5, .article .article-entry h6 {
     cursor: pointer;
@@ -67,8 +69,11 @@ a.tag.article-tag {
   .article .article-entry a {
     word-break: break-word; }
 
+.article .article-more-link {
+  text-align: right; }
+
 .article .article-more-link a {
-  font-size: .9rem;
+  font-size: 1rem;
   color: darkgray;
   border-bottom: 1px dotted transparent; }
   .article .article-more-link a:hover {

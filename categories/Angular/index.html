@@ -2,7 +2,7 @@
 <html class="has-navbar-fixed-top">
 <head>
     <meta charset="utf-8" />
-<title>分類: 文章類別 - Andy 程式雜記</title>
+<title>分類: Angular - Andy 程式雜記</title>
 <meta
   name="viewport"
   content="width=device-width, initial-scale=1, maximum-scale=1"
@@ -17,7 +17,7 @@
 <meta name="description" content="" />
    <meta property="og:type" content="website">
 <meta property="og:title" content="Andy 程式雜記">
-<meta property="og:url" content="http://example.com/categories/%E6%96%87%E7%AB%A0%E9%A1%9E%E5%88%A5/index.html">
+<meta property="og:url" content="http://example.com/categories/Angular/index.html">
 <meta property="og:site_name" content="Andy 程式雜記">
 <meta property="og:locale" content="zh_TW">
 <meta property="article:author" content="Andy Hung">
@@ -59,7 +59,8 @@
           
   
 
-<meta name="generator" content="Hexo 6.2.0"></head>
+<meta name="generator" content="Hexo 6.2.0"><link rel="stylesheet" href="/css/prism-atom-dark.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 <body>
     
 <nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
@@ -114,7 +115,7 @@
     <section class="section section-heading">
     <div class="container">
         <div class="content">
-            <h5><i class="far fa-folder"></i>文章類別</h5>
+            <h5><i class="far fa-folder"></i>Angular</h5>
         </div>
     </div>
 </section>
@@ -122,36 +123,44 @@
     <div class="container">
     
         <article class="article content gallery" itemscope itemprop="blogPost">
-    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
-        
-            <a href="/2022/05/28/test/" itemprop="url">test</a>
-        
-    </h1>
-    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
-        <span class="column is-narrow">
-            
-                <span>2022年05月28日</span>
-            
-        </span>
-        
-        <span class="column is-narrow article-category">
-            <i class="far fa-folder"></i>
-            <a class="article-category-link" href="/categories/%E6%96%87%E7%AB%A0%E9%A1%9E%E5%88%A5/">文章類別</a>
-        </span>
-        
-        
-    </div>
-    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+  <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
     
-        
+    <a href="/2022/05/28/angular-module/" itemprop="url"
+      >探討 Angular Module</a
+    >
     
-    </div>
+  </h1>
+  <div
+    class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile"
+  >
+    <span class="column is-narrow">
+      
+      <span>2022年05月28日</span>
+      
+    </span>
     
+    <span class="column is-narrow article-category">
+      <i class="far fa-folder"></i>
+      <a
+        class="article-category-link"
+        href="/categories/Angular/"
+        >Angular</a
+      >
+    </span>
+     
+  </div>
+  <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+     <html><head></head><body><p>Angular 本身的設計概念就是使用模組化的機制，Module (模組) 是組成 Angular 應用程式的基本單位，每個 Angular 專案最開始都會有一個模組當作程式進入點，稱為<strong>根模組(Root Module)</strong> 。透過 Angular CLI 創建的專案會將此根模組命名為<code>AppModule</code>，並放在<code>app.module.ts</code>檔案中。</p>
+<p>也可以將有相同特性的功能拆出來，組合成不同的模組，各個模組間依程式架構相互引用，組合成 Angular 應用程式。模組中可以透過設定的方式，定義此模組中包含的 components、directives、pipes 等，以及其他與模組相關的屬性，以下我們就來研究一下 Angular Module 的使用方式以及使用情境。</p></body></html>
+    <p class="article-more-link">
+      <a href="/2022/05/28/angular-module/">閱讀更多</a>
+    </p>
     
+  </div>
+   
 </article>
 
-
-
+ 
 
     
     
