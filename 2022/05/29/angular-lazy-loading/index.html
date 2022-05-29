@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head>
+    <meta charset="utf-8" />
+<title>Angular Lazy Loading - Andy 程式雜記</title>
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, maximum-scale=1"
+/>
+
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css"
+/>
+
+ 
+<meta name="description" content="" />
+   <meta name="description" content="在 Angular 應用程式一載入時，預設會將所有的 Module 一次全部載入，但如果今天應用程式規模很大，或是某些 Module 中需要載入的東西過多，就會拖到整個應用程式的載入時間。 為了解決這個問題，Angular 有針對 Module 提供 Lazy Loading 的功能，簡單來說就是當需要此 Module 的時候再進行載入，如此就不會影響到整個應用程式的效能。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Angular Lazy Loading">
+<meta property="og:url" content="http://example.com/2022/05/29/angular-lazy-loading/index.html">
+<meta property="og:site_name" content="Andy 程式雜記">
+<meta property="og:description" content="在 Angular 應用程式一載入時，預設會將所有的 Module 一次全部載入，但如果今天應用程式規模很大，或是某些 Module 中需要載入的東西過多，就會拖到整個應用程式的載入時間。 為了解決這個問題，Angular 有針對 Module 提供 Lazy Loading 的功能，簡單來說就是當需要此 Module 的時候再進行載入，如此就不會影響到整個應用程式的效能。">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://i.imgur.com/pE6DTB9.png">
+<meta property="og:image" content="https://i.imgur.com/ncZUBab.png">
+<meta property="article:published_time" content="2022-05-29T07:07:01.000Z">
+<meta property="article:modified_time" content="2022-05-29T09:41:10.979Z">
+<meta property="article:author" content="Andy Hung">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/pE6DTB9.png">   
+<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+
+<link
+  rel="stylesheet"
+  href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro"
+/>
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css"
+/>
+
+
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css"
+/>
+
+
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css"
+/>
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
+          
+  
+
+<meta name="generator" content="Hexo 6.2.0"><link rel="stylesheet" href="/css/prism-atom-dark.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<body>
+    
+<nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    Andy 程式雜記
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item "
+               href="/archives">列表</a>
+            
+            <a class="navbar-item "
+               href="/categories">分類</a>
+            
+            <a class="navbar-item "
+               href="/about">關於</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="搜尋" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" target="_blank" rel="noopener" href="https://github.com/AndyHung0723">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope itemprop="blogPost">
+  <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+     Angular Lazy Loading 
+  </h1>
+  <div
+    class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile"
+  >
+    <span class="column is-narrow">
+      
+      <span>2022年05月29日</span>
+      
+    </span>
+    
+    <span class="column is-narrow article-category">
+      <i class="far fa-folder"></i>
+      <a
+        class="article-category-link"
+        href="/categories/Angular/"
+        >Angular</a
+      >
+    </span>
+     
+  </div>
+  <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+     <html><head></head><body><p>在 Angular 應用程式一載入時，預設會將所有的 Module 一次全部載入，但如果今天應用程式規模很大，或是某些 Module 中需要載入的東西過多，就會拖到整個應用程式的載入時間。</p>
+<p>為了解決這個問題，Angular 有針對 Module 提供 Lazy Loading 的功能，簡單來說就是當需要此 Module 的時候再進行載入，如此就不會影響到整個應用程式的效能。</p>
+<span id="more"></span>
+
+<h2 id="實現方式"><a href="#實現方式" class="headerlink" title="實現方式"></a>實現方式</h2><p>透過 Angular Router 中內建的功能即可實現，步驟如下：</p>
+<ol>
+<li><p>修改<code>app-routing.module.ts</code></p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">const</span> <span class="token literal-property property">routes</span><span class="token operator">:</span> Routes <span class="token operator">=</span> <span class="token punctuation">[</span>
+  <span class="token punctuation">{</span>
+    <span class="token literal-property property">path</span><span class="token operator">:</span> <span class="token string">'customers'</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">loadChildren</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token keyword">import</span><span class="token punctuation">(</span><span class="token string">'./customers/customers.module'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token parameter">m</span> <span class="token operator">=&gt;</span> m<span class="token punctuation">.</span>CustomersModule<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">]</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>利用<code>loadChildren</code>這個屬性，我們就可以透過 import 將我們想要 lazy loading 的 Module，在應用程式觸發到<code>path</code>中定義的路由(在這個例子中就是<code>/customers</code>)的時候將 CustomersModule 進行載入。</p>
+</li>
+<li><p>修改<code>customers.module.ts</code></p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> CustomersRoutingModule <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'./customers-routing.module'</span><span class="token punctuation">;</span>
+
+@<span class="token function">NgModule</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">declarations</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    CustomersComponent
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">imports</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    CommonModule<span class="token punctuation">,</span>
+    CustomersRoutingModule
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>額外新增<code>customers-routing.module.ts</code>，並新增到 CustomersModule 的 imports 中，我們會將關於此 Module 下 Router 的設定拆出來放在這個檔案中。</p>
+</li>
+<li><p>新增<code>customers-routing.module.ts</code></p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">const</span> <span class="token literal-property property">routes</span><span class="token operator">:</span> Routes <span class="token operator">=</span> <span class="token punctuation">[</span>
+  <span class="token punctuation">{</span> 
+    <span class="token literal-property property">path</span><span class="token operator">:</span> <span class="token string">'info'</span><span class="token punctuation">,</span> 
+    <span class="token literal-property property">component</span><span class="token operator">:</span> CustomersComponent 
+  <span class="token punctuation">}</span>
+<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+@<span class="token function">NgModule</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">imports</span><span class="token operator">:</span> <span class="token punctuation">[</span>RouterModule<span class="token punctuation">.</span><span class="token function">forChild</span><span class="token punctuation">(</span>routes<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">exports</span><span class="token operator">:</span> <span class="token punctuation">[</span>RouterModule<span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">CustomersRoutingModule</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>這邊我們就可以定義在子路徑下要載入哪個 Component，最終的路徑會是原本<code>app-routing.module.ts</code>中定義的<code>path</code>加上這邊定義的<code>path</code>，以上例來說就會是在<code>/customers/info</code>下讀取到 CustomersComponent。這邊要注意需要用<code>forChild</code>來定義子路由。</p>
+</li>
+</ol>
+<h2 id="透過指令建立"><a href="#透過指令建立" class="headerlink" title="透過指令建立"></a>透過指令建立</h2><p>如果我們在一開始就決定要使用 lazy loading 的方式載入 Module，也可以選擇用以下指令直接建立好上述的元件：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ng generate module customers --route customers --module app.module<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="實驗"><a href="#實驗" class="headerlink" title="實驗"></a>實驗</h2><p>我們可以在<code>customers.components.ts</code>中加上<code>console.log</code>來實驗是否有 lazy loading</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">CustomersComponent</span> <span class="token keyword">implements</span> <span class="token class-name">OnInit</span> <span class="token punctuation">{</span>
+
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span>
+
+  <span class="token function">ngOnInit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Customers Component Init"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><p>讀取 <a target="_blank" rel="noopener" href="http://localhost:4200/">http://localhost:4200</a><br><img src="https://i.imgur.com/pE6DTB9.png" alt="localhost:4200"></p>
+</li>
+<li><p>讀取 <a target="_blank" rel="noopener" href="http://localhost:4200/customers">http://localhost:4200/customers</a><br><img src="https://i.imgur.com/ncZUBab.png" alt="localhost:4200/customers"></p>
+</li>
+</ul>
+<h2 id="注意事項"><a href="#注意事項" class="headerlink" title="注意事項"></a>注意事項</h2><ul>
+<li>如果 Module 需要 lazy loading，需注意<code>app.module.ts</code>裡面不可以 import 到這個 Module，否則還是會在應用程式啟動時就載入。</li>
+</ul>
+</body></html> 
+  </div>
+   
+  <div class="columns is-mobile is-multiline article-nav">
+    <span
+      class="column is-12-mobile is-half-desktop is-hidden-mobile article-nav-prev"
+    >
+      
+    </span>
+    <span
+      class="column is-12-mobile is-half-desktop  article-nav-next"
+    >
+      
+      <a href="/2022/05/28/angular-module/">探討 Angular Module</a>
+      
+    </span>
+  </div>
+  
+</article>
+
+ 
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2022 Andy Hung&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        target="_blank" rel="noopener" href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" target="_blank" rel="noopener" href="https://github.com/AndyHung0723">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" target="_blank" rel="noopener" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("zh-TW");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+</script>
+
+    
+    
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <style>
+        .hljs {
+            position: relative;
+        }
+
+        .hljs .clipboard-btn {
+            float: right;
+            color: #9a9a9a;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hljs .clipboard-btn:hover {
+          color: #8a8a8a;
+        }
+
+        .hljs > .clipboard-btn {
+            display: none;
+            position: absolute;
+            right: 4px;
+            top: 4px;
+        }
+
+        .hljs:hover > .clipboard-btn {
+            display: inline;
+        }
+
+        .hljs > figcaption > .clipboard-btn {
+            margin-right: 4px;
+        }
+    </style>
+    <script>
+      $(document).ready(function () {
+        $('figure.hljs').each(function(i, figure) {
+          var codeId = 'code-' + i;
+          var code = figure.querySelector('.code');
+          var copyButton = $('<button>Copy <i class="far fa-clipboard"></i></button>');
+          code.id = codeId;
+          copyButton.addClass('clipboard-btn');
+          copyButton.attr('data-clipboard-target-id', codeId);
+
+          var figcaption = figure.querySelector('figcaption');
+
+          if (figcaption) {
+            figcaption.append(copyButton[0]);
+          } else {
+            figure.prepend(copyButton[0]);
+          }
+        })
+
+        var clipboard = new ClipboardJS('.clipboard-btn', {
+          target: function(trigger) {
+            return document.getElementById(trigger.getAttribute('data-clipboard-target-id'));
+          }
+        });
+        clipboard.on('success', function(e) {
+          e.clearSelection();
+        })
+      })
+    </script>
+
+    
+    
+
+    
+
+
+
+<script src="/js/script.js"></script>
+
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="站內搜尋" />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '頁面',
+                CATEGORIES: '分類',
+                TAGS: '標籤',
+                UNTITLED: '(無標題)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+    
+</body>
+</html>
