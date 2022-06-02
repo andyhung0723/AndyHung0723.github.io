@@ -4,7 +4,7 @@
   <url>
     <loc>http://example.com/2022/06/01/angular-offsetwidth-bug/</loc>
     
-    <lastmod>2022-06-01</lastmod>
+    <lastmod>2022-06-02</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -49,7 +49,7 @@
 
   <url>
     <loc>http://example.com/</loc>
-    <lastmod>2022-06-01</lastmod>
+    <lastmod>2022-06-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -59,14 +59,14 @@
   
   <url>
     <loc>http://example.com/categories/Angular/</loc>
-    <lastmod>2022-06-01</lastmod>
+    <lastmod>2022-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://example.com/categories/%E5%85%B6%E4%BB%96/</loc>
-    <lastmod>2022-06-01</lastmod>
+    <lastmod>2022-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>

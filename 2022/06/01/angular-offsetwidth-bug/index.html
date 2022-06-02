@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://i.imgur.com/FIp0NkZ.png">
 <meta property="og:image" content="https://i.imgur.com/w0wPgDe.png">
 <meta property="article:published_time" content="2022-06-01T15:18:58.000Z">
-<meta property="article:modified_time" content="2022-06-01T16:30:18.523Z">
+<meta property="article:modified_time" content="2022-06-02T02:46:40.449Z">
 <meta property="article:author" content="Andy Hung">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.imgur.com/1wC0QPT.png">   
@@ -182,14 +182,14 @@
 <p><img src="https://i.imgur.com/aXiPGrV.png" alt="result01"></p>
 <br>
 
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>經過測試後發現是 second component 中有 scroll bar 的原因，導致在取得 offsetWidth 時少了 15px。</p>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>經過測試後發現當有載入<code>BrowserAnimationsModule</code>才會發生此問題，且是 second component 中有 scroll bar 的原因，導致在取得 offsetWidth 時少了 15px。</p>
 <p><img src="https://i.imgur.com/FIp0NkZ.png" alt="second component layout"></p>
 <p>但明明我是在 first component 中取 offsetWidth 阿？怎麼會吃到 scroll bar？</p>
 <p>原來是在 ngAfterViewInit 執行的當下子 Component 的畫面會比父 Component 還早運算，我們 ngIf 的條件是寫在父 Component 進行判斷，所以當下吃到的父層寬度還會保留在切換到另一個 Component 之前。</p>
 <blockquote>
 <p>子 Component 的 ngAfterViewInit 也會比父 Component 的同一個事件還早執行。</p>
 </blockquote>
-<p>由於 second component 多了 scroll bar，所以在取得 offsetWidth 會少了 scroll bar 佔去的寬度。</p>
+<p>由於 second component 多了 scroll bar，且在載入<code>BrowserAnimationsModule</code>時 scroll bar 會被算成 15px 的空間，所以在取得 offsetWidth 會少了 scroll bar 佔去的寬度。</p>
 <br>
 
 <h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><p>由於是執行順序的問題，所以最簡單的解法就是透過<code>setTimeout</code>將取得 offsetWidth 的動作強制移動置 event loop 的最後執行。</p>
