@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://example.com/2022/06/01/angular-offsetwidth-bug/</loc>
+    <loc>https://andyhung0723.github.io/2022/06/01/angular-offsetwidth-bug/</loc>
     
     <lastmod>2022-06-02</lastmod>
     
@@ -11,7 +11,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/2022/05/30/domino-opinion/</loc>
+    <loc>https://andyhung0723.github.io/2022/05/30/domino-opinion/</loc>
     
     <lastmod>2022-06-01</lastmod>
     
@@ -20,7 +20,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/2022/05/29/angular-lazy-loading/</loc>
+    <loc>https://andyhung0723.github.io/2022/05/29/angular-lazy-loading/</loc>
     
     <lastmod>2022-05-29</lastmod>
     
@@ -29,7 +29,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/about/index.html</loc>
+    <loc>https://andyhung0723.github.io/about/index.html</loc>
     
     <lastmod>2022-05-28</lastmod>
     
@@ -38,7 +38,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/2022/05/28/angular-module/</loc>
+    <loc>https://andyhung0723.github.io/2022/05/28/angular-module/</loc>
     
     <lastmod>2022-05-28</lastmod>
     
@@ -48,7 +48,7 @@
   
 
   <url>
-    <loc>http://example.com/</loc>
+    <loc>https://andyhung0723.github.io/</loc>
     <lastmod>2022-06-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -58,14 +58,14 @@
 
   
   <url>
-    <loc>http://example.com/categories/Angular/</loc>
+    <loc>https://andyhung0723.github.io/categories/Angular/</loc>
     <lastmod>2022-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://example.com/categories/%E5%85%B6%E4%BB%96/</loc>
+    <loc>https://andyhung0723.github.io/categories/%E5%85%B6%E4%BB%96/</loc>
     <lastmod>2022-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
