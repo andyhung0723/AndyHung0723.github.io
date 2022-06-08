@@ -2,6 +2,33 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://andyhung0723.github.io/about/index.html</loc>
+    
+    <lastmod>2022-06-08</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://andyhung0723.github.io/2022/06/08/position-sticky-issue/</loc>
+    
+    <lastmod>2022-06-08</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://andyhung0723.github.io/2022/05/30/domino-opinion/</loc>
+    
+    <lastmod>2022-06-02</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://andyhung0723.github.io/2022/06/01/angular-offsetwidth-bug/</loc>
     
     <lastmod>2022-06-02</lastmod>
@@ -11,27 +38,9 @@
   </url>
   
   <url>
-    <loc>https://andyhung0723.github.io/2022/05/30/domino-opinion/</loc>
-    
-    <lastmod>2022-06-01</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://andyhung0723.github.io/2022/05/29/angular-lazy-loading/</loc>
     
     <lastmod>2022-05-29</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://andyhung0723.github.io/about/index.html</loc>
-    
-    <lastmod>2022-05-28</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -49,7 +58,7 @@
 
   <url>
     <loc>https://andyhung0723.github.io/</loc>
-    <lastmod>2022-06-02</lastmod>
+    <lastmod>2022-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -59,14 +68,21 @@
   
   <url>
     <loc>https://andyhung0723.github.io/categories/Angular/</loc>
-    <lastmod>2022-06-02</lastmod>
+    <lastmod>2022-06-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://andyhung0723.github.io/categories/%E5%85%B6%E4%BB%96/</loc>
-    <lastmod>2022-06-02</lastmod>
+    <lastmod>2022-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://andyhung0723.github.io/categories/CSS/</loc>
+    <lastmod>2022-06-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>

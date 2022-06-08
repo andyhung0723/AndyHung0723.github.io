@@ -63,8 +63,7 @@
           
   
 
-<meta name="generator" content="Hexo 6.2.0"><link rel="stylesheet" href="/css/prism-atom-dark.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<meta name="generator" content="Hexo 6.2.0"></head>
 <body>
     
 <nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
@@ -146,33 +145,17 @@
 <p>也可以將有相同特性的功能拆出來，組合成不同的模組，各個模組間依程式架構相互引用，組合成 Angular 應用程式。模組中可以透過設定的方式，定義此模組中包含的 components、directives、pipes 等，以及其他與模組相關的屬性，以下我們就來研究一下 Angular Module 的使用方式以及使用情境。</p>
 <span id="more"></span>
 
-<h2 id="組成"><a href="#組成" class="headerlink" title="組成"></a>組成</h2><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">@<span class="token function">NgModule</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-  <span class="token literal-property property">declarations</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-    AppComponent<span class="token punctuation">,</span>
-  <span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">imports</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-    BrowserModule<span class="token punctuation">,</span>
-  <span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">providers</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">bootstrap</span><span class="token operator">:</span> <span class="token punctuation">[</span>AppComponent<span class="token punctuation">]</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="組成"><a href="#組成" class="headerlink" title="組成"></a>組成</h2><figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@<span class="title class_">NgModule</span>({</span><br><span class="line">  <span class="hljs-attr">declarations</span>: [</span><br><span class="line">    <span class="title class_">AppComponent</span>,</span><br><span class="line">  ],</span><br><span class="line">  <span class="hljs-attr">imports</span>: [</span><br><span class="line">    <span class="title class_">BrowserModule</span>,</span><br><span class="line">  ],</span><br><span class="line">  <span class="hljs-attr">providers</span>: [],</span><br><span class="line">  <span class="hljs-attr">bootstrap</span>: [<span class="title class_">AppComponent</span>]</span><br><span class="line">})</span><br></pre></td></tr></tbody></table></figure>
 
 <p>定義模組的檔案中會包含<code>@NgModule</code>，用來定義模組的設定。主要包含以下幾個屬性：</p>
 <h3 id="declarations"><a href="#declarations" class="headerlink" title="declarations"></a>declarations</h3><p>用來宣告此模組中包含的 components、directives、pipes。</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token literal-property property">declarations</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-  UserComponent<span class="token punctuation">,</span>
-  CustomPipe<span class="token punctuation">,</span>
-  FileDirective
-<span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-attr">declarations</span>: [</span><br><span class="line">  <span class="title class_">UserComponent</span>,</span><br><span class="line">  <span class="title class_">CustomPipe</span>,</span><br><span class="line">  <span class="title class_">FileDirective</span></span><br><span class="line">],;</span><br></pre></td></tr></tbody></table></figure>
 
 <ul>
 <li>若使用<code>ng generate</code> 指令來產生物件，Angular CLI 會自動幫你把物件加入 declarations 中。</li>
 </ul>
 <h3 id="imports"><a href="#imports" class="headerlink" title="imports"></a>imports</h3><p>想要額外載入的 module，載入後就可以使用該 module 中 exports 的物件。</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token literal-property property">imports</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-  BrowserModule<span class="token punctuation">,</span>
-  UserModule
-<span class="token punctuation">]</span><span class="token punctuation">,</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-attr">imports</span>: [</span><br><span class="line">  <span class="title class_">BrowserModule</span>,</span><br><span class="line">  <span class="title class_">UserModule</span></span><br><span class="line">],</span><br></pre></td></tr></tbody></table></figure>
 
 <ul>
 <li>如上例，只要 import UserModule，模組內就可以使用 UserModule 中 export 的所有物件。</li>
@@ -181,45 +164,24 @@
 <li>只要是用 CLI 建立的，上述兩項都會自動 import。</li>
 </ul>
 <h3 id="exports"><a href="#exports" class="headerlink" title="exports"></a>exports</h3><p>要匯出給其他模組使用的物件。</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token literal-property property">declarations</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-  UserComponent<span class="token punctuation">,</span>
-  CustomPipe<span class="token punctuation">,</span>
-  FileDirective
-<span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token punctuation">;</span>
-<span class="token literal-property property">exports</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-  UserComponent
-<span class="token punctuation">]</span><span class="token punctuation">,</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-attr">declarations</span>: [</span><br><span class="line">  <span class="title class_">UserComponent</span>,</span><br><span class="line">  <span class="title class_">CustomPipe</span>,</span><br><span class="line">  <span class="title class_">FileDirective</span></span><br><span class="line">],;</span><br><span class="line"><span class="hljs-attr">exports</span>: [</span><br><span class="line">  <span class="title class_">UserComponent</span></span><br><span class="line">],</span><br></pre></td></tr></tbody></table></figure>
 
 <ul>
 <li>要 export 的物件必須存在於 declarations 或 import 的 Module 中才可以。</li>
 <li>上例 export 的只有 UserComponent，因此引入此 module 的模組只可使用 UserComponent。</li>
 </ul>
 <h3 id="providers"><a href="#providers" class="headerlink" title="providers"></a>providers</h3><p>宣告可以依賴注入的 service，整個應用程式都可以使用到此處宣告的 service。</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token literal-property property">providers</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-  UserService
-<span class="token punctuation">]</span><span class="token punctuation">,</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-attr">providers</span>: [</span><br><span class="line">  <span class="title class_">UserService</span></span><br><span class="line">],</span><br></pre></td></tr></tbody></table></figure>
 
 <p>關於 providers 會再整理一篇文章進行探討。</p>
-<h3 id="bootstrap"><a href="#bootstrap" class="headerlink" title="bootstrap"></a>bootstrap</h3><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token literal-property property">bootstrap</span><span class="token operator">:</span> <span class="token punctuation">[</span>AppComponent<span class="token punctuation">]</span><span class="token punctuation">,</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="bootstrap"><a href="#bootstrap" class="headerlink" title="bootstrap"></a>bootstrap</h3><figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-attr">bootstrap</span>: [<span class="title class_">AppComponent</span>],</span><br></pre></td></tr></tbody></table></figure>
 
 <p>定義根元件，作為應用程式啟動後預設讀取的元件，只有根模組需要定義此屬性，一般不太需要更動。<br><br></p>
 <h2 id="使用情境"><a href="#使用情境" class="headerlink" title="使用情境"></a>使用情境</h2><p>Module 用法除了最基本會有的<strong>根模組(Root Module)</strong> 外，常見的還有以下兩種用法：</p>
 <h3 id="Feature-Module"><a href="#Feature-Module" class="headerlink" title="Feature Module"></a>Feature Module</h3><p>其實就是最常見、第一個會想到使用 Module 的情境。將應用程式中你認為可以額外拆出來撰寫成一個功能的程式片段，拆出來成為一個 Module，就會稱它為<code>Feature Module</code>。</p>
 <p>例如假設今天要實作一個網頁聊天室，聊天室可以傳送的訊息種類分為文字、檔案、圖片、貼圖等，我們就可以把傳送的<strong>「訊息」</strong> 拆一個 MessageModule，裡面包含 TextComponent、FileComponent、ImageComponent … 與其他串接的 Service 等。</p>
 <h3 id="Shared-Module"><a href="#Shared-Module" class="headerlink" title="Shared Module"></a>Shared Module</h3><p>在 Angular 中常常會遇到很多物件(component、directive、pipe)一直被重複使用，此時為了不讓這些物件散落各地，還要讓 Module 一直引用來引用去，通常可以建立一個<code>Shared Module</code>來統一管理這些物件，要使用這些物件的 Module 只需要匯入一個<code>Shared Module</code>就可以了。</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">@<span class="token function">NgModule</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-  <span class="token literal-property property">declarations</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-    TableComponent<span class="token punctuation">,</span> 
-    PagerComponent<span class="token punctuation">,</span> 
-    PaginationComponent
-  <span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">exports</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-    TableComponent<span class="token punctuation">,</span> 
-    PagerComponent<span class="token punctuation">,</span> 
-    PaginationComponent
-  <span class="token punctuation">]</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span>
-<span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">SharedModule</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@<span class="title class_">NgModule</span>({</span><br><span class="line">  <span class="hljs-attr">declarations</span>: [</span><br><span class="line">    <span class="title class_">TableComponent</span>, </span><br><span class="line">    <span class="title class_">PagerComponent</span>, </span><br><span class="line">    <span class="title class_">PaginationComponent</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="hljs-attr">exports</span>: [</span><br><span class="line">    <span class="title class_">TableComponent</span>, </span><br><span class="line">    <span class="title class_">PagerComponent</span>, </span><br><span class="line">    <span class="title class_">PaginationComponent</span></span><br><span class="line">  ],</span><br><span class="line">})</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="title class_">SharedModule</span> {}</span><br></pre></td></tr></tbody></table></figure>
 
 <ul>
 <li>如上例，其他模組只需要 import <code>SharedModule</code> 就可以使用裡面的所有物件。</li>

@@ -66,8 +66,7 @@
           
   
 
-<meta name="generator" content="Hexo 6.2.0"><link rel="stylesheet" href="/css/prism-atom-dark.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<meta name="generator" content="Hexo 6.2.0"></head>
 <body>
     
 <nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
@@ -152,56 +151,23 @@
 <h2 id="實現方式"><a href="#實現方式" class="headerlink" title="實現方式"></a>實現方式</h2><p>透過 Angular Router 中內建的功能即可實現，步驟如下：</p>
 <ol>
 <li><p>修改<code>app-routing.module.ts</code></p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">const</span> <span class="token literal-property property">routes</span><span class="token operator">:</span> Routes <span class="token operator">=</span> <span class="token punctuation">[</span>
-  <span class="token punctuation">{</span>
-    <span class="token literal-property property">path</span><span class="token operator">:</span> <span class="token string">'customers'</span><span class="token punctuation">,</span>
-    <span class="token function-variable function">loadChildren</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token keyword">import</span><span class="token punctuation">(</span><span class="token string">'./customers/customers.module'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token parameter">m</span> <span class="token operator">=&gt;</span> m<span class="token punctuation">.</span>CustomersModule<span class="token punctuation">)</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">]</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-attr">routes</span>: <span class="title class_">Routes</span> = [</span><br><span class="line">  {</span><br><span class="line">    <span class="hljs-attr">path</span>: <span class="hljs-string">'customers'</span>,</span><br><span class="line">    <span class="hljs-attr">loadChildren</span>: <span class="hljs-function">() =&gt;</span> <span class="title function_">import</span>(<span class="hljs-string">'./customers/customers.module'</span>).<span class="title function_">then</span>(<span class="hljs-function"><span class="hljs-params">m</span> =&gt;</span> m.<span class="hljs-property">CustomersModule</span>)</span><br><span class="line">  }</span><br><span class="line">];</span><br></pre></td></tr></tbody></table></figure>
 <p>利用<code>loadChildren</code>這個屬性，我們就可以透過 import 將我們想要 lazy loading 的 Module，在應用程式觸發到<code>path</code>中定義的路由(在這個例子中就是<code>/customers</code>)的時候將 CustomersModule 進行載入。</p>
 </li>
 <li><p>修改<code>customers.module.ts</code></p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> CustomersRoutingModule <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'./customers-routing.module'</span><span class="token punctuation">;</span>
-
-@<span class="token function">NgModule</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-  <span class="token literal-property property">declarations</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-    CustomersComponent
-  <span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">imports</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-    CommonModule<span class="token punctuation">,</span>
-    CustomersRoutingModule
-  <span class="token punctuation">]</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> { <span class="title class_">CustomersRoutingModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'./customers-routing.module'</span>;</span><br><span class="line"></span><br><span class="line">@<span class="title class_">NgModule</span>({</span><br><span class="line">  <span class="hljs-attr">declarations</span>: [</span><br><span class="line">    <span class="title class_">CustomersComponent</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="hljs-attr">imports</span>: [</span><br><span class="line">    <span class="title class_">CommonModule</span>,</span><br><span class="line">    <span class="title class_">CustomersRoutingModule</span></span><br><span class="line">  ]</span><br><span class="line">})</span><br></pre></td></tr></tbody></table></figure>
 <p>額外新增<code>customers-routing.module.ts</code>，並新增到 CustomersModule 的 imports 中，我們會將關於此 Module 下 Router 的設定拆出來放在這個檔案中。</p>
 </li>
 <li><p>新增<code>customers-routing.module.ts</code></p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">const</span> <span class="token literal-property property">routes</span><span class="token operator">:</span> Routes <span class="token operator">=</span> <span class="token punctuation">[</span>
-  <span class="token punctuation">{</span> 
-    <span class="token literal-property property">path</span><span class="token operator">:</span> <span class="token string">'info'</span><span class="token punctuation">,</span> 
-    <span class="token literal-property property">component</span><span class="token operator">:</span> CustomersComponent 
-  <span class="token punctuation">}</span>
-<span class="token punctuation">]</span><span class="token punctuation">;</span>
-
-@<span class="token function">NgModule</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-  <span class="token literal-property property">imports</span><span class="token operator">:</span> <span class="token punctuation">[</span>RouterModule<span class="token punctuation">.</span><span class="token function">forChild</span><span class="token punctuation">(</span>routes<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">exports</span><span class="token operator">:</span> <span class="token punctuation">[</span>RouterModule<span class="token punctuation">]</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span>
-<span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">CustomersRoutingModule</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-attr">routes</span>: <span class="title class_">Routes</span> = [</span><br><span class="line">  { </span><br><span class="line">    <span class="hljs-attr">path</span>: <span class="hljs-string">'info'</span>, </span><br><span class="line">    <span class="hljs-attr">component</span>: <span class="title class_">CustomersComponent</span> </span><br><span class="line">  }</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">@<span class="title class_">NgModule</span>({</span><br><span class="line">  <span class="hljs-attr">imports</span>: [<span class="title class_">RouterModule</span>.<span class="title function_">forChild</span>(routes)],</span><br><span class="line">  <span class="hljs-attr">exports</span>: [<span class="title class_">RouterModule</span>]</span><br><span class="line">})</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="title class_">CustomersRoutingModule</span> { }</span><br></pre></td></tr></tbody></table></figure>
 <p>這邊我們就可以定義在子路徑下要載入哪個 Component，最終的路徑會是原本<code>app-routing.module.ts</code>中定義的<code>path</code>加上這邊定義的<code>path</code>，以上例來說就會是在<code>/customers/info</code>下讀取到 CustomersComponent。這邊要注意需要用<code>forChild</code>來定義子路由。</p>
 </li>
 </ol>
 <h2 id="透過指令建立"><a href="#透過指令建立" class="headerlink" title="透過指令建立"></a>透過指令建立</h2><p>如果我們在一開始就決定要使用 lazy loading 的方式載入 Module，也可以選擇用以下指令直接建立好上述的元件：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ng generate module customers --route customers --module app.module<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight shell hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate module customers --route customers --module app.module</span><br></pre></td></tr></tbody></table></figure>
 
 <h2 id="實驗"><a href="#實驗" class="headerlink" title="實驗"></a>實驗</h2><p>我們可以在<code>customers.components.ts</code>中加上<code>console.log</code>來實驗是否有 lazy loading</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">CustomersComponent</span> <span class="token keyword">implements</span> <span class="token class-name">OnInit</span> <span class="token punctuation">{</span>
-
-  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span>
-
-  <span class="token function">ngOnInit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Customers Component Init"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="title class_">CustomersComponent</span> implements <span class="title class_">OnInit</span> {</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="hljs-params"></span>) { }</span><br><span class="line"></span><br><span class="line">  <span class="title function_">ngOnInit</span>(<span class="hljs-params"></span>) {</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="hljs-string">"Customers Component Init"</span>);</span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
 <ul>
 <li><p>讀取 <a target="_blank" rel="noopener" href="http://localhost:4200/">http://localhost:4200</a><br><img src="https://i.imgur.com/pE6DTB9.png" alt="localhost:4200"></p>
 </li>

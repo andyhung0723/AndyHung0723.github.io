@@ -69,8 +69,7 @@
           
   
 
-<meta name="generator" content="Hexo 6.2.0"><link rel="stylesheet" href="/css/prism-atom-dark.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<meta name="generator" content="Hexo 6.2.0"></head>
 <body>
     
 <nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
@@ -155,26 +154,15 @@
 <p>範例連結：<a target="_blank" rel="noopener" href="https://stackblitz.com/edit/angular-ivy-bmpsfk">https://stackblitz.com/edit/angular-ivy-bmpsfk</a></p>
 </blockquote>
 <h2 id="問題"><a href="#問題" class="headerlink" title="問題"></a>問題</h2><p>假設有一個按鈕，點擊之後可依狀態顯示不同的 Component。</p>
-<pre class="line-numbers language-HTML" data-language="HTML"><code class="language-HTML">&lt;div class="container"&gt;
-  &lt;app-first *ngIf="visibleComponent === 'first'; else second"&gt;&lt;/app-first&gt;
-  &lt;ng-template #second&gt;
-    &lt;app-second&gt;&lt;/app-second&gt;
-  &lt;/ng-template&gt;
-&lt;/div&gt;
-
-&lt;button (click)="switch()"&gt;switch&lt;/button&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight html hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"container"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">app-first</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"visibleComponent === 'first'; else second"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">app-first</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> #<span class="hljs-attr">second</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">app-second</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">app-second</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"switch()"</span>&gt;</span>switch<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
 
 <p><img src="https://i.imgur.com/1wC0QPT.png" alt="first component layout"></p>
 <p><img src="https://i.imgur.com/FIp0NkZ.png" alt="second component layout"></p>
 <br>
 
 <p>在 first component 中我們嘗試取得該元素的<code>offsetWidth</code>。</p>
-<pre class="line-numbers language-HTML" data-language="HTML"><code class="language-HTML">&lt;div #content&gt;first component&lt;/div&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token operator">...</span>
-<span class="token function">ngAfterViewInit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'content width: '</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>content<span class="token punctuation">.</span>nativeElement<span class="token punctuation">.</span>offsetWidth<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span class="token operator">...</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight html hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> #<span class="hljs-attr">content</span>&gt;</span>first component<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="title function_">ngAfterViewInit</span>(<span class="hljs-params"></span>) {</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="hljs-string">'content width: '</span>, <span class="variable language_">this</span>.<span class="hljs-property">content</span>.<span class="hljs-property">nativeElement</span>.<span class="hljs-property">offsetWidth</span>);</span><br><span class="line">}</span><br><span class="line">...</span><br></pre></td></tr></tbody></table></figure>
 
 <br>
 
@@ -193,16 +181,7 @@
 <br>
 
 <h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><p>由於是執行順序的問題，所以最簡單的解法就是透過<code>setTimeout</code>將取得 offsetWidth 的動作強制移動置 event loop 的最後執行。</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token function">ngAfterViewInit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'content width: '</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>content<span class="token punctuation">.</span>nativeElement<span class="token punctuation">.</span>offsetWidth<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
-    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>
-      <span class="token string">'content width after: '</span><span class="token punctuation">,</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span>content<span class="token punctuation">.</span>nativeElement<span class="token punctuation">.</span>offsetWidth
-    <span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">ngAfterViewInit</span>(<span class="hljs-params"></span>) {</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="hljs-string">'content width: '</span>, <span class="variable language_">this</span>.<span class="hljs-property">content</span>.<span class="hljs-property">nativeElement</span>.<span class="hljs-property">offsetWidth</span>);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(</span><br><span class="line">      <span class="hljs-string">'content width after: '</span>,</span><br><span class="line">      <span class="variable language_">this</span>.<span class="hljs-property">content</span>.<span class="hljs-property">nativeElement</span>.<span class="hljs-property">offsetWidth</span></span><br><span class="line">    );</span><br><span class="line">  });</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
 
 <br>
 
@@ -213,8 +192,10 @@
    
   <div class="columns is-mobile is-multiline article-nav">
     <span
-      class="column is-12-mobile is-half-desktop is-hidden-mobile article-nav-prev"
+      class="column is-12-mobile is-half-desktop  article-nav-prev"
     >
+      
+      <a href="/2022/06/08/position-sticky-issue/">position:sticky 遇到 overflow 時失效解法</a>
       
     </span>
     <span
