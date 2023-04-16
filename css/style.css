@@ -437,6 +437,12 @@ figure.highlight {
     height: 100%;
     position: absolute; }
 
+@media screen and (max-width: 768px) {
+  .center-768 {
+    display: flex;
+    flex-direction: column;
+    align-items: center; } }
+
 .ins-section-container {
   position: relative;
   background: #f7f7f7; }
