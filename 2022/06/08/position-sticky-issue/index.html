@@ -93,7 +93,7 @@
                href="/categories">分類</a>
             
             <a class="navbar-item "
-               href="/about">關於</a>
+               href="/categories/Google-Analytics">Google Analytics</a>
             
         </div>
         
@@ -163,11 +163,20 @@
 <h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><p>目前單純使用 CSS 貌似沒有解法，因此我使用 JavaScript 的 scroll 事件來動態 transform 表頭的位置來解決，程式碼如下：</p>
 <figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="hljs-string">'scroll'</span>, <span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) {</span><br><span class="line">  <span class="hljs-keyword">var</span> scrollTop = <span class="variable language_">window</span>.<span class="hljs-property">pageYOffset</span> || <span class="variable language_">document</span>.<span class="hljs-property">documentElement</span>.<span class="hljs-property">scrollTop</span> || <span class="variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">scrollTop</span> || <span class="hljs-number">0</span>;</span><br><span class="line">  <span class="hljs-keyword">var</span> stickyTables = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="hljs-string">'.table-sticky'</span>);</span><br><span class="line">  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span> ; i &lt; stickyTables.<span class="hljs-property">length</span> ; i++) {</span><br><span class="line">    <span class="hljs-keyword">var</span> thead = stickyTables[i].<span class="title function_">querySelector</span>(<span class="hljs-string">'thead'</span>);</span><br><span class="line">    <span class="hljs-keyword">var</span> offsetTop = stickyTables[i].<span class="hljs-property">offsetTop</span>;</span><br><span class="line">    <span class="hljs-keyword">var</span> offsetHeight = stickyTables[i].<span class="hljs-property">offsetHeight</span> - thead.<span class="hljs-property">offsetHeight</span>;</span><br><span class="line">    <span class="hljs-keyword">var</span> transformY = <span class="title function_">getTranslateY</span>(thead);</span><br><span class="line">    <span class="hljs-keyword">if</span>(scrollTop &gt;= offsetTop &amp;&amp; scrollTop &lt;= offsetTop + offsetHeight) {</span><br><span class="line">      transformY = scrollTop - offsetTop;</span><br><span class="line">    }<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(scrollTop &lt; offsetTop){</span><br><span class="line">      transformY = <span class="hljs-number">0</span>;</span><br><span class="line">    }</span><br><span class="line">    thead.<span class="hljs-property">style</span>.<span class="hljs-property">transform</span> = <span class="hljs-string">'translateY('</span>+ transformY +<span class="hljs-string">'px)'</span>;</span><br><span class="line">  } </span><br><span class="line">});</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">function</span> <span class="title function_">getTranslateY</span>(<span class="hljs-params">element</span>) {</span><br><span class="line">  <span class="hljs-keyword">var</span> style = <span class="variable language_">window</span>.<span class="title function_">getComputedStyle</span>(element);</span><br><span class="line">  <span class="hljs-keyword">var</span> matrix = <span class="hljs-keyword">new</span> <span class="title class_">WebKitCSSMatrix</span>(style.<span class="hljs-property">transform</span>);</span><br><span class="line">  <span class="hljs-keyword">return</span> matrix.<span class="hljs-property">m42</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></body></html> 
   </div>
-   
+  
+
+  
+  
+  
+  
+
+  
   <div class="columns is-mobile is-multiline article-nav">
     <span
-      class="column is-12-mobile is-half-desktop is-hidden-mobile article-nav-prev"
+      class="column is-12-mobile is-half-desktop  article-nav-prev"
     >
+      
+      <a href="/2023/04/16/ga/ga4_share_0416/">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</a>
       
     </span>
     <span
@@ -215,7 +224,7 @@
     <div class="container">
         <div class="columns content">
             <div class="column is-narrow has-text-centered">
-                &copy; 2022 Andy Hung&nbsp;
+                &copy; 2023 Andy Hung&nbsp;
                 Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
                         target="_blank" rel="noopener" href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
             </div>

@@ -2,9 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://andyhung0723.github.io/about/index.html</loc>
+    <loc>https://andyhung0723.github.io/2023/04/16/ga/ga4_share_0416/</loc>
     
-    <lastmod>2022-08-07</lastmod>
+    <lastmod>2023-04-16</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -13,7 +13,16 @@
   <url>
     <loc>https://andyhung0723.github.io/google54765e92939cdff8.html</loc>
     
-    <lastmod>2022-07-01</lastmod>
+    <lastmod>2022-08-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://andyhung0723.github.io/about/index.html</loc>
+    
+    <lastmod>2022-08-07</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -58,7 +67,7 @@
 
   <url>
     <loc>https://andyhung0723.github.io/</loc>
-    <lastmod>2022-08-07</lastmod>
+    <lastmod>2023-04-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -68,14 +77,21 @@
   
   <url>
     <loc>https://andyhung0723.github.io/categories/Angular/</loc>
-    <lastmod>2022-08-07</lastmod>
+    <lastmod>2023-04-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://andyhung0723.github.io/categories/CSS/</loc>
-    <lastmod>2022-08-07</lastmod>
+    <lastmod>2023-04-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://andyhung0723.github.io/categories/Google-Analytics/</loc>
+    <lastmod>2023-04-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>

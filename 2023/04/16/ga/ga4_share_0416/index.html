@@ -2,7 +2,7 @@
 <html class="has-navbar-fixed-top">
 <head>
     <meta charset="utf-8" />
-<title>分類 - Andy 程式雜記</title>
+<title>Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦! - Andy 程式雜記</title>
 <meta
   name="viewport"
   content="width=device-width, initial-scale=1, maximum-scale=1"
@@ -15,13 +15,24 @@
 
  
 <meta name="description" content="" />
-   <meta property="og:type" content="website">
-<meta property="og:title" content="Andy 程式雜記">
-<meta property="og:url" content="https://andyhung0723.github.io/categories/index.html">
+   <meta name="description" content="👉 文章內容深度 : 3&#x2F;5顆星👉 適用對象 : GA4 有做電子商務事件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!">
+<meta property="og:url" content="https://andyhung0723.github.io/2023/04/16/ga/ga4_share_0416/index.html">
 <meta property="og:site_name" content="Andy 程式雜記">
+<meta property="og:description" content="👉 文章內容深度 : 3&#x2F;5顆星👉 適用對象 : GA4 有做電子商務事件">
 <meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://i.imgur.com/GqUrcxP.png">
+<meta property="og:image" content="https://i.imgur.com/rk38GYv.png">
+<meta property="og:image" content="https://i.imgur.com/87tr979.png">
+<meta property="og:image" content="https://i.imgur.com/rbWXou3.png">
+<meta property="og:image" content="https://i.imgur.com/U29tNgA.png">
+<meta property="og:image" content="https://i.imgur.com/j24EcAj.png">
+<meta property="article:published_time" content="2023-04-16T04:30:00.000Z">
+<meta property="article:modified_time" content="2023-04-16T04:39:50.613Z">
 <meta property="article:author" content="Andy Hung">
-<meta name="twitter:card" content="summary">   
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/GqUrcxP.png">   
 <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
 
@@ -85,7 +96,7 @@
             <a class="navbar-item "
                href="/archives">列表</a>
             
-            <a class="navbar-item is-active"
+            <a class="navbar-item "
                href="/categories">分類</a>
             
             <a class="navbar-item "
@@ -112,30 +123,102 @@
     </div>
 </nav>
 
-    <section class="section section-heading">
+    <section class="section">
     <div class="container">
-        <div class="content">
-            <h5><i class="far fa-folder"></i>分類</h5>
-        </div>
-    </div>
-</section>
-<section class="section">
-    <div class="container">
-        <div class="columns is-variable is-1 is-multiline is-mobile">
-            
-            <span class="column is-narrow">
-                <a class="tag is-light article-tag" href="/categories/Angular/">Angular&nbsp;(3)</a>
-            </span>
-            
-            <span class="column is-narrow">
-                <a class="tag is-light article-tag" href="/categories/CSS/">CSS&nbsp;(1)</a>
-            </span>
-            
-            <span class="column is-narrow">
-                <a class="tag is-light article-tag" href="/categories/Google-Analytics/">Google Analytics&nbsp;(1)</a>
-            </span>
-            
-        </div>
+    <article class="article content gallery" itemscope itemprop="blogPost">
+  <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+     Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦! 
+  </h1>
+  <div
+    class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile"
+  >
+    <span class="column is-narrow">
+      
+      <span>2023年04月16日</span>
+      
+    </span>
+    
+    <span class="column is-narrow article-category">
+      <i class="far fa-folder"></i>
+      <a
+        class="article-category-link"
+        href="/categories/Google-Analytics/"
+        >Google Analytics</a
+      >
+    </span>
+     
+  </div>
+  <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+     <html><head></head><body><p>👉 文章內容深度 : 3/5顆星<br>👉 適用對象 : GA4 有做電子商務事件</p>
+<span id="more"></span>
+
+<p>▶ <strong>什麼是項目範圍自訂維度(item scope) ?</strong><br>項目範圍的維度，是指專門用來追蹤 GA4 電子商務事件中商品的資訊，例如 : 商品名稱、商品id、顏色、尺寸、重量等等。<br>在項目範圍的維度中，有分 GA4 預設維度 &amp; 最近才公布的自訂維度。<br>舉例來說 :<br>GA4 預設維度 : 商品名稱(item_name)、商品編號(item_id)、商品價格(price)等等。&lt;官方文件&gt;<br>自訂維度 : 用來補足 GA4 預設維度中沒有的維度，由自己定義，例如 : 課程長度、售票種類、商品關鍵字等等。<br>數量限制 : 免費版資源 : 10個 / 付費版資源 : 25個</p>
+<p>▶ <strong>項目範圍自訂維度(item scope)情境舉例</strong><br>以這一個商品舉例，右邊 items 陣列中的參數(item_name、item_id、price 等)都屬於 GA4 的預設項目範圍維度。<br><img src="https://i.imgur.com/GqUrcxP.png"></p>
+<p>若想多追蹤杯子的容量，GA4 預設的項目範圍維度又沒有提供對應參數，這時候，就可以自訂一個項目範圍的自訂維度，Datalayer 調整後如下圖，新增的參數一定要放在 items 陣列中。<br><img src="https://i.imgur.com/rk38GYv.png"></p>
+<p>▶ <strong>項目範圍自訂維度(item scope)要如何在 GA4 中設定 ?</strong><br>確認有把自訂的參數送到 GA4 後，接下來就是要在 GA4 中設定自訂維度，<br>設定路徑 : 管理(左下角齒輪) &gt; 自訂定義 &gt; 建立自訂維度(藍底按鈕) &gt; 範圍選 : 項目 &gt; 按下儲存<br>可參考以下圖片，依序設定。<br><img src="https://i.imgur.com/87tr979.png"></p>
+<p>(下圖)記得範圍要選「項目」，項目參數需要填寫您在網站中傳送的參數名稱，以本次範例為例，則是填入 capacity (並非照填寫 capacity) 。<br><img src="https://i.imgur.com/rbWXou3.png"></p>
+<p>(下圖)儲存後，會出現範圍為「項目」的自訂維度。<br><img src="https://i.imgur.com/U29tNgA.png"></p>
+<p>▶ 項目範圍自訂維度(item scope)在 GA4 探索報表中的呈現<br>目前還無法在預設報表中，透過次要維度或是利用自訂報表功能拉取項目範圍維度，所以設定完的項目範圍自訂維度無法呈現在電子商務報表中，只能在探索報表使用，這部分較可惜，希望未來能更新上去。</p>
+<ul>
+<li>補充提醒，電子商務相關的維度都只能搭配使用部分指標，所以建議先拉取項目範圍的維度後，再選擇指標(無法使用的指標會被反灰)。</li>
+</ul>
+<p><img src="https://i.imgur.com/j24EcAj.png"></p>
+<p>此外Looker Studio 中也無法拉取項目範圍的自訂維度，以上的限制待未來更新後，再分享給大家~</p>
+</body></html> 
+  </div>
+  
+
+  
+  
+  
+  
+
+  
+  <div class="columns is-mobile is-multiline article-nav">
+    <span
+      class="column is-12-mobile is-half-desktop is-hidden-mobile article-nav-prev"
+    >
+      
+    </span>
+    <span
+      class="column is-12-mobile is-half-desktop  article-nav-next"
+    >
+      
+      <a href="/2022/06/08/position-sticky-issue/">position:sticky 遇到 overflow 時失效解法</a>
+      
+    </span>
+  </div>
+  
+</article>
+
+ 
+<div class="comments">
+  <h3 class="title is-4">評論</h3>
+  
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://andyhung0723.github.io/2023/04/16/ga/ga4_share_0416/';
+        this.page.identifier = '2023/04/16/ga/ga4_share_0416/';
+        this.language = "zh_TW";
+        // 
+        // this.language = 'zh';
+        // 
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'andyhung0723' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</div>
+
+
     </div>
 </section>
     <footer class="footer">
