@@ -2,7 +2,7 @@
 <html class="has-navbar-fixed-top">
 <head>
     <meta charset="utf-8" />
-<title>Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦! - Andy 程式雜記</title>
+<title>GA4 vs GA3 來源/媒介 BigQuery 欄位解析 - Andy 程式雜記</title>
 <meta
   name="viewport"
   content="width=device-width, initial-scale=1, maximum-scale=1"
@@ -15,24 +15,20 @@
 
  
 <meta name="description" content="" />
-   <meta name="description" content="👉 文章內容深度 : 3&#x2F;5顆星👉 適用對象 : GA4 有做電子商務事件">
+   <meta name="description" content="👉 文章內容深度 : 3&#x2F;5顆星👉 適用對象 : 有使用 BigQuery 製作來源&#x2F;媒介報表">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!">
-<meta property="og:url" content="https://andyhung0723.github.io/2023/04/16/ga/ga4_share_0416/index.html">
+<meta property="og:title" content="GA4 vs GA3 來源&#x2F;媒介 BigQuery 欄位解析">
+<meta property="og:url" content="https://andyhung0723.github.io/2023/04/20/ga/ga4_share_0420/index.html">
 <meta property="og:site_name" content="Andy 程式雜記">
-<meta property="og:description" content="👉 文章內容深度 : 3&#x2F;5顆星👉 適用對象 : GA4 有做電子商務事件">
+<meta property="og:description" content="👉 文章內容深度 : 3&#x2F;5顆星👉 適用對象 : 有使用 BigQuery 製作來源&#x2F;媒介報表">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://i.imgur.com/GqUrcxP.png">
-<meta property="og:image" content="https://i.imgur.com/rk38GYv.png">
-<meta property="og:image" content="https://i.imgur.com/87tr979.png">
-<meta property="og:image" content="https://i.imgur.com/rbWXou3.png">
-<meta property="og:image" content="https://i.imgur.com/U29tNgA.png">
-<meta property="og:image" content="https://i.imgur.com/j24EcAj.png">
-<meta property="article:published_time" content="2023-04-16T04:30:00.000Z">
-<meta property="article:modified_time" content="2023-04-18T16:07:29.179Z">
+<meta property="og:image" content="https://i.imgur.com/hVTllIw.png">
+<meta property="og:image" content="https://i.imgur.com/6Ukf3Ai.png">
+<meta property="article:published_time" content="2023-04-20T08:30:00.000Z">
+<meta property="article:modified_time" content="2023-04-20T15:55:48.675Z">
 <meta property="article:author" content="Andy Hung">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.imgur.com/GqUrcxP.png">   
+<meta name="twitter:image" content="https://i.imgur.com/hVTllIw.png">   
 <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
 
@@ -134,14 +130,14 @@
     <div class="container">
     <article class="article content gallery" itemscope itemprop="blogPost">
   <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
-     Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦! 
+     GA4 vs GA3 來源/媒介 BigQuery 欄位解析 
   </h1>
   <div
     class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile"
   >
     <span class="column is-narrow">
       
-      <span>2023年04月16日</span>
+      <span>2023年04月20日</span>
       
     </span>
     
@@ -156,22 +152,160 @@
      
   </div>
   <div class="article-entry is-size-6-mobile" itemprop="articleBody">
-     <html><head></head><body><p>👉 文章內容深度 : 3/5顆星<br>👉 適用對象 : GA4 有做電子商務事件</p>
+     <html><head></head><body><p>👉 文章內容深度 : 3/5顆星<br>👉 適用對象 : 有使用 BigQuery 製作來源/媒介報表</p>
 <span id="more"></span>
 
-<p>▶ <strong>什麼是項目範圍自訂維度(item scope) ?</strong><br>項目範圍的維度，是指專門用來追蹤 GA4 電子商務事件中商品的資訊，例如 : 商品名稱、商品id、顏色、尺寸、重量等等。<br>在項目範圍的維度中，有分 GA4 預設維度 &amp; 最近才公布的自訂維度。<br>舉例來說 :<br>GA4 預設維度 : 商品名稱(item_name)、商品編號(item_id)、商品價格(price)等等。<a target="_blank" rel="noopener" href="https://support.google.com/analytics/answer/12947610?hl=zh-Hant&amp;ref=tako-analytics">官方文件</a><br>自訂維度 : 用來補足 GA4 預設維度中沒有的維度，由自己定義，例如 : 課程長度、售票種類、商品關鍵字等等。<br>數量限制 : 免費版資源 : 10個 / 付費版資源 : 25個</p>
-<p>▶ <strong>項目範圍自訂維度(item scope)情境舉例</strong><br>以這一個商品舉例，右邊 items 陣列中的參數(item_name、item_id、price 等)都屬於 GA4 的預設項目範圍維度。<br><img src="https://i.imgur.com/GqUrcxP.png"></p>
-<p>若想多追蹤杯子的容量，GA4 預設的項目範圍維度又沒有提供對應參數，這時候，就可以自訂一個項目範圍的自訂維度，Datalayer 調整後如下圖，新增的參數一定要放在 items 陣列中。<br><img src="https://i.imgur.com/rk38GYv.png"></p>
-<p>▶ <strong>項目範圍自訂維度(item scope)要如何在 GA4 中設定 ?</strong><br>確認有把自訂的參數送到 GA4 後，接下來就是要在 GA4 中設定自訂維度，<br>設定路徑 : 管理(左下角齒輪) &gt; 自訂定義 &gt; 建立自訂維度(藍底按鈕) &gt; 範圍選 : 項目 &gt; 按下儲存<br>可參考以下圖片，依序設定。<br><img src="https://i.imgur.com/87tr979.png"></p>
-<p>(下圖)記得範圍要選「項目」，項目參數需要填寫您在網站中傳送的參數名稱，以本次範例為例，則是填入 capacity (並非照填寫 capacity) 。<br><img src="https://i.imgur.com/rbWXou3.png"></p>
-<p>(下圖)儲存後，會出現範圍為「項目」的自訂維度。<br><img src="https://i.imgur.com/U29tNgA.png"></p>
-<p>▶ 項目範圍自訂維度(item scope)在 GA4 探索報表中的呈現<br>目前還無法在預設報表中，透過次要維度或是利用自訂報表功能拉取項目範圍維度，所以設定完的項目範圍自訂維度無法呈現在電子商務報表中，只能在探索報表使用，這部分較可惜，希望未來能更新上去。</p>
+<h3 id="▶-什麼是來源-x2F-媒介"><a href="#▶-什麼是來源-x2F-媒介" class="headerlink" title="▶ 什麼是來源/媒介 ?"></a>▶ <strong>什麼是來源/媒介 ?</strong></h3><p>  簡單來說就是判斷這個流量從哪邊來? 是從 Google 搜尋引擎進入網站還是從 FB 粉專進入網站。<br>以下為 GA3 &amp; GA4 的來源/媒介報表路徑</p>
 <ul>
-<li>補充提醒，電子商務相關的維度都只能搭配使用部分指標，所以建議先拉取項目範圍的維度後，再選擇指標(無法使用的指標會被反灰)。</li>
+<li>GA3 : 獲客 &gt; 所有流量 &gt; 來源/媒介</li>
+<li>GA4 : 獲客 &gt; 流量開發 : 工作階段預設管道分組 (如下圖)<br><img src="https://i.imgur.com/hVTllIw.png"></li>
 </ul>
-<p><img src="https://i.imgur.com/j24EcAj.png"></p>
-<p>此外Looker Studio 中也無法拉取項目範圍的自訂維度，以上的限制待未來更新後，再分享給大家~</p>
-</body></html> 
+<h3 id="▶-GA3-vs-GA4-BigQuery-來源-x2F-媒介欄位比較表"><a href="#▶-GA3-vs-GA4-BigQuery-來源-x2F-媒介欄位比較表" class="headerlink" title="▶ GA3 vs. GA4 BigQuery 來源/媒介欄位比較表"></a>▶ <strong>GA3 vs. GA4 BigQuery 來源/媒介欄位比較表</strong></h3><p>GA3 時代，從 BigQuery 中提取來源/媒介數據時，會使用欄位「trafficSource.source」&amp;「trafficSource.medium」，這是沒有錯的!這兩個欄位代表的是每次進站的渠道。<br>&lt;<a target="_blank" rel="noopener" href="https://support.google.com/analytics/answer/3437719?hl=zh-Hant">附上 GA3 匯出 BigQuery 的結構定義</a>&gt;</p>
+<p>當看到 GA4 匯出到 BigQuery 的 Dataset 中看到「traffic_source.source」&amp;「traffic_source.medium」時，心中是不是無比喜悅，就是他惹 :100: </p>
+<p><strong>但是!</strong> 現在我們來看一下 Google 的官方文件說明(附上截圖&amp;<a target="_blank" rel="noopener" href="https://support.google.com/analytics/answer/7029846?hl=zh-Hant&amp;ref_topic=9359001&amp;sjid=6130283979471431016-AP#zippy=%2Ctraffic-source">文件</a>)，<br><span style="color:grab">補充:這兩個欄位會對應到 GA4 維度為「最初招攬到使用者的來源/媒介」</span></p>
+<ul>
+<li>traffic_source.source	: <span style="color:red">初次招攬</span>到使用者的聯播網名稱。</li>
+<li>traffic_source.medium	: <span style="color:red">初次招攬</span>到使用者的媒介名稱。</li>
+</ul>
+<p><img src="https://i.imgur.com/6Ukf3Ai.png"></p>
+<p>「初次招攬」指的是第一次進到網站的使用者是從哪個渠道進入網站，是 FB 廣告還是 Google 自然搜尋等等。<br>舉例來說 :<br>小明點了 Google 廣告，<strong>第一次</strong>進到網站中，那欄位值會如下</p>
+<ul>
+<li>traffic_source.source	: google</li>
+<li>traffic_source.medium	: cpc</li>
+</ul>
+<p>那小明隔天從 LINE 官方帳號進入網站，那欄位值是什麼?<br><span style="color:blue"><em>值還是一樣的 ! 因為「traffic_source.source 和 traffic_source.medium 這兩個欄位就是這兩個欄位僅記錄用戶首次訪問網站時的來源媒介</em></span></p>
+<ul>
+<li>traffic_source.source	: google</li>
+<li>traffic_source.medium	: cpc</li>
+</ul>
+<h3 id="▶那第2次的來源媒介要怎麼取得"><a href="#▶那第2次的來源媒介要怎麼取得" class="headerlink" title="▶那第2次的來源媒介要怎麼取得?"></a>▶<strong>那第2次的來源媒介要怎麼取得?</strong></h3><p>GA4 的數據模型是由事件組成，所以每個 event_name 對應一個資料列。<br>event_name = page_view 指的就是每一次的網站瀏覽，所以第二次進站的來源媒介，會出現在事件名為 page_view 的資料列中，包含 source 和 medium 參數。</p>
+<h3 id="▶2種情境與對應值，分享給大家"><a href="#▶2種情境與對應值，分享給大家" class="headerlink" title="▶2種情境與對應值，分享給大家"></a>▶<strong>2種情境與對應值，分享給大家</strong></h3><h4 id="情境1-小明從-Google-自然搜尋第1次進站到首頁，點了站內-UTM-Urchin-Tracking-Module-到活動頁"><a href="#情境1-小明從-Google-自然搜尋第1次進站到首頁，點了站內-UTM-Urchin-Tracking-Module-到活動頁" class="headerlink" title="情境1 :小明從 Google 自然搜尋第1次進站到首頁，點了站內 UTM(Urchin Tracking Module) 到活動頁"></a>情境1 :小明從 Google 自然搜尋第1次進站到首頁，點了站內 UTM(Urchin Tracking Module) 到活動頁</h4><!--![](https://i.imgur.com/EVFY6f9.png)-->
+
+<p>下表為 BQ 中的資料列示意</p>
+<table>
+<thead>
+<tr>
+<th>event_date</th>
+<th>event_name</th>
+<th>event_params.key</th>
+<th>event_params_value.string_value</th>
+<th>traffic_source.source</th>
+<th>traffic_source.medium</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>20230222</td>
+<td>first_visit</td>
+<td>page_location</td>
+<td>首頁網址</td>
+<td>google</td>
+<td>organic</td>
+</tr>
+<tr>
+<td>20230222</td>
+<td>session_start</td>
+<td>page_location</td>
+<td>首頁網址</td>
+<td>google</td>
+<td>organic</td>
+</tr>
+<tr>
+<td>20230222</td>
+<td>page_view</td>
+<td>page_location</td>
+<td>首頁網址</td>
+<td>google</td>
+<td>organic</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>source</td>
+<td>google</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>medium</td>
+<td>organic</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>20230222</td>
+<td>page_view</td>
+<td>page_location</td>
+<td>站內UTM活動頁</td>
+<td>google</td>
+<td>organic</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>source</td>
+<td>Amy1</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>medium</td>
+<td>Test1</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="情境2-延續情境1，隔天小明點了-FB-粉專的貼文進入了網站商品頁，粉專貼文的連結有帶-UTM-為-Facebook-x2F-post"><a href="#情境2-延續情境1，隔天小明點了-FB-粉專的貼文進入了網站商品頁，粉專貼文的連結有帶-UTM-為-Facebook-x2F-post" class="headerlink" title="情境2 : 延續情境1，隔天小明點了 FB 粉專的貼文進入了網站商品頁，粉專貼文的連結有帶 UTM 為 Facebook / post"></a>情境2 : 延續情境1，隔天小明點了 FB 粉專的貼文進入了網站商品頁，粉專貼文的連結有帶 UTM 為 Facebook / post</h4><p>下表為 BQ 中的資料列示意</p>
+<!--![](https://i.imgur.com/djMJipF.png)-->
+<table>
+<thead>
+<tr>
+<th>event_date</th>
+<th>event_name</th>
+<th>event_params.key</th>
+<th>event_params_value.string_value</th>
+<th>traffic_source.source</th>
+<th>traffic_source.medium</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>20230223</td>
+<td>session_start</td>
+<td>page_location</td>
+<td>商品頁</td>
+<td>google</td>
+<td>organic</td>
+</tr>
+<tr>
+<td>20230223</td>
+<td>page_view</td>
+<td>page_location</td>
+<td>商品頁</td>
+<td>google</td>
+<td>organic</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>source</td>
+<td>Facebook</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>medium</td>
+<td>post</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="結論-traffic-source-欄位僅記錄用戶首次訪問網站時的來源媒介，不會因未來用戶進入網站的渠道而改變其值。"><a href="#結論-traffic-source-欄位僅記錄用戶首次訪問網站時的來源媒介，不會因未來用戶進入網站的渠道而改變其值。" class="headerlink" title="結論 : traffic_source 欄位僅記錄用戶首次訪問網站時的來源媒介，不會因未來用戶進入網站的渠道而改變其值。"></a><span style="color:blue">結論 : traffic_source 欄位僅記錄用戶首次訪問網站時的來源媒介，不會因未來用戶進入網站的渠道而改變其值。</span></h4><p>附上查詢 SQL </p>
+<figure class="highlight sql hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> event_date,event_name, event_params, traffic_source.source, traffic_source.medium</span><br><span class="line"><span class="hljs-keyword">FROM</span> `你的工作表名稱`</span><br></pre></td></tr></tbody></table></figure></body></html> 
   </div>
   
 
@@ -199,17 +333,15 @@
   
   <div class="columns is-mobile is-multiline article-nav">
     <span
-      class="column is-12-mobile is-half-desktop  article-nav-prev"
+      class="column is-12-mobile is-half-desktop is-hidden-mobile article-nav-prev"
     >
-      
-      <a href="/2023/04/20/ga/ga4_share_0420/">GA4 vs GA3 來源/媒介 BigQuery 欄位解析</a>
       
     </span>
     <span
       class="column is-12-mobile is-half-desktop  article-nav-next"
     >
       
-      <a href="/2022/06/08/position-sticky-issue/">position:sticky 遇到 overflow 時失效解法</a>
+      <a href="/2023/04/16/ga/ga4_share_0416/">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</a>
       
     </span>
   </div>
@@ -222,8 +354,8 @@
   
 <script>
     var disqus_config = function () {
-        this.page.url = 'https://andyhung0723.github.io/2023/04/16/ga/ga4_share_0416/';
-        this.page.identifier = '2023/04/16/ga/ga4_share_0416/';
+        this.page.url = 'https://andyhung0723.github.io/2023/04/20/ga/ga4_share_0420/';
+        this.page.identifier = '2023/04/20/ga/ga4_share_0420/';
         this.language = "zh_TW";
         // 
         // this.language = 'zh';
