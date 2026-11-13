@@ -1,17 +1,234 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>資安週報精選｜APT 套件驗證漏洞與修補 · Andy 的筆記</title><meta name="description" content="本期聚焦 APT 的高風險漏洞：適用條件、版本確認，以及修補前應注意的下載路徑。"><link rel="stylesheet" href="/css/reading.css?v=20261113-2"><link rel="alternate" type="application/atom+xml" title="訂閱全部文章" href="/atom.xml"><link rel="canonical" href="https://andyhung0723.github.io/2026/11/09/security-weekly-2026-11-09/"><meta name="generator" content="Hexo 8.1.2"></head><body><a class="skip" href="#main">跳到主要內容</a><header class="site-header"><a class="brand" href="/">Andy 的筆記</a><nav aria-label="主選單"><a href="/">首頁</a><a href="/archives/">所有文章</a><a href="/about/">關於</a><a href="/atom.xml">RSS ↗</a></nav></header><main id="main"><article class="post"><a class="back" href="/">← 首頁</a><header class="post-header"><h1>資安週報精選｜APT 套件驗證漏洞與修補</h1><p class="post-meta">AI 協助整理 · <time datetime="2026-11-09">2026-11-09</time> · 2 分鐘閱讀</p><p class="lede">本期聚焦 APT 的高風險漏洞：適用條件、版本確認，以及修補前應注意的下載路徑。</p></header><div class="post-grid"><div class="prose"><p>本篇節選自 2026&#x2F;11&#x2F;02–11&#x2F;08 的資安週報，於 11&#x2F;13 重新核對官方來源。這是公開資訊精選，不是完整漏洞清單，也不表示讀者的系統已受影響。</p>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>資安週報｜2026/11/09 · Andy 的筆記</title><meta name="description" content="14 個主題：APT、WordPress、SonicWall、Linux Kernel、憑證信任庫、NGINX、Chrome、AWS、Python、Debian 與 PostgreSQL。"><link rel="stylesheet" href="/css/reading.css?v=20261113-2"><link rel="alternate" type="application/atom+xml" title="訂閱全部文章" href="/atom.xml"><link rel="canonical" href="https://andyhung0723.github.io/2026/11/09/security-weekly-2026-11-09/"><meta name="generator" content="Hexo 8.1.2"></head><body><a class="skip" href="#main">跳到主要內容</a><header class="site-header"><a class="brand" href="/">Andy 的筆記</a><nav aria-label="主選單"><a href="/">首頁</a><a href="/archives/">所有文章</a><a href="/about/">關於</a><a href="/atom.xml">RSS ↗</a></nav></header><main id="main"><article class="post"><a class="back" href="/">← 首頁</a><header class="post-header"><h1>資安週報｜2026/11/09</h1><p class="post-meta">AI 協助整理 · <time datetime="2026-11-09">2026-11-09</time> · 13 分鐘閱讀</p><p class="lede">14 個主題：APT、WordPress、SonicWall、Linux Kernel、憑證信任庫、NGINX、Chrome、AWS、Python、Debian 與 PostgreSQL。</p></header><div class="post-grid"><div class="prose"><p>整理 2026&#x2F;11&#x2F;02–11&#x2F;08 的 14 個資安主題與其他平台追蹤結果。11&#x2F;13 重新核對官方來源，修正 Chrome 修補數量，補上 PostgreSQL 14 的最新版本資訊。</p>
+<p>優先確認 APT 修補；使用 WordPress 或 SonicWall 的環境，應先處理已知遭利用的漏洞。以下是通用盤點建議，不代表任何個別系統已受影響或已完成修補。</p>
 <span id="more"></span>
 
-<h2 id="本週先看：APT-安全更新"><a href="#本週先看：APT-安全更新" class="headerlink" title="本週先看：APT 安全更新"></a>本週先看：APT 安全更新</h2><p>Canonical 於 11&#x2F;4 公告 <strong>CVE-2026-109518</strong>。能操縱套件下載 HTTP 流量的攻擊者，在重試下載等條件成立時，可能使 APT 安裝惡意套件並取得 root 權限。官方評為 High，CVSS 4.0 為 7.7。</p>
-<p>Ubuntu 22.04 LTS 及更新版本在預設設定下受影響；較舊版本則須檢查 <code>Acquire::Retries</code> 是否非零。公告提供修補，但不能據此認定所有系統已完成更新。</p>
-<h2 id="建議檢查順序"><a href="#建議檢查順序" class="headerlink" title="建議檢查順序"></a>建議檢查順序</h2><ol>
-<li>確認作業系統、APT 版本及套件來源。</li>
-<li>對照官方修補表；例如 Ubuntu 22.04 的修補版本為 <code>2.4.15ubuntu0.1</code>。</li>
-<li>依維護流程安裝更新，再確認實際安裝結果。HTTPS 可降低此下載路徑攻擊風險，但不應取代修補。</li>
+<h2 id="1-APT：下載驗證繞過，可取得-root-權限"><a href="#1-APT：下載驗證繞過，可取得-root-權限" class="headerlink" title="1. APT：下載驗證繞過，可取得 root 權限"></a>1. APT：下載驗證繞過，可取得 root 權限</h2><p><strong>CVE-2026-109518｜11&#x2F;04｜Canonical：High，CVSS 4.0 7.7</strong></p>
+<p>能操縱套件下載 HTTP 流量的攻擊者，可利用重新導向、下載重試與 hard link 處理缺陷，使 APT 安裝未驗證的套件。Debian 12、Ubuntu 22.04 起預設啟用下載重試；舊版也須檢查 <code>Acquire::Retries</code> 是否非零。</p>
+<table>
+<thead>
+<tr>
+<th>系統</th>
+<th>APT 修補版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Debian 12</td>
+<td><code>2.6.2</code></td>
+</tr>
+<tr>
+<td>Debian 13</td>
+<td><code>3.0.4</code></td>
+</tr>
+<tr>
+<td>Ubuntu 22.04</td>
+<td><code>2.4.15ubuntu0.1</code></td>
+</tr>
+<tr>
+<td>Ubuntu 24.04</td>
+<td><code>2.8.4ubuntu0.1</code></td>
+</tr>
+<tr>
+<td>Ubuntu 26.04</td>
+<td><code>3.2.1ubuntu0.1</code></td>
+</tr>
+<tr>
+<td>Ubuntu 26.10</td>
+<td><code>3.3.3ubuntu0.1</code></td>
+</tr>
+</tbody></table>
+<p>Ubuntu 20.04 及更舊版本的修補取得方式涉及 Ubuntu Pro／Legacy，須對照公告。先確認已安裝版本，再依維護流程更新。HTTPS 可保護這條下載路徑，但不應取代正式修補。本次未確認野外利用。</p>
+<p>來源：<a target="_blank" rel="noopener" href="https://ubuntu.com/blog/apt-vulnerability-fixes-available">Canonical 說明</a>、<a target="_blank" rel="noopener" href="https://ubuntu.com/security/notices/USN-8996-1">USN-8996-1</a>、<a target="_blank" rel="noopener" href="https://security-tracker.debian.org/tracker/CVE-2026-109518">Debian Tracker</a>。</p>
+<h2 id="2-WordPress：更新期間的遠端程式碼執行"><a href="#2-WordPress：更新期間的遠端程式碼執行" class="headerlink" title="2. WordPress：更新期間的遠端程式碼執行"></a>2. WordPress：更新期間的遠端程式碼執行</h2><p><strong>CVE-2026-119977｜11&#x2F;03 列入 CISA KEV</strong></p>
+<p>WordPress 更新流程的競爭條件可能讓攻擊者在升級期間執行程式碼。7.1.4 已於 10&#x2F;28 修補；本週的新進展是確認實際利用，而不是首次發布修補。</p>
+<p>有部署 WordPress 時，確認已安裝 7.1.4 或所屬舊分支的對應安全更新，並檢查更新期間的異常存取。不要只確認主站，測試站與活動網站也應納入盤點。</p>
+<p>來源：<a target="_blank" rel="noopener" href="https://wordpress.org/news/2026/10/wordpress-7-1-4/">WordPress 7.1.4</a>、<a target="_blank" rel="noopener" href="https://www.cyber.gc.ca/en/alerts-advisories/wordpress-security-advisory-av26-1117">加拿大網路安全中心 AV26-1117</a>。</p>
+<h2 id="3-SonicWall：SSL-VPN-驗證繞過"><a href="#3-SonicWall：SSL-VPN-驗證繞過" class="headerlink" title="3. SonicWall：SSL VPN 驗證繞過"></a>3. SonicWall：SSL VPN 驗證繞過</h2><p><strong>CVE-2026-19868｜11&#x2F;06 列入 CISA KEV</strong></p>
+<p>這項 SonicOS SSL VPN 漏洞涉及驗證流程，原報告追蹤的是 SAML／MFA 繞過風險。加拿大網路安全中心確認 SonicWall 已表示漏洞遭到利用，並列出 <code>7.3.4-7013</code>、<code>8.2.2-8015</code> 的修補門檻。</p>
+<p>應優先確認設備所屬分支、實際版本、VPN 對外暴露與異常登入紀錄。各機型及設定適用性仍以原廠公告為準；本次未能讀取原廠動態頁面的完整條件，因此不沿用原報告的 CVSS 數字。</p>
+<p>來源：<a target="_blank" rel="noopener" href="https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2026-0014">SonicWall SNWLID-2026-0014</a>、<a target="_blank" rel="noopener" href="https://www.cyber.gc.ca/en/alerts-advisories/sonicwall-security-advisory-av26-1133">加拿大網路安全中心 AV26-1133</a>。</p>
+<h2 id="4-GCP／Linux-Kernel：TCP-漏洞"><a href="#4-GCP／Linux-Kernel：TCP-漏洞" class="headerlink" title="4. GCP／Linux Kernel：TCP 漏洞"></a>4. GCP／Linux Kernel：TCP 漏洞</h2><p><strong>CVE-2026-98432｜GCP-2026-078｜11&#x2F;04</strong></p>
+<p>Linux IPv4 TCP 堆疊漏洞可能造成核心當機或容器逃逸。Google 列出 GKE Standard、Autopilot 受影響；網路攻擊需要連得到相關 TCP listener，容器內亦有本地觸發途徑。Google 此公告的產品風險分級為 Medium，不等同原報告引用的通用 CVSS 分數。</p>
+<p>盤點時須區分作業系統、Kernel flavor 與實際運行核心，不能把 generic 核心狀態套到 <code>linux-gcp</code>。本次未重建 11&#x2F;09 各發行版的歷史修補矩陣，請依官方現況核對，更新後確認新核心已生效。</p>
+<p>來源：<a target="_blank" rel="noopener" href="https://docs.cloud.google.com/support/bulletins#gcp-2026-078">Google Cloud GCP-2026-078</a>。</p>
+<h2 id="5-Ubuntu：Java-憑證信任庫未同步"><a href="#5-Ubuntu：Java-憑證信任庫未同步" class="headerlink" title="5. Ubuntu：Java 憑證信任庫未同步"></a>5. Ubuntu：Java 憑證信任庫未同步</h2><p><strong>USN-9001-1｜11&#x2F;05</strong></p>
+<p>系統 CA bundle 移除憑證後，Java JKS keystore 可能未同步移除，讓 Java 程式繼續信任已撤除的 CA。更新會修正同步行為並重新同步信任庫；公告沒有獨立 CVE。</p>
+<table>
+<thead>
+<tr>
+<th>Ubuntu</th>
+<th><code>ca-certificates</code></th>
+<th><code>ca-certificates-java</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>22.04</td>
+<td><code>20260816ubuntu0.22.04.2</code></td>
+<td><code>20190909ubuntu1.4</code></td>
+</tr>
+<tr>
+<td>24.04</td>
+<td><code>20260816ubuntu0.24.04.2</code></td>
+<td><code>20240118ubuntu0.24.04.1</code></td>
+</tr>
+<tr>
+<td>26.04</td>
+<td><code>20260816ubuntu0.26.04.2</code></td>
+<td><code>20260311ubuntu0.26.04.1</code></td>
+</tr>
+<tr>
+<td>26.10</td>
+<td><code>20260816ubuntu0.26.10.2</code></td>
+<td><code>20260311ubuntu0.26.10.1</code></td>
+</tr>
+</tbody></table>
+<p>使用自訂 JKS、JDK 內建信任庫或容器映像時，須另外確認，不能只看 OS 套件更新。</p>
+<p>來源：<a target="_blank" rel="noopener" href="https://ubuntu.com/security/notices/USN-9001-1">Ubuntu USN-9001-1</a>。</p>
+<h2 id="6-Google-Cloud-SDK：Python／Java-憑證更新"><a href="#6-Google-Cloud-SDK：Python／Java-憑證更新" class="headerlink" title="6. Google Cloud SDK：Python／Java 憑證更新"></a>6. Google Cloud SDK：Python／Java 憑證更新</h2><p><strong>GCP-2026-075｜11&#x2F;02</strong></p>
+<p>eMudhra 憑證私鑰事件影響仍信任相關 CA 的應用程式。Google 表示其基礎設施未遭入侵，遙測未見相關工作負載利用證據。</p>
+<p>公告要求檢查 <code>certifi</code>（至少 <code>2026.10.19</code>）、<code>httplib2</code>（<code>0.32.1</code>）、<code>grpcio</code>（<code>1.84.1</code> 或其他已修補分支），以及 Java <code>google-api-client</code>（<code>2.9.2</code>）。gRPC 使用的憑證集合不一定來自 OS，更新作業系統不代表應用程式已修好。完成依賴更新後重新建置、部署映像。</p>
+<p>來源：<a target="_blank" rel="noopener" href="https://docs.cloud.google.com/support/bulletins#gcp-2026-075">Google Cloud GCP-2026-075</a>。</p>
+<h2 id="7-NGINX：舊版-Ubuntu-補上安全更新"><a href="#7-NGINX：舊版-Ubuntu-補上安全更新" class="headerlink" title="7. NGINX：舊版 Ubuntu 補上安全更新"></a>7. NGINX：舊版 Ubuntu 補上安全更新</h2><p><strong>USN-8955-2｜11&#x2F;05</strong></p>
+<p>本次把先前 NGINX 修補擴及 Ubuntu 20.04、18.04、16.04、14.04，並修正 CVE-2026-42533。特定 regex、capture variable、<code>map</code> 或 <code>alias</code>／rewrite 組合可能造成當機或程式碼執行；僅看到 <code>alias</code> 不足以判定符合觸發條件。</p>
+<p>Ubuntu 20.04 的公告修補版本為 <code>1.18.0-0ubuntu1.7+esm4</code>，其他舊版須對照各自套件表及 Pro／ESM 資格。Ubuntu 22.04 以上則查 USN-8955-1；Debian 必須另查其 Tracker，不能套用 Ubuntu 結論。本次未重新確認 Debian 12 的即時修補狀態。</p>
+<p>來源：<a target="_blank" rel="noopener" href="https://ubuntu.com/security/notices/USN-8955-2">Ubuntu USN-8955-2</a>。</p>
+<h2 id="8-Chrome-157：瀏覽器安全更新"><a href="#8-Chrome-157：瀏覽器安全更新" class="headerlink" title="8. Chrome 157：瀏覽器安全更新"></a>8. Chrome 157：瀏覽器安全更新</h2><p><strong>11&#x2F;03 Stable 發布</strong></p>
+<p>公告版本為 Linux <code>157.0.8103.38</code>，Windows／macOS <code>157.0.8103.38/.39</code>，包含記憶體安全等問題，且有 Critical 項目。應更新瀏覽器並重新啟動，確認新版本已實際載入。</p>
+<p><strong>11&#x2F;13 校訂：</strong> 原週報寫 213 項修補，部分搜尋摘要仍如此顯示，但官方公告正文目前寫 <strong>212 項</strong>，本文以正文為準。原週報只舉低風險 CVE，不能代表整次更新的嚴重程度。本次未確認這批項目的野外利用狀態。</p>
+<p>來源：<a target="_blank" rel="noopener" href="https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop.html">Chrome Releases</a>。</p>
+<h2 id="9-AWS-Serverless-MCP-Server：路徑穿越"><a href="#9-AWS-Serverless-MCP-Server：路徑穿越" class="headerlink" title="9. AWS Serverless MCP Server：路徑穿越"></a>9. AWS Serverless MCP Server：路徑穿越</h2><p><strong>CVE-2026-116635｜11&#x2F;02</strong></p>
+<p>能影響 MCP agent 輸入的攻擊者，在特定條件下可讀取部署狀態目錄以外的 JSON；若啟用寫入，也可能建立或覆寫目錄外的 JSON。</p>
+<p><code>awslabs.aws-serverless-mcp-server</code> 低於 <code>0.2.1</code> 受影響，<code>0.2.1</code> 已修補。AWS 未提供替代緩解措施，應更新套件，分叉版本也須帶入修正。公告未列 CVSS，本次未確認實際利用。</p>
+<p>來源：<a target="_blank" rel="noopener" href="https://aws.amazon.com/security/security-bulletins/2026-164-aws/">AWS 2026-164</a>。</p>
+<h2 id="10-AWS-EKS：NetworkPolicy-隔離繞過"><a href="#10-AWS-EKS：NetworkPolicy-隔離繞過" class="headerlink" title="10. AWS EKS：NetworkPolicy 隔離繞過"></a>10. AWS EKS：NetworkPolicy 隔離繞過</h2><p><strong>CVE-2026-122266｜11&#x2F;04</strong></p>
+<p>共享 eBPF 連線狀態隔離不足，可能讓具相鄰環境存取能力的已驗證使用者繞過同節點其他 Pod 的 ingress NetworkPolicy。</p>
+<table>
+<thead>
+<tr>
+<th>元件</th>
+<th>受影響版本</th>
+<th>修補版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>aws-network-policy-agent</code></td>
+<td><code>&lt; 1.3.7</code></td>
+<td><code>1.3.7</code></td>
+</tr>
+<tr>
+<td>Amazon VPC CNI Managed Add-on</td>
+<td><code>&lt; 1.22.3</code></td>
+<td><code>1.22.3</code></td>
+</tr>
+</tbody></table>
+<p>AWS 表示沒有替代緩解措施。使用 EKS NetworkPolicy 時應確認元件版本及更新後的網路隔離行為。公告未列 CVSS，本次未確認實際利用。</p>
+<p>來源：<a target="_blank" rel="noopener" href="https://aws.amazon.com/security/security-bulletins/2026-170-aws/">AWS 2026-170</a>。</p>
+<h2 id="11-AWS-Babelfish：TDS-記憶體安全漏洞"><a href="#11-AWS-Babelfish：TDS-記憶體安全漏洞" class="headerlink" title="11. AWS Babelfish：TDS 記憶體安全漏洞"></a>11. AWS Babelfish：TDS 記憶體安全漏洞</h2><p><strong>CVE-2026-119923、CVE-2026-119924｜11&#x2F;06</strong></p>
+<p>前者涉及 TDS 握手，可由未驗證遠端攻擊者影響資料庫程序；後者涉及 TDS RPC，已驗證攻擊者可能讀取鄰近記憶體或造成服務中斷。</p>
+<p>Babelfish for PostgreSQL extension 的修補版包含 <code>4.10</code>、<code>5.6</code>、<code>6.1</code>。Aurora 的修補門檻依分支不同，應對照公告中的 Aurora／Babelfish 版本配對，並完成待處理維護，不能直接套用 extension 版號。更新前可先把 TDS 連接埠來源限制為可信來源。本次未確認實際利用。</p>
+<p>來源：<a target="_blank" rel="noopener" href="https://aws.amazon.com/security/security-bulletins/2026-166-aws/">AWS 2026-166</a>。</p>
+<h2 id="12-Python：Pillow、Twisted、Tornado"><a href="#12-Python：Pillow、Twisted、Tornado" class="headerlink" title="12. Python：Pillow、Twisted、Tornado"></a>12. Python：Pillow、Twisted、Tornado</h2><p>三項更新的適用情境不同，不應只用「Python 有漏洞」概括。</p>
+<table>
+<thead>
+<tr>
+<th>元件／公告</th>
+<th>影響與處理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Pillow／USN-8999-1，11&#x2F;04</td>
+<td>影像、字型與 filter 處理可造成資訊外洩、資源耗盡，部分問題可能執行程式碼；處理不可信影像的服務應檢查依賴。</td>
+</tr>
+<tr>
+<td>Twisted／USN-9000-1，11&#x2F;04</td>
+<td>CVE-2026-106454 涉及 IMAP mailbox list wildcard；已驗證使用者可造成資源耗盡。Ubuntu 22.04 對應 <code>22.1.0-2ubuntu2.8</code>。</td>
+</tr>
+<tr>
+<td>Tornado／USN-8952-2，11&#x2F;06</td>
+<td>CVE-2026-103263 的先前修補不完整，造成繼承 <code>StaticFileHandler</code> 的應用（如 Jupyter）靜態檔案服務回歸，本次予以修正。</td>
+</tr>
+</tbody></table>
+<p>APT 安裝的 Python 套件與 <code>pip</code>、Poetry、<code>uv</code> 的虛擬環境要分開盤點。更新後除了版本檢查，也應測試影像處理、郵件及靜態檔案功能。</p>
+<p>來源：<a target="_blank" rel="noopener" href="https://ubuntu.com/security/notices/USN-8999-1">Pillow</a>、<a target="_blank" rel="noopener" href="https://ubuntu.com/security/notices/USN-9000-1">Twisted</a>、<a target="_blank" rel="noopener" href="https://ubuntu.com/security/notices/USN-8952-2">Tornado</a>。</p>
+<h2 id="13-Debian：APT、zlib-與-Kernel-公告"><a href="#13-Debian：APT、zlib-與-Kernel-公告" class="headerlink" title="13. Debian：APT、zlib 與 Kernel 公告"></a>13. Debian：APT、zlib 與 Kernel 公告</h2><table>
+<thead>
+<tr>
+<th>日期／公告</th>
+<th>套件</th>
+<th>重點</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>11&#x2F;04 DSA-6607-1</td>
+<td>APT</td>
+<td>CVE-2026-109518；Trixie 修補版 <code>3.0.4</code>，詳細條件見第 1 節。</td>
+</tr>
+<tr>
+<td>11&#x2F;07 DSA-6613-1</td>
+<td>zlib</td>
+<td>特製輸入可能造成 DoS 或程式碼執行；Trixie 修補版 <code>1:1.3.dfsg+really1.3.1-1+deb13u1</code>。</td>
+</tr>
+<tr>
+<td>11&#x2F;08 DSA-6616-1</td>
+<td>Linux</td>
+<td>權限提升、DoS、資訊外洩等問題；Trixie 修補版 <code>6.12.116-1</code>。</td>
+</tr>
+</tbody></table>
+<p>上述 DSA 的版本表主要針對 Debian 13（Trixie）。Debian 12（Bookworm）應另看 Tracker／LTS 公告，不能因為 DSA 已發布就認定同樣修好。</p>
+<p>來源：<a target="_blank" rel="noopener" href="https://lists.debian.org/debian-security-announce/2026/msg00526.html">APT 公告</a>、<a target="_blank" rel="noopener" href="https://lists.debian.org/debian-security-announce/2026/msg00532.html">zlib 公告</a>、<a target="_blank" rel="noopener" href="https://lists.debian.org/debian-security-announce/2026/msg00536.html">Linux 公告</a>。</p>
+<h2 id="14-PostgreSQL-14：支援期限到期"><a href="#14-PostgreSQL-14：支援期限到期" class="headerlink" title="14. PostgreSQL 14：支援期限到期"></a>14. PostgreSQL 14：支援期限到期</h2><p>這不是新漏洞，而是版本維護期限。官方版本政策列出的 PostgreSQL 14 最終發行日為 <strong>2026&#x2F;11&#x2F;12</strong>。</p>
+<p><strong>11&#x2F;13 更新：</strong> 官方目前列出 <code>14.25</code>，因此原報告「最後版本為 14.24」的說法不再適用。盤點仍使用 14 的資料庫，確認升級或額外維護方案；最後一次小版本更新不能取代後續主版本遷移。大版本升級需先測試資料遷移、擴充套件與回復流程。</p>
+<p>來源：<a target="_blank" rel="noopener" href="https://www.postgresql.org/support/versioning/">PostgreSQL 版本政策</a>。</p>
+<h2 id="其他平台追蹤"><a href="#其他平台追蹤" class="headerlink" title="其他平台追蹤"></a>其他平台追蹤</h2><p>以下保留 11&#x2F;09 原報告的追蹤範圍。原檢索未取得足夠證據列出該週新增重大事件；這不是「沒有漏洞」的保證，11&#x2F;13 的補稿也沒有重跑所有平台的完整歷史調查。</p>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>本期紀錄與後續關注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GitHub／Actions</td>
+<td>未確認新的重大平台事件；持續盤點第三方 Action、依賴及 token 權限。</td>
+</tr>
+<tr>
+<td>Docker Engine／Desktop</td>
+<td>未確認該週新增重大公告；原報告提及既有憑證紀錄風險，但本次未核實其具體公告，不將它列為已確認新事件。</td>
+</tr>
+<tr>
+<td>Windows／Microsoft 365</td>
+<td>原報告未確認另需列為緊急處理的新事件。</td>
+</tr>
+<tr>
+<td>Azure</td>
+<td>原報告未確認需客戶立即處理的新重大公告。</td>
+</tr>
+<tr>
+<td>Figma</td>
+<td>未確認可由官方來源支持的該週重大事件。</td>
+</tr>
+<tr>
+<td>OpenAI／ChatGPT／API</td>
+<td>未確認可由官方來源支持的該週重大事件。</td>
+</tr>
+<tr>
+<td>Anthropic／Claude／API</td>
+<td>未確認可由官方來源支持的該週重大事件。</td>
+</tr>
+<tr>
+<td>Gemini／Gemini API</td>
+<td>未確認可由官方來源支持的該週重大事件。</td>
+</tr>
+</tbody></table>
+<h2 id="檢查順序"><a href="#檢查順序" class="headerlink" title="檢查順序"></a>檢查順序</h2><ol>
+<li>確認是否使用 WordPress、SonicWall，優先處理已知遭利用項目。</li>
+<li>檢查 APT、NGINX、Kernel 的完整套件版本與適用設定。</li>
+<li>分別檢查 OS、Java、Python 與容器的憑證信任庫及依賴。</li>
+<li>盤點 EKS、MCP Server、Babelfish，套用對應分支的更新。</li>
+<li>更新瀏覽器，處理 PostgreSQL 14 的版本遷移。</li>
 </ol>
-<p><strong>證據邊界：</strong> 本篇未確認野外利用狀態，也未檢查任何個別主機。</p>
-<h2 id="官方來源"><a href="#官方來源" class="headerlink" title="官方來源"></a>官方來源</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://ubuntu.com/blog/apt-vulnerability-fixes-available">Canonical：APT vulnerability fixes available（2026&#x2F;11&#x2F;04）</a></li>
-</ul>
-<p><em>公開版僅保留可核實的通用資訊；不包含原報告中的個別環境設定。</em></p>
-</div><aside class="toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E9%80%B1%E5%85%88%E7%9C%8B%EF%BC%9AAPT-%E5%AE%89%E5%85%A8%E6%9B%B4%E6%96%B0"><span class="toc-text">本週先看：APT 安全更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E8%AD%B0%E6%AA%A2%E6%9F%A5%E9%A0%86%E5%BA%8F"><span class="toc-text">建議檢查順序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%98%E6%96%B9%E4%BE%86%E6%BA%90"><span class="toc-text">官方來源</span></a></li></ol></aside></div><div class="post-end"><a href="/archives/">← 所有文章</a><a href="/atom.xml">訂閱 RSS ↗</a></div></article>
+<p>以下只讀取本機狀態，不會安裝更新：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt-cache policy apt nginx ca-certificates ca-certificates-java</span><br><span class="line">apt-config dump | grep -i <span class="string">&#x27;Acquire::Retries&#x27;</span></span><br><span class="line"><span class="built_in">uname</span> -r</span><br></pre></td></tr></table></figure>
+
+<p>套件版本、執行中的版本及設定條件都要符合，才可判定修補生效。本文未檢查任何個別主機，也未保留私人環境設定。</p>
+</div><aside class="toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-APT%EF%BC%9A%E4%B8%8B%E8%BC%89%E9%A9%97%E8%AD%89%E7%B9%9E%E9%81%8E%EF%BC%8C%E5%8F%AF%E5%8F%96%E5%BE%97-root-%E6%AC%8A%E9%99%90"><span class="toc-text">1. APT：下載驗證繞過，可取得 root 權限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-WordPress%EF%BC%9A%E6%9B%B4%E6%96%B0%E6%9C%9F%E9%96%93%E7%9A%84%E9%81%A0%E7%AB%AF%E7%A8%8B%E5%BC%8F%E7%A2%BC%E5%9F%B7%E8%A1%8C"><span class="toc-text">2. WordPress：更新期間的遠端程式碼執行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-SonicWall%EF%BC%9ASSL-VPN-%E9%A9%97%E8%AD%89%E7%B9%9E%E9%81%8E"><span class="toc-text">3. SonicWall：SSL VPN 驗證繞過</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-GCP%EF%BC%8FLinux-Kernel%EF%BC%9ATCP-%E6%BC%8F%E6%B4%9E"><span class="toc-text">4. GCP／Linux Kernel：TCP 漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Ubuntu%EF%BC%9AJava-%E6%86%91%E8%AD%89%E4%BF%A1%E4%BB%BB%E5%BA%AB%E6%9C%AA%E5%90%8C%E6%AD%A5"><span class="toc-text">5. Ubuntu：Java 憑證信任庫未同步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-Google-Cloud-SDK%EF%BC%9APython%EF%BC%8FJava-%E6%86%91%E8%AD%89%E6%9B%B4%E6%96%B0"><span class="toc-text">6. Google Cloud SDK：Python／Java 憑證更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-NGINX%EF%BC%9A%E8%88%8A%E7%89%88-Ubuntu-%E8%A3%9C%E4%B8%8A%E5%AE%89%E5%85%A8%E6%9B%B4%E6%96%B0"><span class="toc-text">7. NGINX：舊版 Ubuntu 補上安全更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-Chrome-157%EF%BC%9A%E7%80%8F%E8%A6%BD%E5%99%A8%E5%AE%89%E5%85%A8%E6%9B%B4%E6%96%B0"><span class="toc-text">8. Chrome 157：瀏覽器安全更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-AWS-Serverless-MCP-Server%EF%BC%9A%E8%B7%AF%E5%BE%91%E7%A9%BF%E8%B6%8A"><span class="toc-text">9. AWS Serverless MCP Server：路徑穿越</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-AWS-EKS%EF%BC%9ANetworkPolicy-%E9%9A%94%E9%9B%A2%E7%B9%9E%E9%81%8E"><span class="toc-text">10. AWS EKS：NetworkPolicy 隔離繞過</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-AWS-Babelfish%EF%BC%9ATDS-%E8%A8%98%E6%86%B6%E9%AB%94%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E"><span class="toc-text">11. AWS Babelfish：TDS 記憶體安全漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-Python%EF%BC%9APillow%E3%80%81Twisted%E3%80%81Tornado"><span class="toc-text">12. Python：Pillow、Twisted、Tornado</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-Debian%EF%BC%9AAPT%E3%80%81zlib-%E8%88%87-Kernel-%E5%85%AC%E5%91%8A"><span class="toc-text">13. Debian：APT、zlib 與 Kernel 公告</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-PostgreSQL-14%EF%BC%9A%E6%94%AF%E6%8F%B4%E6%9C%9F%E9%99%90%E5%88%B0%E6%9C%9F"><span class="toc-text">14. PostgreSQL 14：支援期限到期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%B9%B3%E5%8F%B0%E8%BF%BD%E8%B9%A4"><span class="toc-text">其他平台追蹤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AA%A2%E6%9F%A5%E9%A0%86%E5%BA%8F"><span class="toc-text">檢查順序</span></a></li></ol></aside></div><div class="post-end"><a href="/archives/">← 所有文章</a><a href="/atom.xml">訂閱 RSS ↗</a></div></article>
 </main><footer><span>Andy 的筆記</span><a href="/atom.xml">RSS 訂閱</a></footer><script src="/js/reading.js" defer></script></body></html>
