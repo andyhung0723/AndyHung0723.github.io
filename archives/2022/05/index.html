@@ -1,366 +1,84 @@
-<!DOCTYPE html>
-<html class="has-navbar-fixed-top">
-<head>
-    <meta charset="utf-8" />
-<title>列表: 2022/5 - Andy 程式雜記</title>
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1, maximum-scale=1"
-/>
-
-<link
-  rel="stylesheet"
-  href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css"
-/>
-
- 
-<meta name="description" content="" />
-   <meta property="og:type" content="website">
-<meta property="og:title" content="Andy 程式雜記">
-<meta property="og:url" content="https://andyhung0723.github.io/archives/2022/05/index.html">
-<meta property="og:site_name" content="Andy 程式雜記">
-<meta property="og:locale" content="zh_TW">
-<meta property="article:author" content="Andy Hung">
-<meta name="twitter:card" content="summary">   
-<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Andy’s Reading Room</title><meta name="description" content="資安週報、技術雷達與研究筆記，一個安靜閱讀與回顧的地方。"><link rel="stylesheet" href="/css/reading.css"><link rel="alternate" type="application/atom+xml" title="訂閱全部文章" href="/atom.xml"><link rel="canonical" href="https://andyhung0723.github.ioarchives/2022/05/index.html"><meta name="generator" content="Hexo 8.1.2"></head><body><a class="skip" href="#main">跳到主要內容</a><header class="site-header"><a class="brand" href="/">A<span> / </span>READING ROOM</a><nav aria-label="主選單"><a href="/">閱讀首頁</a><a href="/archives/">文章總覽</a><a href="/about/">關於</a><a href="/atom.xml">RSS ↗</a></nav></header><main id="main"><section class="page"><p class="eyebrow">THE ARCHIVE</p><h1>文章總覽</h1><p class="lede">週報、筆記與以前寫下的程式雜記，都留在這裡。</p><article class="entry" data-search="angular lazy loading  angular 在 angular 應用程式一載入時，預設會將所有的 module 一次全部載入，但如果今天應用程式規模很大，或是某些 module 中需要載入的東西過多，就會拖到整個應用程式的載入時間。
+為了解決這個問題，angular 有針對 module 提供 lazy loading 的功能，簡單來說就是當需要此 module 的時候再進行載入，如此就不會影響到整個應用程式的效能。
 
 
-<link
-  rel="stylesheet"
-  href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro"
-/>
-<link
-  rel="stylesheet"
-  href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css"
-/>
+實現方式透過 angular router 中內建的功能即可實現，步驟如下：
+
+修改app-routing.module.ts
+
+123456const routes: routes = [  &amp;#123;    path: &amp;#x27;customers&amp;#x27;,    loadchildren: () =&amp;gt; import(&amp;#x27;./customers/customers.module&amp;#x27;).then(m =&amp;gt; m.customersmodule)  &amp;#125;];
+利用loadchildren這個屬性，我們就可以透過 import 將我們想要 lazy loading 的 module，在應用程式觸發到path中定義的路由(在這個例子中就是/customers)的時候將 customersmodule 進行載入。
+
+修改customers.module.ts
+
+1234567891011import &amp;#123; customersroutingmodule &amp;#125; from &amp;#x27;./customers-routing.module&amp;#x27;;@ngmodule(&amp;#123;  declarations: [    customerscomponent  ],  imports: [    commonmodule,    customersroutingmodule  ]&amp;#125;)
+額外新增customers-routing.module.ts，並新增到 customersmodule 的 imports 中，我們會將關於此 module 下 router 的設定拆出來放在這個檔案中。
+
+新增customers-routing.module.ts
+
+123456789101112const routes: routes = [  &amp;#123;     path: &amp;#x27;info&amp;#x27;,     component: customerscomponent   &amp;#125;];@ngmodule(&amp;#123;  imports: [routermodule.forchild(routes)],  exports: [routermodule]&amp;#125;)export class customersroutingmodule &amp;#123; &amp;#125;
+這邊我們就可以定義在子路徑下要載入哪個 component，最終的路徑會是原本app-routing.module.ts中定義的path加上這邊定義的path，以上例來說就會是在/customers/info下讀取到 customerscomponent。這邊要注意需要用forchild來定義子路由。
+透過指令建立如果我們在一開始就決定要使用 lazy loading 的方式載入 module，也可以選擇用以下指令直接建立好上述的元件：
+1ng generate module customers --route customers --module app.module
+
+實驗我們可以在customers.components.ts中加上console.log來實驗是否有 lazy loading
+12345678export class customerscomponent implements oninit &amp;#123;  constructor() &amp;#123; &amp;#125;  ngoninit() &amp;#123;    console.log(&amp;quot;customers component init&amp;quot;);  &amp;#125;&amp;#125;
+
+讀取 http://localhost:4200
+
+讀取 http://localhost:4200/customers
 
 
-<link
-  rel="stylesheet"
-  href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css"
-/>
-<link
-  rel="stylesheet"
-  href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css"
-/>
+注意事項
+如果 module 需要 lazy loading，需注意app.module.ts裡面不可以 import 到這個 module，否則還是會在應用程式啟動時就載入。
+
+"><div class="entry-meta"><time datetime="2022-05-29">2022.05.29</time><span class="pill note">研究筆記</span></div><div><h3><a href="/2022/05/29/angular-lazy-loading/">Angular Lazy Loading</a></h3><p>在 Angular 應用程式一載入時，預設會將所有的 Module 一次全部載入，但如果今天應用程式規模很大，或是某些 Module 中需要載入的東西過多，就會拖到整個應用程式的載入時間。
+為了解決這個問題，Angular 有針對 Module...</p><div class="byline">Andy Hung · 4 分鐘閱讀 · 歷史文章</div></div><a class="entry-arrow" tabindex="-1" aria-hidden="true" href="/2022/05/29/angular-lazy-loading/">↗</a></article>
+<article class="entry" data-search="探討 angular module  angular angular 本身的設計概念就是使用模組化的機制，module (模組) 是組成 angular 應用程式的基本單位，每個 angular 專案最開始都會有一個模組當作程式進入點，稱為根模組(root module) 。透過 angular cli 創建的專案會將此根模組命名為appmodule，並放在app.module.ts檔案中。
+也可以將有相同特性的功能拆出來，組合成不同的模組，各個模組間依程式架構相互引用，組合成 angular 應用程式。模組中可以透過設定的方式，定義此模組中包含的 components、directives、pipes 等，以及其他與模組相關的屬性，以下我們就來研究一下 angular module 的使用方式以及使用情境。
 
 
-<link
-  rel="stylesheet"
-  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css"
-/>
+組成12345678910@ngmodule(&amp;#123;  declarations: [    appcomponent,  ],  imports: [    browsermodule,  ],  providers: [],  bootstrap: [appcomponent]&amp;#125;)
+
+定義模組的檔案中會包含@ngmodule，用來定義模組的設定。主要包含以下幾個屬性：
+declarations用來宣告此模組中包含的 components、directives、pipes。
+12345declarations: [  usercomponent,  custompipe,  filedirective],;
 
 
-<link rel="stylesheet" href="/css/style.css">
+若使用ng generate 指令來產生物件，angular cli 會自動幫你把物件加入 declarations 中。
+
+imports想要額外載入的 module，載入後就可以使用該 module 中 exports 的物件。
+1234imports: [  browsermodule,  usermodule],
 
 
-<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+如上例，只要 import usermodule，模組內就可以使用 usermodule 中 export 的所有物件。
+根模組必須要 import browsermodule。
+其他模組必須要 import commonmodule。
+只要是用 cli 建立的，上述兩項都會自動 import。
 
-          
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WNKP76R');</script>
-    <!-- End Google Tag Manager -->
-  
-
-    <meta name="google-site-verification" content="b-gZ-g46Zqse8T04Cg5Oq7o_y4_e5h7GE0MnJp7wKyE" />
-<meta name="generator" content="Hexo 6.2.0"></head>
-<body>
-    
-<nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
-    <div class="container">
-        <div class="navbar-brand">
-            <a class="navbar-item navbar-logo" href="/">
-                
-                    
-                    Andy 程式雜記
-                    
-                
-            </a>
-            <div class="navbar-burger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-        
-        <div class="navbar-menu navbar-start">
-            
-            <a class="navbar-item "
-               href="/archives">列表</a>
-            
-            <a class="navbar-item "
-               href="/categories">分類</a>
-            
-            <a class="navbar-item "
-               href="/categories/Google-Analytics">Google Analytics</a>
-            
-        </div>
-        
-        <div class="navbar-menu navbar-end">
-            
-            <a class="navbar-item search" title="搜尋" href="javascript:;">
-                <i class="fas fa-search"></i>
-            </a>
-            
-            
-            
-            <a class="navbar-item" title="GitHub" target="_blank" rel="noopener" href="https://github.com/AndyHung0723">
-                
-                <i class="fab fa-github"></i>
-                
-            </a>
-               
-            
-        </div>
-    </div>
-</nav>
-
-    <section class="section">
-    <div class="container">
-    
-    
-        <div class="archive content">
-            <h4 class="title is-4" id="2022">2022</h4>
-            <div class="articles">
-            
-                <div class="article content>">
-                    <time class="is-text-small" datetime="2022-05-29T07:07:01.000Z" itemprop="datePublished">
-                        5月 29</time>
-                    <h6 class="title is-6"><a href="/2022/05/29/angular-lazy-loading/">Angular Lazy Loading</a></h6>
-                </div>
-            
-                <div class="article content>">
-                    <time class="is-text-small" datetime="2022-05-28T12:06:08.000Z" itemprop="datePublished">
-                        5月 28</time>
-                    <h6 class="title is-6"><a href="/2022/05/28/angular-module/">探討 Angular Module</a></h6>
-                </div>
-            
-            </div>
-        </div>
-    
-    
-    </div>
-</section>
-    <footer class="footer">
-    <div class="container">
-        <div class="columns content">
-            <div class="column is-narrow has-text-centered">
-                &copy; 2023 Andy Hung&nbsp;
-                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
-                        target="_blank" rel="noopener" href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
-            </div>
-            <div class="column is-hidden-mobile"></div>
-
-            
-            <div class="column is-narrow">
-                <div class="columns is-mobile is-multiline is-centered">
-                
-                    
-                <a class="column is-narrow has-text-black" title="GitHub" target="_blank" rel="noopener" href="https://github.com/AndyHung0723">
-                    
-                    GitHub
-                    
-                </a>
-                
-                </div>
-            </div>
-            
-            
-        </div>
-    </div>
-</footer>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
-
-<!-- test if the browser is outdated -->
-<div id="outdated">
-    <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" target="_blank" rel="noopener" href="http://outdatedbrowser.com/">Update my browser now </a></p>
-    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
-</div>
-<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
-<script>
-    $(document).ready(function () {
-        // plugin function, place inside DOM ready function
-        outdatedBrowser({
-            bgColor: '#f25648',
-            color: '#ffffff',
-            lowerThan: 'flex'
-        })
-    });
-</script>
-
-<script>
-    window.FontAwesomeConfig = {
-        searchPseudoElements: true
-    }
-    moment.locale("zh-TW");
-</script>
+exports要匯出給其他模組使用的物件。
+12345678declarations: [  usercomponent,  custompipe,  filedirective],;exports: [  usercomponent],
 
 
-    
-    
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-<script>
-    MathJax.Hub.Config({
-        "HTML-CSS": {
-            matchFontHeight: false
-        },
-        SVG: {
-            matchFontHeight: false
-        },
-        CommonHTML: {
-            matchFontHeight: false
-        },
-        tex2jax: {
-            inlineMath: [
-                ['$','$'],
-                ['\\(','\\)']
-            ]
-        }
-    });
-</script>
+要 export 的物件必須存在於 declarations 或 import 的 module 中才可以。
+上例 export 的只有 usercomponent，因此引入此 module 的模組只可使用 usercomponent。
 
-    
-    
-    
-    
-<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
-<script>
-    (function ($) {
-        $(document).ready(function () {
-            if (typeof($.fn.lightGallery) === 'function') {
-                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
-            }
-            if (typeof($.fn.justifiedGallery) === 'function') {
-                $('.justified-gallery').justifiedGallery();
-            }
-        });
-    })(jQuery);
-</script>
+providers宣告可以依賴注入的 service，整個應用程式都可以使用到此處宣告的 service。
+123providers: [  userservice],
 
-    
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
-    <style>
-        .hljs {
-            position: relative;
-        }
+關於 providers 會再整理一篇文章進行探討。
+bootstrap1bootstrap: [appcomponent],
 
-        .hljs .clipboard-btn {
-            float: right;
-            color: #9a9a9a;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        .hljs .clipboard-btn:hover {
-          color: #8a8a8a;
-        }
-
-        .hljs > .clipboard-btn {
-            display: none;
-            position: absolute;
-            right: 4px;
-            top: 4px;
-        }
-
-        .hljs:hover > .clipboard-btn {
-            display: inline;
-        }
-
-        .hljs > figcaption > .clipboard-btn {
-            margin-right: 4px;
-        }
-    </style>
-    <script>
-      $(document).ready(function () {
-        $('figure.hljs').each(function(i, figure) {
-          var codeId = 'code-' + i;
-          var code = figure.querySelector('.code');
-          var copyButton = $('<button>Copy <i class="far fa-clipboard"></i></button>');
-          code.id = codeId;
-          copyButton.addClass('clipboard-btn');
-          copyButton.attr('data-clipboard-target-id', codeId);
-
-          var figcaption = figure.querySelector('figcaption');
-
-          if (figcaption) {
-            figcaption.append(copyButton[0]);
-          } else {
-            figure.prepend(copyButton[0]);
-          }
-        })
-
-        var clipboard = new ClipboardJS('.clipboard-btn', {
-          target: function(trigger) {
-            return document.getElementById(trigger.getAttribute('data-clipboard-target-id'));
-          }
-        });
-        clipboard.on('success', function(e) {
-          e.clearSelection();
-        })
-      })
-    </script>
-
-    
-    
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WNKP76R');</script>
-    <!-- End Google Tag Manager -->
-
-    
+定義根元件，作為應用程式啟動後預設讀取的元件，只有根模組需要定義此屬性，一般不太需要更動。
+使用情境module 用法除了最基本會有的根模組(root module) 外，常見的還有以下兩種用法：
+feature module其實就是最常見、第一個會想到使用 module 的情境。將應用程式中你認為可以額外拆出來撰寫成一個功能的程式片段，拆出來成為一個 module，就會稱它為feature module。
+例如假設今天要實作一個網頁聊天室，聊天室可以傳送的訊息種類分為文字、檔案、圖片、貼圖等，我們就可以把傳送的**「訊息」** 拆一個 messagemodule，裡面包含 textcomponent、filecomponent、imagecomponent … 與其他串接的 service 等。
+shared module在 angular 中常常會遇到很多物件(component、directive、pipe)一直被重複使用，此時為了不讓這些物件散落各地，還要讓 module 一直引用來引用去，通常可以建立一個shared module來統一管理這些物件，要使用這些物件的 module 只需要匯入一個shared module就可以了。
+12345678910111213@ngmodule(&amp;#123;  declarations: [    tablecomponent,     pagercomponent,     paginationcomponent  ],  exports: [    tablecomponent,     pagercomponent,     paginationcomponent  ],&amp;#125;)export class sharedmodule &amp;#123;&amp;#125;
 
 
+如上例，其他模組只需要 import sharedmodule 就可以使用裡面的所有物件。
 
-<script src="/js/script.js"></script>
-
-
-    
-    <div class="searchbox ins-search">
-    <div class="searchbox-mask"></div>
-    <div class="searchbox-container ins-search-container">
-        <div class="searchbox-input-wrapper">
-            <input type="text" class="searchbox-input ins-search-input" placeholder="站內搜尋" />
-            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="searchbox-result-wrapper ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-    (function (window) {
-        var INSIGHT_CONFIG = {
-            TRANSLATION: {
-                POSTS: '文章',
-                PAGES: '頁面',
-                CATEGORIES: '分類',
-                TAGS: '標籤',
-                UNTITLED: '(無標題)',
-            },
-            CONTENT_URL: '/content.json',
-        };
-        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-    })(window);
-</script>
-
-<script src="/js/insight.js"></script>
-
-    
-    <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WNKP76R"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-</body>
-</html>
+"><div class="entry-meta"><time datetime="2022-05-28">2022.05.28</time><span class="pill note">研究筆記</span></div><div><h3><a href="/2022/05/28/angular-module/">探討 Angular Module</a></h3><p>Angular 本身的設計概念就是使用模組化的機制，Module (模組) 是組成 Angular 應用程式的基本單位，每個 Angular 專案最開始都會有一個模組當作程式進入點，稱為根模組(Root Module) 。透過 Angular ...</p><div class="byline">Andy Hung · 5 分鐘閱讀 · 歷史文章</div></div><a class="entry-arrow" tabindex="-1" aria-hidden="true" href="/2022/05/28/angular-module/">↗</a></article>
+<div class="pagination"><span class="page-number current">1</span></div></section>
+</main><footer><span>Andy’s Reading Room · 把資訊整理成值得留下的知識</span><span>靜態網站 · Hexo · <a href="/archives/">保留歷史文章</a></span></footer><script src="/js/reading.js" defer></script></body></html>

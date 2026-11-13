@@ -1,447 +1,172 @@
-<!DOCTYPE html>
-<html class="has-navbar-fixed-top">
-<head>
-    <meta charset="utf-8" />
-<title>分類: Google Analytics - Andy 程式雜記</title>
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1, maximum-scale=1"
-/>
-
-<link
-  rel="stylesheet"
-  href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css"
-/>
-
- 
-<meta name="description" content="" />
-   <meta property="og:type" content="website">
-<meta property="og:title" content="Andy 程式雜記">
-<meta property="og:url" content="https://andyhung0723.github.io/categories/Google-Analytics/index.html">
-<meta property="og:site_name" content="Andy 程式雜記">
-<meta property="og:locale" content="zh_TW">
-<meta property="article:author" content="Andy Hung">
-<meta name="twitter:card" content="summary">   
-<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Andy’s Reading Room</title><meta name="description" content="資安週報、技術雷達與研究筆記，一個安靜閱讀與回顧的地方。"><link rel="stylesheet" href="/css/reading.css"><link rel="alternate" type="application/atom+xml" title="訂閱全部文章" href="/atom.xml"><link rel="canonical" href="https://andyhung0723.github.iocategories/Google-Analytics/index.html"><meta name="generator" content="Hexo 8.1.2"></head><body><a class="skip" href="#main">跳到主要內容</a><header class="site-header"><a class="brand" href="/">A<span> / </span>READING ROOM</a><nav aria-label="主選單"><a href="/">閱讀首頁</a><a href="/archives/">文章總覽</a><a href="/about/">關於</a><a href="/atom.xml">RSS ↗</a></nav></header><main id="main"><section class="page"><p class="eyebrow">THE ARCHIVE</p><h1>Google Analytics</h1><p class="lede">週報、筆記與以前寫下的程式雜記，都留在這裡。</p><article class="entry" data-search="ga4 vs ga3 來源/媒介 bigquery 欄位解析  google analytics 👉 文章內容深度 : 3&amp;#x2f;5顆星👉 適用對象 : 有使用 bigquery 製作來源&amp;#x2f;媒介報表
 
 
-<link
-  rel="stylesheet"
-  href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro"
-/>
-<link
-  rel="stylesheet"
-  href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css"
-/>
+▶ 什麼是來源&amp;#x2f;媒介 ?  簡單來說就是判斷這個流量從哪邊來? 是從 google 搜尋引擎進入網站還是從 fb 粉專進入網站。以下為 ga3 &amp;amp; ga4 的來源&amp;#x2f;媒介報表路徑
+
+ga3 : 獲客 &amp;gt; 所有流量 &amp;gt; 來源&amp;#x2f;媒介
+ga4 : 獲客 &amp;gt; 流量開發 : 工作階段預設管道分組 (如下圖)
+
+▶ ga3 vs. ga4 bigquery 來源&amp;#x2f;媒介欄位比較表ga3 時代，從 bigquery 中提取來源&amp;#x2f;媒介數據時，會使用欄位「trafficsource.source」&amp;amp;「trafficsource.medium」，這是沒有錯的!這兩個欄位代表的是每次進站的渠道。&amp;lt;附上 ga3 匯出 bigquery 的結構定義&amp;gt;
+當看到 ga4 匯出到 bigquery 的 dataset 中看到「traffic_source.source」&amp;amp;「traffic_source.medium」時，心中是不是無比喜悅，就是他惹 :100: 
+但是! 現在我們來看一下 google 的官方文件說明(附上截圖&amp;amp;文件)，補充:這兩個欄位會對應到 ga4 維度為「最初招攬到使用者的來源&amp;#x2f;媒介」
+
+traffic_source.source	: 初次招攬到使用者的聯播網名稱。
+traffic_source.medium	: 初次招攬到使用者的媒介名稱。
 
 
-<link
-  rel="stylesheet"
-  href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css"
-/>
-<link
-  rel="stylesheet"
-  href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css"
-/>
+「初次招攬」指的是第一次進到網站的使用者是從哪個渠道進入網站，是 fb 廣告還是 google 自然搜尋等等。舉例來說 :小明點了 google 廣告，第一次進到網站中，那欄位值會如下
 
+traffic_source.source	: google
+traffic_source.medium	: cpc
 
-<link
-  rel="stylesheet"
-  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css"
-/>
+那小明隔天從 line 官方帳號進入網站，那欄位值是什麼?值還是一樣的 ! 因為「traffic_source.source 和 traffic_source.medium 這兩個欄位就是這兩個欄位僅記錄用戶首次訪問網站時的來源媒介
 
+traffic_source.source	: google
+traffic_source.medium	: cpc
 
-<link rel="stylesheet" href="/css/style.css">
+▶那第2次的來源媒介要怎麼取得?ga4 的數據模型是由事件組成，所以每個 event_name 對應一個資料列。event_name &amp;#x3d; page_view 指的就是每一次的網站瀏覽，所以第二次進站的來源媒介，會出現在事件名為 page_view 的資料列中，包含 source 和 medium 參數。
+▶2種情境與對應值，分享給大家情境1 :小明從 google 自然搜尋第1次進站到首頁，點了站內 utm(urchin tracking module) 到活動頁
 
-
-<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
-
-          
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WNKP76R');</script>
-    <!-- End Google Tag Manager -->
-  
-
-    <meta name="google-site-verification" content="b-gZ-g46Zqse8T04Cg5Oq7o_y4_e5h7GE0MnJp7wKyE" />
-<meta name="generator" content="Hexo 6.2.0"></head>
-<body>
-    
-<nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
-    <div class="container">
-        <div class="navbar-brand">
-            <a class="navbar-item navbar-logo" href="/">
-                
-                    
-                    Andy 程式雜記
-                    
-                
-            </a>
-            <div class="navbar-burger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-        
-        <div class="navbar-menu navbar-start">
-            
-            <a class="navbar-item "
-               href="/archives">列表</a>
-            
-            <a class="navbar-item "
-               href="/categories">分類</a>
-            
-            <a class="navbar-item is-active"
-               href="/categories/Google-Analytics">Google Analytics</a>
-            
-        </div>
-        
-        <div class="navbar-menu navbar-end">
-            
-            <a class="navbar-item search" title="搜尋" href="javascript:;">
-                <i class="fas fa-search"></i>
-            </a>
-            
-            
-            
-            <a class="navbar-item" title="GitHub" target="_blank" rel="noopener" href="https://github.com/AndyHung0723">
-                
-                <i class="fab fa-github"></i>
-                
-            </a>
-               
-            
-        </div>
-    </div>
-</nav>
-
-    <section class="section section-heading">
-    <div class="container">
-        <div class="content">
-            <h5><i class="far fa-folder"></i>Google Analytics</h5>
-        </div>
-    </div>
-</section>
-<section class="section">
-    <div class="container">
-    
-        <article class="article content gallery" itemscope itemprop="blogPost">
-  <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
-    
-    <a href="/2023/04/20/ga/ga4_share_0420/" itemprop="url"
-      >GA4 vs GA3 來源/媒介 BigQuery 欄位解析</a
-    >
-    
-  </h1>
-  <div
-    class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile"
-  >
-    <span class="column is-narrow">
-      
-      <span>2023年04月20日</span>
-      
-    </span>
-    
-    <span class="column is-narrow article-category">
-      <i class="far fa-folder"></i>
-      <a
-        class="article-category-link"
-        href="/categories/Google-Analytics/"
-        >Google Analytics</a
-      >
-    </span>
-     
-  </div>
-  <div class="article-entry is-size-6-mobile" itemprop="articleBody">
-     <html><head></head><body><p>👉 文章內容深度 : 3/5顆星<br>👉 適用對象 : 有使用 BigQuery 製作來源/媒介報表</p></body></html>
-    <p class="article-more-link">
-      <a href="/2023/04/20/ga/ga4_share_0420/">閱讀更多</a>
-    </p>
-    
-  </div>
-  
-
-  
-  
-  
-  
-
-  
-</article>
-
- 
-
-    
-        <article class="article content gallery" itemscope itemprop="blogPost">
-  <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
-    
-    <a href="/2023/04/16/ga/ga4_share_0416/" itemprop="url"
-      >Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</a
-    >
-    
-  </h1>
-  <div
-    class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile"
-  >
-    <span class="column is-narrow">
-      
-      <span>2023年04月16日</span>
-      
-    </span>
-    
-    <span class="column is-narrow article-category">
-      <i class="far fa-folder"></i>
-      <a
-        class="article-category-link"
-        href="/categories/Google-Analytics/"
-        >Google Analytics</a
-      >
-    </span>
-     
-  </div>
-  <div class="article-entry is-size-6-mobile" itemprop="articleBody">
-     <html><head></head><body><p>👉 文章內容深度 : 3/5顆星<br>👉 適用對象 : GA4 有做電子商務事件</p></body></html>
-    <p class="article-more-link">
-      <a href="/2023/04/16/ga/ga4_share_0416/">閱讀更多</a>
-    </p>
-    
-  </div>
-  
-
-  
-  
-  
-  
-
-  
-</article>
-
- 
-
-    
-    
-    </div>
-</section>
-    <footer class="footer">
-    <div class="container">
-        <div class="columns content">
-            <div class="column is-narrow has-text-centered">
-                &copy; 2023 Andy Hung&nbsp;
-                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
-                        target="_blank" rel="noopener" href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
-            </div>
-            <div class="column is-hidden-mobile"></div>
-
-            
-            <div class="column is-narrow">
-                <div class="columns is-mobile is-multiline is-centered">
-                
-                    
-                <a class="column is-narrow has-text-black" title="GitHub" target="_blank" rel="noopener" href="https://github.com/AndyHung0723">
-                    
-                    GitHub
-                    
-                </a>
-                
-                </div>
-            </div>
-            
-            
-        </div>
-    </div>
-</footer>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
-
-<!-- test if the browser is outdated -->
-<div id="outdated">
-    <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" target="_blank" rel="noopener" href="http://outdatedbrowser.com/">Update my browser now </a></p>
-    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
-</div>
-<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
-<script>
-    $(document).ready(function () {
-        // plugin function, place inside DOM ready function
-        outdatedBrowser({
-            bgColor: '#f25648',
-            color: '#ffffff',
-            lowerThan: 'flex'
-        })
-    });
-</script>
-
-<script>
-    window.FontAwesomeConfig = {
-        searchPseudoElements: true
-    }
-    moment.locale("zh-TW");
-</script>
-
-
-    
-    
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-<script>
-    MathJax.Hub.Config({
-        "HTML-CSS": {
-            matchFontHeight: false
-        },
-        SVG: {
-            matchFontHeight: false
-        },
-        CommonHTML: {
-            matchFontHeight: false
-        },
-        tex2jax: {
-            inlineMath: [
-                ['$','$'],
-                ['\\(','\\)']
-            ]
-        }
-    });
-</script>
-
-    
-    
-    
-    
-<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
-<script>
-    (function ($) {
-        $(document).ready(function () {
-            if (typeof($.fn.lightGallery) === 'function') {
-                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
-            }
-            if (typeof($.fn.justifiedGallery) === 'function') {
-                $('.justified-gallery').justifiedGallery();
-            }
-        });
-    })(jQuery);
-</script>
-
-    
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
-    <style>
-        .hljs {
-            position: relative;
-        }
-
-        .hljs .clipboard-btn {
-            float: right;
-            color: #9a9a9a;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        .hljs .clipboard-btn:hover {
-          color: #8a8a8a;
-        }
-
-        .hljs > .clipboard-btn {
-            display: none;
-            position: absolute;
-            right: 4px;
-            top: 4px;
-        }
-
-        .hljs:hover > .clipboard-btn {
-            display: inline;
-        }
-
-        .hljs > figcaption > .clipboard-btn {
-            margin-right: 4px;
-        }
-    </style>
-    <script>
-      $(document).ready(function () {
-        $('figure.hljs').each(function(i, figure) {
-          var codeId = 'code-' + i;
-          var code = figure.querySelector('.code');
-          var copyButton = $('<button>Copy <i class="far fa-clipboard"></i></button>');
-          code.id = codeId;
-          copyButton.addClass('clipboard-btn');
-          copyButton.attr('data-clipboard-target-id', codeId);
-
-          var figcaption = figure.querySelector('figcaption');
-
-          if (figcaption) {
-            figcaption.append(copyButton[0]);
-          } else {
-            figure.prepend(copyButton[0]);
-          }
-        })
-
-        var clipboard = new ClipboardJS('.clipboard-btn', {
-          target: function(trigger) {
-            return document.getElementById(trigger.getAttribute('data-clipboard-target-id'));
-          }
-        });
-        clipboard.on('success', function(e) {
-          e.clearSelection();
-        })
-      })
-    </script>
-
-    
-    
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WNKP76R');</script>
-    <!-- End Google Tag Manager -->
-
-    
+下表為 bq 中的資料列示意
 
 
 
-<script src="/js/script.js"></script>
+event_date
+event_name
+event_params.key
+event_params_value.string_value
+traffic_source.source
+traffic_source.medium
 
 
-    
-    <div class="searchbox ins-search">
-    <div class="searchbox-mask"></div>
-    <div class="searchbox-container ins-search-container">
-        <div class="searchbox-input-wrapper">
-            <input type="text" class="searchbox-input ins-search-input" placeholder="站內搜尋" />
-            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="searchbox-result-wrapper ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-    (function (window) {
-        var INSIGHT_CONFIG = {
-            TRANSLATION: {
-                POSTS: '文章',
-                PAGES: '頁面',
-                CATEGORIES: '分類',
-                TAGS: '標籤',
-                UNTITLED: '(無標題)',
-            },
-            CONTENT_URL: '/content.json',
-        };
-        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-    })(window);
-</script>
 
-<script src="/js/insight.js"></script>
+20230222
+first_visit
+page_location
+首頁網址
+google
+organic
 
-    
-    <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WNKP76R"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-</body>
-</html>
+
+20230222
+session_start
+page_location
+首頁網址
+google
+organic
+
+
+20230222
+page_view
+page_location
+首頁網址
+google
+organic
+
+
+
+
+source
+google
+
+
+
+
+
+
+medium
+organic
+
+
+
+
+20230222
+page_view
+page_location
+站內utm活動頁
+google
+organic
+
+
+
+
+source
+amy1
+
+
+
+
+
+
+medium
+test1
+
+
+
+
+情境2 : 延續情境1，隔天小明點了 fb 粉專的貼文進入了網站商品頁，粉專貼文的連結有帶 utm 為 facebook &amp;#x2f; post下表為 bq 中的資料列示意
+
+
+
+
+event_date
+event_name
+event_params.key
+event_params_value.string_value
+traffic_source.source
+traffic_source.medium
+
+
+
+20230223
+session_start
+page_location
+商品頁
+google
+organic
+
+
+20230223
+page_view
+page_location
+商品頁
+google
+organic
+
+
+
+
+source
+facebook
+
+
+
+
+
+
+medium
+post
+
+
+
+
+結論 : traffic_source 欄位僅記錄用戶首次訪問網站時的來源媒介，不會因未來用戶進入網站的渠道而改變其值。附上查詢 sql 
+12select event_date,event_name, event_params, traffic_source.source, traffic_source.mediumfrom `你的工作表名稱`"><div class="entry-meta"><time datetime="2023-04-20">2023.04.20</time><span class="pill note">研究筆記</span></div><div><h3><a href="/2023/04/20/ga/ga4_share_0420/">GA4 vs GA3 來源/媒介 BigQuery 欄位解析</a></h3><p>👉 文章內容深度 : 3&amp;#x2F;5顆星👉 適用對象 : 有使用 BigQuery 製作來源&amp;#x2F;媒介報表</p><div class="byline">Amy · 5 分鐘閱讀 · 歷史文章</div></div><a class="entry-arrow" tabindex="-1" aria-hidden="true" href="/2023/04/20/ga/ga4_share_0420/">↗</a></article>
+<article class="entry" data-search="google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!  google analytics 👉 文章內容深度 : 3&amp;#x2f;5顆星👉 適用對象 : ga4 有做電子商務事件
+
+
+▶ 什麼是項目範圍自訂維度(item scope) ?項目範圍的維度，是指專門用來追蹤 ga4 電子商務事件中商品的資訊，例如 : 商品名稱、商品id、顏色、尺寸、重量等等。在項目範圍的維度中，有分 ga4 預設維度 &amp;amp; 最近才公布的自訂維度。舉例來說 :ga4 預設維度 : 商品名稱(item_name)、商品編號(item_id)、商品價格(price)等等。官方文件自訂維度 : 用來補足 ga4 預設維度中沒有的維度，由自己定義，例如 : 課程長度、售票種類、商品關鍵字等等。數量限制 : 免費版資源 : 10個 &amp;#x2f; 付費版資源 : 25個
+▶ 項目範圍自訂維度(item scope)情境舉例以這一個商品舉例，右邊 items 陣列中的參數(item_name、item_id、price 等)都屬於 ga4 的預設項目範圍維度。
+若想多追蹤杯子的容量，ga4 預設的項目範圍維度又沒有提供對應參數，這時候，就可以自訂一個項目範圍的自訂維度，datalayer 調整後如下圖，新增的參數一定要放在 items 陣列中。
+▶ 項目範圍自訂維度(item scope)要如何在 ga4 中設定 ?確認有把自訂的參數送到 ga4 後，接下來就是要在 ga4 中設定自訂維度，設定路徑 : 管理(左下角齒輪) &amp;gt; 自訂定義 &amp;gt; 建立自訂維度(藍底按鈕) &amp;gt; 範圍選 : 項目 &amp;gt; 按下儲存可參考以下圖片，依序設定。
+(下圖)記得範圍要選「項目」，項目參數需要填寫您在網站中傳送的參數名稱，以本次範例為例，則是填入 capacity (並非照填寫 capacity) 。
+(下圖)儲存後，會出現範圍為「項目」的自訂維度。
+▶ 項目範圍自訂維度(item scope)在 ga4 探索報表中的呈現目前還無法在預設報表中，透過次要維度或是利用自訂報表功能拉取項目範圍維度，所以設定完的項目範圍自訂維度無法呈現在電子商務報表中，只能在探索報表使用，這部分較可惜，希望未來能更新上去。
+
+補充提醒，電子商務相關的維度都只能搭配使用部分指標，所以建議先拉取項目範圍的維度後，再選擇指標(無法使用的指標會被反灰)。
+
+
+此外looker studio 中也無法拉取項目範圍的自訂維度，以上的限制待未來更新後，再分享給大家~
+"><div class="entry-meta"><time datetime="2023-04-16">2023.04.16</time><span class="pill note">研究筆記</span></div><div><h3><a href="/2023/04/16/ga/ga4_share_0416/">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</a></h3><p>👉 文章內容深度 : 3&amp;#x2F;5顆星👉 適用對象 : GA4 有做電子商務事件</p><div class="byline">Amy · 3 分鐘閱讀 · 歷史文章</div></div><a class="entry-arrow" tabindex="-1" aria-hidden="true" href="/2023/04/16/ga/ga4_share_0416/">↗</a></article>
+<div class="pagination"><span class="page-number current">1</span></div></section>
+</main><footer><span>Andy’s Reading Room · 把資訊整理成值得留下的知識</span><span>靜態網站 · Hexo · <a href="/archives/">保留歷史文章</a></span></footer><script src="/js/reading.js" defer></script></body></html>
