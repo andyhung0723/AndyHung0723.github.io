@@ -1,0 +1,16 @@
+<% const stream = current_stream(page); %>
+<!doctype html>
+<html lang="<%= config.language %>">
+<%- partial('_partial/head') %>
+<body data-stream="<%= stream ? stream.id : '' %>">
+<a class="skip-link" href="#main">跳到主要內容</a>
+<%- partial('_partial/header') %>
+<% if (is_post()) { %><div class="progress" aria-hidden="true"><span></span></div><% } %>
+<div class="shell">
+  <%- partial('_partial/sidebar', { stream }) %>
+  <main class="main" id="main" tabindex="-1">
+    <%- body %>
+  </main>
+</div>
+</body>
+</html>

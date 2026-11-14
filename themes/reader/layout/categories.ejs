@@ -1,0 +1,11 @@
+<div class="listing">
+  <header class="listing-header">
+    <h1 class="listing-title">分類</h1>
+    <p class="listing-desc">共 <%= site.categories.length %> 個分類。</p>
+  </header>
+  <ul class="terms">
+    <% site.categories.sort('name').forEach((term) => { %>
+      <li><a class="term" href="<%- url_for(term.path) %>"><%= term.name %><span class="term-count"><%= term.length %></span></a></li>
+    <% }) %>
+  </ul>
+</div>

@@ -1,0 +1,9 @@
+<% const s = current_stream(page); %>
+<div class="listing" data-stream="<%= s.id %>">
+  <header class="listing-header">
+    <p class="listing-kicker"><span class="badge"><%= s.label %></span></p>
+    <h1 class="listing-title"><%= s.label %></h1>
+    <p class="listing-desc"><%= s.description %>共 <%= s.posts.length %> 篇。</p>
+  </header>
+  <%- partial('_partial/post-list', { posts: s.posts, showStream: false }) %>
+</div>

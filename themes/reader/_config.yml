@@ -1,0 +1,39 @@
+# Each stream is one tab in the sidebar and one landing page at /<id>/.
+# A post joins the first stream whose `category` it has; anything else falls into the `fallback` stream.
+streams:
+  - id: security
+    label: 資安週報
+    category: 資安週報
+    description: 每週整理 CVE、已知遭利用漏洞與修補順序。
+    color: '#9A3F08'
+    tint: '#FDF0E6'
+    color_dark: '#F4A66B'
+    tint_dark: '#3A2416'
+  - id: tech
+    label: 技術雷達
+    category: 技術雷達
+    description: 雲端、AI 工具鏈與前端框架的每週更新。
+    color: '#2450C8'
+    tint: '#EAF0FD'
+    color_dark: '#8FB0FF'
+    tint_dark: '#1B2540'
+  - id: notes
+    label: 研究筆記
+    fallback: true
+    description: 踩坑紀錄與深入探討，一篇解一個問題。
+    color: '#0E6B5F'
+    tint: '#E5F4F1'
+    color_dark: '#5FD0BC'
+    tint_dark: '#12302B'
+
+# Posts dated before this show an "may be outdated" notice.
+stale_before: 2023-01-01
+toc_depth: 3
+home_latest_per_stream: 3
+
+# Used for the "view source on GitHub" link on each post.
+source_url: https://github.com/andyhung0723/AndyHung0723.github.io/blob/source/source/
+
+reading_speed:
+  cjk_chars_per_minute: 260
+  words_per_minute: 130

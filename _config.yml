@@ -1,0 +1,86 @@
+title: Andy 的筆記
+description: 資安、技術與程式筆記。
+author: Andy Hung
+language: zh-Hant
+timezone: Asia/Taipei
+
+url: https://andyhung0723.github.io
+permalink: :year/:month/:day/:title/
+pretty_urls:
+  trailing_index: false
+  trailing_html: true
+
+source_dir: source
+public_dir: public
+skip_render:
+  - google*.html
+
+new_post_name: :title.md
+post_asset_folder: false
+render_drafts: false
+
+syntax_highlighter: highlight.js
+highlight:
+  line_number: false
+  auto_detect: false
+  wrap: false
+  hljs: false
+
+date_format: YYYY-MM-DD
+time_format: HH:mm
+
+index_generator:
+  path: ''
+  per_page: 0
+  order_by: -date
+
+archive_generator:
+  per_page: 0
+  yearly: true
+  monthly: true
+  daily: false
+
+category_generator:
+  per_page: 0
+
+tag_generator:
+  per_page: 0
+
+marked:
+  gfm: true
+  breaks: true
+  smartypants: false
+  prependRoot: true
+  external_link:
+    enable: true
+    exclude: []
+    nofollow: false
+
+feed:
+  enable: true
+  type: atom
+  path: atom.xml
+  limit: 20
+  content: true
+
+sitemap:
+  path: sitemap.xml
+
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    path: true
+    date: true
+    text: true
+    categories: true
+    tags: true
+
+theme: reader
+
+deploy:
+  type: git
+  repo: git@github.com:andyhung0723/AndyHung0723.github.io.git
+  branch: master
+  message: 'Deploy {{ now("YYYY-MM-DD HH:mm") }}'

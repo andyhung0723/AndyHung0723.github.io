@@ -1,0 +1,8 @@
+<div class="listing">
+  <header class="listing-header">
+    <p class="listing-kicker">標籤</p>
+    <h1 class="listing-title">#<%= page.tag %></h1>
+    <p class="listing-desc">共 <%= page.posts.length %> 篇。</p>
+  </header>
+  <%- partial('_partial/post-list', { posts: page.posts, showStream: true }) %>
+</div>

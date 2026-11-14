@@ -1,0 +1,38 @@
+<% const allStreams = streams(); %>
+<% const activeId = (stream || allStreams[0]).id; %>
+<aside class="sidebar" id="sidebar" aria-label="文章列表">
+  <div class="stream-tabs" role="tablist" aria-label="分類">
+    <% allStreams.forEach((s) => { %>
+      <a class="stream-tab" role="tab" id="tab-<%= s.id %>" data-stream="<%= s.id %>" data-stream-tab="<%= s.id %>"
+         href="<%- url_for(`/${s.id}/`) %>" aria-controls="panel-<%= s.id %>" aria-selected="<%= s.id === activeId %>">
+        <span class="stream-tab-label"><%= s.label %></span>
+        <span class="stream-tab-count"><%= s.posts.length %> 篇</span>
+      </a>
+    <% }) %>
+  </div>
+  <% allStreams.forEach((s) => { %>
+    <section class="stream-panel" id="panel-<%= s.id %>" role="tabpanel" aria-labelledby="tab-<%= s.id %>" data-stream="<%= s.id %>"<%= s.id === activeId ? '' : ' hidden' %>>
+      <p class="stream-desc"><%= s.description %> <a href="<%- url_for(`/${s.id}/`) %>">看全部</a></p>
+      <% group_by_year(s.posts).forEach((group) => { %>
+        <h3 class="year"><%= group.year %></h3>
+        <ol class="post-nav">
+          <% group.posts.forEach((post) => { %>
+            <li>
+              <a class="post-link" href="<%- url_for(post.path) %>"<%- post.path === page.path ? ' aria-current="page"' : '' %>>
+                <span class="post-link-title"><%= post.title %></span>
+                <span class="post-link-meta"><time datetime="<%= date_xml(post.date) %>"><%= post.date.format('MM-DD') %></time><span><%= reading_minutes(post) %> min</span></span>
+              </a>
+            </li>
+          <% }) %>
+        </ol>
+      <% }) %>
+    </section>
+  <% }) %>
+  <p class="kbd-hint"><kbd>j</kbd><kbd>k</kbd> 上下切換文章 <kbd>/</kbd> 搜尋</p>
+</aside>
+<script>
+  try {
+    document.getElementById('sidebar').scrollTop = Number(sessionStorage.getItem('sidebar-scroll')) || 0;
+  } catch {}
+</script>
+<div class="scrim" hidden></div>

@@ -1,0 +1,61 @@
+<% const stream = stream_of(page); %>
+<% const neighbors = stream_neighbors(page); %>
+<% const tocHtml = toc(page.content, { list_number: false, max_depth: theme.toc_depth }); %>
+<div class="post-layout">
+  <article class="post">
+    <header class="post-header">
+      <nav class="crumbs" aria-label="麵包屑">
+        <a class="badge" href="<%- url_for(`/${stream.id}/`) %>"><%= stream.label %></a>
+        <span aria-hidden="true">/</span>
+        <time datetime="<%= date_xml(page.date) %>"><%= date(page.date, 'YYYY-MM-DD') %></time>
+      </nav>
+      <h1 class="post-title"><%= page.title %></h1>
+      <p class="post-meta">
+        <span><%= page.author || config.author %></span>
+        <span><%= reading_minutes(page) %> 分鐘閱讀</span>
+        <span><%= stream.label %>第 <%= neighbors.position %> / <%= neighbors.total %> 篇</span>
+      </p>
+      <% if (is_stale(page)) { %>
+        <p class="notice"><%= date(page.date, 'YYYY') %> 年的舊文章，部分 API 或行為可能已變更。</p>
+      <% } %>
+      <% if (page.description) { %><p class="lede"><%= page.description %></p><% } %>
+      <% if (page.tldr) { %>
+        <aside class="tldr" aria-label="重點">
+          <p class="tldr-label">先看這裡</p>
+          <p><%= page.tldr %></p>
+        </aside>
+      <% } %>
+    </header>
+
+    <% if (tocHtml) { %>
+      <details class="toc-inline">
+        <summary>本頁目錄</summary>
+        <%- tocHtml %>
+      </details>
+    <% } %>
+
+    <div class="prose"><%- page.content %></div>
+
+    <footer class="post-footer">
+      <% if (page.tags && page.tags.length) { %>
+        <ul class="tags" aria-label="標籤">
+          <% page.tags.forEach((tag) => { %><li><a href="<%- url_for(tag.path) %>">#<%= tag.name %></a></li><% }) %>
+        </ul>
+      <% } %>
+      <% if (theme.source_url) { %>
+        <a class="source-link" href="<%= theme.source_url + page.source.replace(/^source\//, '') %>">在 GitHub 檢視原始檔</a>
+      <% } %>
+    </footer>
+
+    <%- partial('_partial/pager', { neighbors, variant: '' }) %>
+  </article>
+
+  <% if (tocHtml) { %>
+    <nav class="toc-rail" aria-label="本頁目錄">
+      <p class="toc-title">本頁目錄</p>
+      <%- tocHtml %>
+      <a class="toc-top" href="#main">回到頂端 ↑</a>
+    </nav>
+  <% } %>
+</div>
+<%- partial('_partial/pager', { neighbors, variant: 'dock' }) %>

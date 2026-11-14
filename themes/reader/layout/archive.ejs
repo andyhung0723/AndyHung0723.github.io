@@ -1,0 +1,12 @@
+<div class="listing">
+  <header class="listing-header">
+    <h1 class="listing-title">所有文章</h1>
+    <p class="listing-desc">共 <%= site.posts.length %> 篇，依時間排序。</p>
+  </header>
+  <% group_by_year(page.posts).forEach((group) => { %>
+    <section class="listing-section">
+      <h2 class="listing-year"><%= group.year %></h2>
+      <%- partial('_partial/post-list', { posts: group.posts, showStream: true }) %>
+    </section>
+  <% }) %>
+</div>

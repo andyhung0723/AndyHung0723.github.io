@@ -1,0 +1,27 @@
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title><%= page.title ? `${page.title} · ${config.title}` : config.title %></title>
+<meta name="description" content="<%= page_description(page) %>">
+<link rel="canonical" href="<%= canonical_url(page) %>">
+<meta property="og:type" content="<%= is_post() ? 'article' : 'website' %>">
+<meta property="og:title" content="<%= page.title || config.title %>">
+<meta property="og:description" content="<%= page_description(page) %>">
+<meta property="og:url" content="<%= canonical_url(page) %>">
+<meta property="og:site_name" content="<%= config.title %>">
+<script>
+  try {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+  } catch {}
+</script>
+<link rel="stylesheet" href="<%- asset_url('/css/reader.css') %>">
+<style><%- stream_style() %></style>
+<link rel="icon" type="image/png" href="<%- url_for('/favicon.png') %>">
+<link rel="alternate" type="application/atom+xml" title="<%= config.title %>" href="<%- url_for('/atom.xml') %>">
+<script type="speculationrules">
+  {"prerender": [{"source": "document", "where": {"selector_matches": ".pager-link, .post-link"}, "eagerness": "moderate"}]}
+</script>
+<script src="<%- asset_url('/js/reader.js') %>" defer></script>
+</head>

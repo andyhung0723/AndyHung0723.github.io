@@ -1,0 +1,15 @@
+<ol class="entries">
+  <% posts.forEach((post) => { const s = stream_of(post); %>
+    <li class="entry" data-stream="<%= s.id %>">
+      <a class="entry-link" href="<%- url_for(post.path) %>">
+        <span class="entry-meta">
+          <% if (showStream) { %><span class="badge"><%= s.label %></span><% } %>
+          <time datetime="<%= date_xml(post.date) %>"><%= date(post.date, 'YYYY-MM-DD') %></time>
+          <span><%= reading_minutes(post) %> 分鐘</span>
+        </span>
+        <span class="entry-title"><%= post.title %></span>
+        <span class="entry-summary"><%= post_summary(post) %></span>
+      </a>
+    </li>
+  <% }) %>
+</ol>

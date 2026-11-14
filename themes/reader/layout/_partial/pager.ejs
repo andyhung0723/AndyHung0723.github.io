@@ -1,0 +1,18 @@
+<nav class="pager<%= variant ? ` pager--${variant}` : '' %>" aria-label="同分類的其他文章">
+  <% if (neighbors.newer) { %>
+    <a class="pager-link" rel="prev" data-nav="newer" href="<%- url_for(neighbors.newer.path) %>">
+      <span class="pager-dir">← 較新一篇</span>
+      <span class="pager-title"><%= neighbors.newer.title %></span>
+    </a>
+  <% } else { %>
+    <span class="pager-empty">已是最新一篇</span>
+  <% } %>
+  <% if (neighbors.older) { %>
+    <a class="pager-link pager-link--older" rel="next" data-nav="older" href="<%- url_for(neighbors.older.path) %>">
+      <span class="pager-dir">較舊一篇 →</span>
+      <span class="pager-title"><%= neighbors.older.title %></span>
+    </a>
+  <% } else { %>
+    <span class="pager-empty pager-empty--older">已是最舊一篇</span>
+  <% } %>
+</nav>

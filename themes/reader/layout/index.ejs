@@ -1,0 +1,15 @@
+<div class="listing">
+  <header class="listing-header">
+    <h1 class="listing-title"><%= config.title %></h1>
+    <p class="listing-desc"><%= config.description %>從左邊挑一個分類，一篇一篇往下讀。</p>
+  </header>
+  <% streams().forEach((s) => { %>
+    <section class="listing-section" data-stream="<%= s.id %>" aria-labelledby="home-<%= s.id %>">
+      <div class="listing-section-head">
+        <h2 id="home-<%= s.id %>"><span class="badge"><%= s.label %></span></h2>
+        <a href="<%- url_for(`/${s.id}/`) %>">全部 <%= s.posts.length %> 篇 →</a>
+      </div>
+      <%- partial('_partial/post-list', { posts: s.posts.slice(0, theme.home_latest_per_stream), showStream: false }) %>
+    </section>
+  <% }) %>
+</div>
