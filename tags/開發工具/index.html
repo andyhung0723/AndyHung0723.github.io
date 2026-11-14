@@ -1,3 +1,215 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Andy 的筆記</title><meta name="description" content="資安、技術與程式筆記。"><link rel="stylesheet" href="/css/reading.css?v=20261113-2"><link rel="alternate" type="application/atom+xml" title="訂閱全部文章" href="/atom.xml"><link rel="canonical" href="https://andyhung0723.github.iotags/開發工具/index.html"><meta name="generator" content="Hexo 8.1.2"></head><body><a class="skip" href="#main">跳到主要內容</a><header class="site-header"><a class="brand" href="/">Andy 的筆記</a><nav aria-label="主選單"><a href="/">首頁</a><a href="/archives/">所有文章</a><a href="/about/">關於</a><a href="/atom.xml">RSS ↗</a></nav></header><main id="main"><section class="page"><h1>開發工具</h1><article class="entry" data-search="資安週報｜2026/11/09 14 個主題：apt、wordpress、sonicwall、linux kernel、憑證信任庫、nginx、chrome、aws、python、debian 與 postgresql。 資安週報 整理 2026/11/02–11/08 的 14 個資安主題與其他平台追蹤結果。11/13 重新核對官方來源，修正 chrome 修補數量，補上 postgresql 14 的最新版本資訊。 優先確認 apt 修補；使用 wordpress 或 sonicwall 的環境，應先處理已知遭利用的漏洞。以下是通用盤點建議，不代表任何個別系統已受影響或已完成修補。 1. apt：下載驗證繞過，可取得 root 權限 cve-2026-109518｜11/04｜canonical：high，cvss 4.0 7.7 能操縱套件下載 http 流量的攻擊者，可利用重新導向、下載重試與 hard link 處理缺陷，使 apt 安裝未驗證的套件。debian 12、ubuntu 22.04 起預設啟用下載重試；舊版也須檢查 acquire::retries 是否非零。 系統 apt 修補版本 debian 12 2.6.2 debian 13 3.0.4 ubuntu 22.04 2.4.15ubuntu0.1 ubuntu 24.04 2.8.4ubuntu0.1 ubuntu 26.04 3.2.1ubuntu0.1 ubuntu 26.10 3.3.3ubuntu0.1 ubuntu 20.04 及更舊版本的修補取得方式涉及 ubuntu pro／legacy，須對照公告。先確認已安裝版本，再依維護流程更新。https 可保護這條下載路徑，但不應取代正式修補。本次未確認野外利用。 來源： canonical 說明 、 usn-8996-1 、 debian tracker 。 2. wordpress：更新期間的遠端程式碼執行 cve-2026-119977｜11/03 列入 cisa kev wordpress 更新流程的競爭條件可能讓攻擊者在升級期間執行程式碼。7.1.4 已於 10/28 修補；本週的新進展是確認實際利用，而不是首次發布修補。 有部署 wordpress 時，確認已安裝 7.1.4 或所屬舊分支的對應安全更新，並檢查更新期間的異常存取。不要只確認主站，測試站與活動網站也應納入盤點。 來源： wordpress 7.1.4 、 加拿大網路安全中心 av26-1117 。 3. sonicwall：ssl vpn 驗證繞過 cve-2026-19868｜11/06 列入 cisa kev 這項 sonicos ssl vpn 漏洞涉及驗證流程，原報告追蹤的是 saml／mfa 繞過風險。加拿大網路安全中心確認 sonicwall 已表示漏洞遭到利用，並列出 7.3.4-7013 、 8.2.2-8015 的修補門檻。 應優先確認設備所屬分支、實際版本、vpn 對外暴露與異常登入紀錄。各機型及設定適用性仍以原廠公告為準；本次未能讀取原廠動態頁面的完整條件，因此不沿用原報告的 cvss 數字。 來源： sonicwall snwlid-2026-0014 、 加拿大網路安全中心 av26-1133 。 4. gcp／linux kernel：tcp 漏洞 cve-2026-98432｜gcp-2026-078｜11/04 linux ipv4 tcp 堆疊漏洞可能造成核心當機或容器逃逸。google 列出 gke standard、autopilot 受影響；網路攻擊需要連得到相關 tcp listener，容器內亦有本地觸發途徑。google 此公告的產品風險分級為 medium，不等同原報告引用的通用 cvss 分數。 盤點時須區分作業系統、kernel flavor 與實際運行核心，不能把 generic 核心狀態套到 linux-gcp 。本次未重建 11/09 各發行版的歷史修補矩陣，請依官方現況核對，更新後確認新核心已生效。 來源： google cloud gcp-2026-078 。 5. ubuntu：java 憑證信任庫未同步 usn-9001-1｜11/05 系統 ca bundle 移除憑證後，java jks keystore 可能未同步移除，讓 java 程式繼續信任已撤除的 ca。更新會修正同步行為並重新同步信任庫；公告沒有獨立 cve。 ubuntu ca-certificates ca-certificates-java 22.04 20260816ubuntu0.22.04.2 20190909ubuntu1.4 24.04 20260816ubuntu0.24.04.2 20240118ubuntu0.24.04.1 26.04 20260816ubuntu0.26.04.2 20260311ubuntu0.26.04.1 26.10 20260816ubuntu0.26.10.2 20260311ubuntu0.26.10.1 使用自訂 jks、jdk 內建信任庫或容器映像時，須另外確認，不能只看 os 套件更新。 來源： ubuntu usn-9001-1 。 6. google cloud sdk：python／java 憑證更新 gcp-2026-075｜11/02 emudhra 憑證私鑰事件影響仍信任相關 ca 的應用程式。google 表示其基礎設施未遭入侵，遙測未見相關工作負載利用證據。 公告要求檢查 certifi （至少 2026.10.19 ）、 httplib2 （ 0.32.1 ）、 grpcio （ 1.84.1 或其他已修補分支），以及 java google-api-client （ 2.9.2 ）。grpc 使用的憑證集合不一定來自 os，更新作業系統不代表應用程式已修好。完成依賴更新後重新建置、部署映像。 來源： google cloud gcp-2026-075 。 7. nginx：舊版 ubuntu 補上安全更新 usn-8955-2｜11/05 本次把先前 nginx 修補擴及 ubuntu 20.04、18.04、16.04、14.04，並修正 cve-2026-42533。特定 regex、capture variable、 map 或 alias ／rewrite 組合可能造成當機或程式碼執行；僅看到 alias 不足以判定符合觸發條件。 ubuntu 20.04 的公告修補版本為 1.18.0-0ubuntu1.7+esm4 ，其他舊版須對照各自套件表及 pro／esm 資格。ubuntu 22.04 以上則查 usn-8955-1；debian 必須另查其 tracker，不能套用 ubuntu 結論。本次未重新確認 debian 12 的即時修補狀態。 來源： ubuntu usn-8955-2 。 8. chrome 157：瀏覽器安全更新 11/03 stable 發布 公告版本為 linux 157.0.8103.38 ，windows／macos 157.0.8103.38/.39 ，包含記憶體安全等問題，且有 critical 項目。應更新瀏覽器並重新啟動，確認新版本已實際載入。 11/13 校訂： 原週報寫 213 項修補，部分搜尋摘要仍如此顯示，但官方公告正文目前寫 212 項 ，本文以正文為準。原週報只舉低風險 cve，不能代表整次更新的嚴重程度。本次未確認這批項目的野外利用狀態。 來源： chrome releases 。 9. aws serverless mcp server：路徑穿越 cve-2026-116635｜11/02 能影響 mcp agent 輸入的攻擊者，在特定條件下可讀取部署狀態目錄以外的 json；若啟用寫入，也可能建立或覆寫目錄外的 json。 awslabs.aws-serverless-mcp-server 低於 0.2.1 受影響， 0.2.1 已修補。aws 未提供替代緩解措施，應更新套件，分叉版本也須帶入修正。公告未列 cvss，本次未確認實際利用。 來源： aws 2026-164 。 10. aws eks：networkpolicy 隔離繞過 cve-2026-122266｜11/04 共享 ebpf 連線狀態隔離不足，可能讓具相鄰環境存取能力的已驗證使用者繞過同節點其他 pod 的 ingress networkpolicy。 元件 受影響版本 修補版本 aws-network-policy-agent &lt; 1.3.7 1.3.7 amazon vpc cni managed add-on &lt; 1.22.3 1.22.3 aws 表示沒有替代緩解措施。使用 eks networkpolicy 時應確認元件版本及更新後的網路隔離行為。公告未列 cvss，本次未確認實際利用。 來源： aws 2026-170 。 11. aws babelfish：tds 記憶體安全漏洞 cve-2026-119923、cve-2026-119924｜11/06 前者涉及 tds 握手，可由未驗證遠端攻擊者影響資料庫程序；後者涉及 tds rpc，已驗證攻擊者可能讀取鄰近記憶體或造成服務中斷。 babelfish for postgresql extension 的修補版包含 4.10 、 5.6 、 6.1 。aurora 的修補門檻依分支不同，應對照公告中的 aurora／babelfish 版本配對，並完成待處理維護，不能直接套用 extension 版號。更新前可先把 tds 連接埠來源限制為可信來源。本次未確認實際利用。 來源： aws 2026-166 。 12. python：pillow、twisted、tornado 三項更新的適用情境不同，不應只用「python 有漏洞」概括。 元件／公告 影響與處理 pillow／usn-8999-1，11/04 影像、字型與 filter 處理可造成資訊外洩、資源耗盡，部分問題可能執行程式碼；處理不可信影像的服務應檢查依賴。 twisted／usn-9000-1，11/04 cve-2026-106454 涉及 imap mailbox list wildcard；已驗證使用者可造成資源耗盡。ubuntu 22.04 對應 22.1.0-2ubuntu2.8 。 tornado／usn-8952-2，11/06 cve-2026-103263 的先前修補不完整，造成繼承 staticfilehandler 的應用（如 jupyter）靜態檔案服務回歸，本次予以修正。 apt 安裝的 python 套件與 pip 、poetry、 uv 的虛擬環境要分開盤點。更新後除了版本檢查，也應測試影像處理、郵件及靜態檔案功能。 來源： pillow 、 twisted 、 tornado 。 13. debian：apt、zlib 與 kernel 公告 日期／公告 套件 重點 11/04 dsa-6607-1 apt cve-2026-109518；trixie 修補版 3.0.4 ，詳細條件見第 1 節。 11/07 dsa-6613-1 zlib 特製輸入可能造成 dos 或程式碼執行；trixie 修補版 1:1.3.dfsg+really1.3.1-1+deb13u1 。 11/08 dsa-6616-1 linux 權限提升、dos、資訊外洩等問題；trixie 修補版 6.12.116-1 。 上述 dsa 的版本表主要針對 debian 13（trixie）。debian 12（bookworm）應另看 tracker／lts 公告，不能因為 dsa 已發布就認定同樣修好。 來源： apt 公告 、 zlib 公告 、 linux 公告 。 14. postgresql 14：支援期限到期 這不是新漏洞，而是版本維護期限。官方版本政策列出的 postgresql 14 最終發行日為 2026/11/12 。 11/13 更新： 官方目前列出 14.25 ，因此原報告「最後版本為 14.24」的說法不再適用。盤點仍使用 14 的資料庫，確認升級或額外維護方案；最後一次小版本更新不能取代後續主版本遷移。大版本升級需先測試資料遷移、擴充套件與回復流程。 來源： postgresql 版本政策 。 其他平台追蹤 以下保留 11/09 原報告的追蹤範圍。原檢索未取得足夠證據列出該週新增重大事件；這不是「沒有漏洞」的保證，11/13 的補稿也沒有重跑所有平台的完整歷史調查。 平台 本期紀錄與後續關注 github／actions 未確認新的重大平台事件；持續盤點第三方 action、依賴及 token 權限。 docker engine／desktop 未確認該週新增重大公告；原報告提及既有憑證紀錄風險，但本次未核實其具體公告，不將它列為已確認新事件。 windows／microsoft 365 原報告未確認另需列為緊急處理的新事件。 azure 原報告未確認需客戶立即處理的新重大公告。 figma 未確認可由官方來源支持的該週重大事件。 openai／chatgpt／api 未確認可由官方來源支持的該週重大事件。 anthropic／claude／api 未確認可由官方來源支持的該週重大事件。 gemini／gemini api 未確認可由官方來源支持的該週重大事件。 檢查順序 確認是否使用 wordpress、sonicwall，優先處理已知遭利用項目。 檢查 apt、nginx、kernel 的完整套件版本與適用設定。 分別檢查 os、java、python 與容器的憑證信任庫及依賴。 盤點 eks、mcp server、babelfish，套用對應分支的更新。 更新瀏覽器，處理 postgresql 14 的版本遷移。 以下只讀取本機狀態，不會安裝更新： 1 2 3 apt-cache policy apt nginx ca-certificates ca-certificates-java apt-config dump | grep -i &amp;#x27;acquire::retries&amp;#x27; uname -r 套件版本、執行中的版本及設定條件都要符合，才可判定修補生效。本文未檢查任何個別主機，也未保留私人環境設定。"><div class="entry-meta"><time datetime="2026-11-09">2026.11.09</time><span class="pill security">資安週報</span></div><div><h3><a href="/2026/11/09/security-weekly-2026-11-09/">資安週報｜2026/11/09</a></h3><p>14 個主題：APT、WordPress、SonicWall、Linux Kernel、憑證信任庫、NGINX、Chrome、AWS、Python、Debian 與 PostgreSQL。</p><div class="byline">AI 協助整理 · 12 分鐘閱讀</div></div><a class="entry-arrow" tabindex="-1" aria-hidden="true" href="/2026/11/09/security-weekly-2026-11-09/">↗</a></article>
-<div class="pagination"><span class="page-number current">1</span></div></section>
-</main><footer><span>Andy 的筆記</span><a href="/atom.xml">RSS 訂閱</a></footer><script src="/js/reading.js" defer></script></body></html>
+
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Andy 的筆記</title>
+<meta name="description" content="資安、技術與程式筆記。">
+<link rel="canonical" href="https://andyhung0723.github.io/tags/%E9%96%8B%E7%99%BC%E5%B7%A5%E5%85%B7/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Andy 的筆記">
+<meta property="og:description" content="資安、技術與程式筆記。">
+<meta property="og:url" content="https://andyhung0723.github.io/tags/%E9%96%8B%E7%99%BC%E5%B7%A5%E5%85%B7/">
+<meta property="og:site_name" content="Andy 的筆記">
+<script>
+  try {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+  } catch {}
+</script>
+<link rel="stylesheet" href="/css/reader.css?v=b8fc5f6b9f">
+<style>[data-stream="security"]{--stream:#9A3F08;--stream-tint:#FDF0E6}[data-stream="tech"]{--stream:#2450C8;--stream-tint:#EAF0FD}[data-stream="notes"]{--stream:#0E6B5F;--stream-tint:#E5F4F1}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root:not([data-theme="light"]) [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root:not([data-theme="light"]) [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}}:root[data-theme="dark"] [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root[data-theme="dark"] [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root[data-theme="dark"] [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}</style>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="Andy 的筆記" href="/atom.xml">
+<script type="speculationrules">
+  {"prerender": [{"source": "document", "where": {"selector_matches": ".pager-link, .post-link"}, "eagerness": "moderate"}]}
+</script>
+<script src="/js/reader.js?v=98ae7b0f53" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body data-stream="">
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header">
+  <button class="icon-btn menu-btn" type="button" aria-label="開啟文章列表" aria-controls="sidebar" aria-expanded="false">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+  </button>
+  <a class="brand" href="/">
+    <span class="brand-mark" aria-hidden="true">A/</span>
+    <span class="brand-name">Andy 的筆記</span>
+  </a>
+  <div class="search" role="search">
+    <label class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="搜尋文章、CVE、套件名稱" aria-label="搜尋文章" autocomplete="off" aria-controls="search-results" aria-expanded="false">
+      <kbd>/</kbd>
+    </label>
+    <div class="search-results" id="search-results" hidden></div>
+  </div>
+  <nav class="site-nav" aria-label="主選單">
+    <a href="/archives/">所有文章</a>
+    <a href="/about/">關於</a>
+    <a href="/atom.xml">RSS</a>
+    <button class="icon-btn theme-btn" type="button" aria-label="切換深色模式">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </nav>
+</header>
+
+
+<div class="shell">
+  
+
+<aside class="sidebar" id="sidebar" aria-label="文章列表">
+  <div class="stream-tabs" role="tablist" aria-label="分類">
+    
+      <a class="stream-tab" role="tab" id="tab-security" data-stream="security" data-stream-tab="security"
+         href="/security/" aria-controls="panel-security" aria-selected="true">
+        <span class="stream-tab-label">資安週報</span>
+        <span class="stream-tab-count">1 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-tech" data-stream="tech" data-stream-tab="tech"
+         href="/tech/" aria-controls="panel-tech" aria-selected="false">
+        <span class="stream-tab-label">技術雷達</span>
+        <span class="stream-tab-count">1 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-notes" data-stream="notes" data-stream-tab="notes"
+         href="/notes/" aria-controls="panel-notes" aria-selected="false">
+        <span class="stream-tab-label">研究筆記</span>
+        <span class="stream-tab-count">6 篇</span>
+      </a>
+    
+  </div>
+  
+    <section class="stream-panel" id="panel-security" role="tabpanel" aria-labelledby="tab-security" data-stream="security">
+      <p class="stream-desc">每週整理 CVE、已知遭利用漏洞與修補順序。 <a href="/security/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/security-weekly-2026-11-09/">
+                <span class="post-link-title">資安週報｜2026/11/09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>12 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-tech" role="tabpanel" aria-labelledby="tab-tech" data-stream="tech" hidden>
+      <p class="stream-desc">雲端、AI 工具鏈與前端框架的每週更新。 <a href="/tech/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/tech-radar-2026-11-09/">
+                <span class="post-link-title">技術週報｜2026-11-09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>13 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-notes" role="tabpanel" aria-labelledby="tab-notes" data-stream="notes" hidden>
+      <p class="stream-desc">踩坑紀錄與深入探討，一篇解一個問題。 <a href="/notes/">看全部</a></p>
+      
+        <h3 class="year">2023</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2023/04/20/ga/ga4_share_0420/">
+                <span class="post-link-title">GA4 vs GA3 來源/媒介 BigQuery 欄位解析</span>
+                <span class="post-link-meta"><time datetime="2023-04-19T16:00:00.000Z">04-20</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2023/04/16/ga/ga4_share_0416/">
+                <span class="post-link-title">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</span>
+                <span class="post-link-meta"><time datetime="2023-04-15T16:00:00.000Z">04-16</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+        <h3 class="year">2022</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2022/06/08/position-sticky-issue/">
+                <span class="post-link-title">position:sticky 遇到 overflow 時失效解法</span>
+                <span class="post-link-meta"><time datetime="2022-06-07T16:00:00.000Z">06-08</time><span>2 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/06/01/angular-offsetwidth-bug/">
+                <span class="post-link-title">Angular 取得元素 offsetWidth 時有誤解法</span>
+                <span class="post-link-meta"><time datetime="2022-05-31T16:00:00.000Z">06-01</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/29/angular-lazy-loading/">
+                <span class="post-link-title">Angular Lazy Loading</span>
+                <span class="post-link-meta"><time datetime="2022-05-28T16:00:00.000Z">05-29</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/28/angular-module/">
+                <span class="post-link-title">探討 Angular Module</span>
+                <span class="post-link-meta"><time datetime="2022-05-27T16:00:00.000Z">05-28</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+  <p class="kbd-hint"><kbd>j</kbd><kbd>k</kbd> 上下切換文章 <kbd>/</kbd> 搜尋</p>
+</aside>
+<script>
+  try {
+    document.getElementById('sidebar').scrollTop = Number(sessionStorage.getItem('sidebar-scroll')) || 0;
+  } catch {}
+</script>
+<div class="scrim" hidden></div>
+
+  <main class="main" id="main" tabindex="-1">
+    <div class="listing">
+  <header class="listing-header">
+    <p class="listing-kicker">標籤</p>
+    <h1 class="listing-title">#開發工具</h1>
+    <p class="listing-desc">共 1 篇。</p>
+  </header>
+  <ol class="entries">
+  
+    <li class="entry" data-stream="security">
+      <a class="entry-link" href="/2026/11/09/security-weekly-2026-11-09/">
+        <span class="entry-meta">
+          <span class="badge">資安週報</span>
+          <time datetime="2026-11-08T16:00:00.000Z">2026-11-09</time>
+          <span>12 分鐘</span>
+        </span>
+        <span class="entry-title">資安週報｜2026/11/09</span>
+        <span class="entry-summary">14 個主題：APT、WordPress、SonicWall、Linux Kernel、憑證信任庫、NGINX、Chrome、AWS、Python、Debian 與 PostgreSQL。</span>
+      </a>
+    </li>
+  
+</ol>
+
+</div>
+
+  </main>
+</div>
+</body>
+</html>

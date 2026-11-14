@@ -1,366 +1,211 @@
-<!DOCTYPE html>
-<html class="has-navbar-fixed-top">
+
+<!doctype html>
+<html lang="zh-Hant">
 <head>
-    <meta charset="utf-8" />
-<title>分類 - Andy 程式雜記</title>
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1, maximum-scale=1"
-/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>分類 · Andy 的筆記</title>
+<meta name="description" content="資安、技術與程式筆記。">
+<link rel="canonical" href="https://andyhung0723.github.io/categories/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="分類">
+<meta property="og:description" content="資安、技術與程式筆記。">
+<meta property="og:url" content="https://andyhung0723.github.io/categories/">
+<meta property="og:site_name" content="Andy 的筆記">
+<script>
+  try {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+  } catch {}
+</script>
+<link rel="stylesheet" href="/css/reader.css?v=b8fc5f6b9f">
+<style>[data-stream="security"]{--stream:#9A3F08;--stream-tint:#FDF0E6}[data-stream="tech"]{--stream:#2450C8;--stream-tint:#EAF0FD}[data-stream="notes"]{--stream:#0E6B5F;--stream-tint:#E5F4F1}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root:not([data-theme="light"]) [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root:not([data-theme="light"]) [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}}:root[data-theme="dark"] [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root[data-theme="dark"] [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root[data-theme="dark"] [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}</style>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="Andy 的筆記" href="/atom.xml">
+<script type="speculationrules">
+  {"prerender": [{"source": "document", "where": {"selector_matches": ".pager-link, .post-link"}, "eagerness": "moderate"}]}
+</script>
+<script src="/js/reader.js?v=98ae7b0f53" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
 
-<link
-  rel="stylesheet"
-  href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css"
-/>
-
- 
-<meta name="description" content="" />
-   <meta property="og:type" content="website">
-<meta property="og:title" content="Andy 程式雜記">
-<meta property="og:url" content="https://andyhung0723.github.io/categories/index.html">
-<meta property="og:site_name" content="Andy 程式雜記">
-<meta property="og:locale" content="zh_TW">
-<meta property="article:author" content="Andy Hung">
-<meta name="twitter:card" content="summary">   
-<link rel="icon" type="image/x-icon" href="/favicon.ico" />
-
-
-<link
-  rel="stylesheet"
-  href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro"
-/>
-<link
-  rel="stylesheet"
-  href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css"
-/>
-
-
-<link
-  rel="stylesheet"
-  href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css"
-/>
-<link
-  rel="stylesheet"
-  href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css"
-/>
+<body data-stream="">
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header">
+  <button class="icon-btn menu-btn" type="button" aria-label="開啟文章列表" aria-controls="sidebar" aria-expanded="false">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+  </button>
+  <a class="brand" href="/">
+    <span class="brand-mark" aria-hidden="true">A/</span>
+    <span class="brand-name">Andy 的筆記</span>
+  </a>
+  <div class="search" role="search">
+    <label class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="搜尋文章、CVE、套件名稱" aria-label="搜尋文章" autocomplete="off" aria-controls="search-results" aria-expanded="false">
+      <kbd>/</kbd>
+    </label>
+    <div class="search-results" id="search-results" hidden></div>
+  </div>
+  <nav class="site-nav" aria-label="主選單">
+    <a href="/archives/">所有文章</a>
+    <a href="/about/">關於</a>
+    <a href="/atom.xml">RSS</a>
+    <button class="icon-btn theme-btn" type="button" aria-label="切換深色模式">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </nav>
+</header>
 
 
-<link
-  rel="stylesheet"
-  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css"
-/>
-
-
-<link rel="stylesheet" href="/css/style.css">
-
-
-<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
-
-          
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WNKP76R');</script>
-    <!-- End Google Tag Manager -->
+<div class="shell">
   
 
-    <meta name="google-site-verification" content="b-gZ-g46Zqse8T04Cg5Oq7o_y4_e5h7GE0MnJp7wKyE" />
-<meta name="generator" content="Hexo 6.2.0"></head>
-<body>
+<aside class="sidebar" id="sidebar" aria-label="文章列表">
+  <div class="stream-tabs" role="tablist" aria-label="分類">
     
-<nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
-    <div class="container">
-        <div class="navbar-brand">
-            <a class="navbar-item navbar-logo" href="/">
-                
-                    
-                    Andy 程式雜記
-                    
-                
-            </a>
-            <div class="navbar-burger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-        
-        <div class="navbar-menu navbar-start">
-            
-            <a class="navbar-item "
-               href="/archives">列表</a>
-            
-            <a class="navbar-item is-active"
-               href="/categories">分類</a>
-            
-            <a class="navbar-item "
-               href="/categories/Google-Analytics">Google Analytics</a>
-            
-        </div>
-        
-        <div class="navbar-menu navbar-end">
-            
-            <a class="navbar-item search" title="搜尋" href="javascript:;">
-                <i class="fas fa-search"></i>
-            </a>
-            
-            
-            
-            <a class="navbar-item" title="GitHub" target="_blank" rel="noopener" href="https://github.com/AndyHung0723">
-                
-                <i class="fab fa-github"></i>
-                
-            </a>
-               
-            
-        </div>
-    </div>
-</nav>
+      <a class="stream-tab" role="tab" id="tab-security" data-stream="security" data-stream-tab="security"
+         href="/security/" aria-controls="panel-security" aria-selected="true">
+        <span class="stream-tab-label">資安週報</span>
+        <span class="stream-tab-count">1 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-tech" data-stream="tech" data-stream-tab="tech"
+         href="/tech/" aria-controls="panel-tech" aria-selected="false">
+        <span class="stream-tab-label">技術雷達</span>
+        <span class="stream-tab-count">1 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-notes" data-stream="notes" data-stream-tab="notes"
+         href="/notes/" aria-controls="panel-notes" aria-selected="false">
+        <span class="stream-tab-label">研究筆記</span>
+        <span class="stream-tab-count">6 篇</span>
+      </a>
+    
+  </div>
+  
+    <section class="stream-panel" id="panel-security" role="tabpanel" aria-labelledby="tab-security" data-stream="security">
+      <p class="stream-desc">每週整理 CVE、已知遭利用漏洞與修補順序。 <a href="/security/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/security-weekly-2026-11-09/">
+                <span class="post-link-title">資安週報｜2026/11/09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>12 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-tech" role="tabpanel" aria-labelledby="tab-tech" data-stream="tech" hidden>
+      <p class="stream-desc">雲端、AI 工具鏈與前端框架的每週更新。 <a href="/tech/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/tech-radar-2026-11-09/">
+                <span class="post-link-title">技術週報｜2026-11-09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>13 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-notes" role="tabpanel" aria-labelledby="tab-notes" data-stream="notes" hidden>
+      <p class="stream-desc">踩坑紀錄與深入探討，一篇解一個問題。 <a href="/notes/">看全部</a></p>
+      
+        <h3 class="year">2023</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2023/04/20/ga/ga4_share_0420/">
+                <span class="post-link-title">GA4 vs GA3 來源/媒介 BigQuery 欄位解析</span>
+                <span class="post-link-meta"><time datetime="2023-04-19T16:00:00.000Z">04-20</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2023/04/16/ga/ga4_share_0416/">
+                <span class="post-link-title">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</span>
+                <span class="post-link-meta"><time datetime="2023-04-15T16:00:00.000Z">04-16</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+        <h3 class="year">2022</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2022/06/08/position-sticky-issue/">
+                <span class="post-link-title">position:sticky 遇到 overflow 時失效解法</span>
+                <span class="post-link-meta"><time datetime="2022-06-07T16:00:00.000Z">06-08</time><span>2 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/06/01/angular-offsetwidth-bug/">
+                <span class="post-link-title">Angular 取得元素 offsetWidth 時有誤解法</span>
+                <span class="post-link-meta"><time datetime="2022-05-31T16:00:00.000Z">06-01</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/29/angular-lazy-loading/">
+                <span class="post-link-title">Angular Lazy Loading</span>
+                <span class="post-link-meta"><time datetime="2022-05-28T16:00:00.000Z">05-29</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/28/angular-module/">
+                <span class="post-link-title">探討 Angular Module</span>
+                <span class="post-link-meta"><time datetime="2022-05-27T16:00:00.000Z">05-28</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+  <p class="kbd-hint"><kbd>j</kbd><kbd>k</kbd> 上下切換文章 <kbd>/</kbd> 搜尋</p>
+</aside>
+<script>
+  try {
+    document.getElementById('sidebar').scrollTop = Number(sessionStorage.getItem('sidebar-scroll')) || 0;
+  } catch {}
+</script>
+<div class="scrim" hidden></div>
 
-    <section class="section section-heading">
-    <div class="container">
-        <div class="content">
-            <h5><i class="far fa-folder"></i>分類</h5>
-        </div>
-    </div>
-</section>
-<section class="section">
-    <div class="container">
-        <div class="columns is-variable is-1 is-multiline is-mobile">
-            
-            <span class="column is-narrow">
-                <a class="tag is-light article-tag" href="/categories/Angular/">Angular&nbsp;(3)</a>
-            </span>
-            
-            <span class="column is-narrow">
-                <a class="tag is-light article-tag" href="/categories/CSS/">CSS&nbsp;(1)</a>
-            </span>
-            
-            <span class="column is-narrow">
-                <a class="tag is-light article-tag" href="/categories/Google-Analytics/">Google Analytics&nbsp;(2)</a>
-            </span>
-            
-        </div>
-    </div>
-</section>
-    <footer class="footer">
-    <div class="container">
-        <div class="columns content">
-            <div class="column is-narrow has-text-centered">
-                &copy; 2023 Andy Hung&nbsp;
-                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
-                        target="_blank" rel="noopener" href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
-            </div>
-            <div class="column is-hidden-mobile"></div>
-
-            
-            <div class="column is-narrow">
-                <div class="columns is-mobile is-multiline is-centered">
-                
-                    
-                <a class="column is-narrow has-text-black" title="GitHub" target="_blank" rel="noopener" href="https://github.com/AndyHung0723">
-                    
-                    GitHub
-                    
-                </a>
-                
-                </div>
-            </div>
-            
-            
-        </div>
-    </div>
-</footer>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
-
-<!-- test if the browser is outdated -->
-<div id="outdated">
-    <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" target="_blank" rel="noopener" href="http://outdatedbrowser.com/">Update my browser now </a></p>
-    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+  <main class="main" id="main" tabindex="-1">
+    <div class="listing">
+  <header class="listing-header">
+    <h1 class="listing-title">分類</h1>
+    <p class="listing-desc">共 5 個分類。</p>
+  </header>
+  <ul class="terms">
+    
+      <li><a class="term" href="/categories/Angular/">Angular<span class="term-count">3</span></a></li>
+    
+      <li><a class="term" href="/categories/CSS/">CSS<span class="term-count">1</span></a></li>
+    
+      <li><a class="term" href="/categories/Google-Analytics/">Google Analytics<span class="term-count">2</span></a></li>
+    
+      <li><a class="term" href="/categories/%E6%8A%80%E8%A1%93%E9%9B%B7%E9%81%94/">技術雷達<span class="term-count">1</span></a></li>
+    
+      <li><a class="term" href="/categories/%E8%B3%87%E5%AE%89%E9%80%B1%E5%A0%B1/">資安週報<span class="term-count">1</span></a></li>
+    
+  </ul>
 </div>
-<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
-<script>
-    $(document).ready(function () {
-        // plugin function, place inside DOM ready function
-        outdatedBrowser({
-            bgColor: '#f25648',
-            color: '#ffffff',
-            lowerThan: 'flex'
-        })
-    });
-</script>
 
-<script>
-    window.FontAwesomeConfig = {
-        searchPseudoElements: true
-    }
-    moment.locale("zh-TW");
-</script>
-
-
-    
-    
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-<script>
-    MathJax.Hub.Config({
-        "HTML-CSS": {
-            matchFontHeight: false
-        },
-        SVG: {
-            matchFontHeight: false
-        },
-        CommonHTML: {
-            matchFontHeight: false
-        },
-        tex2jax: {
-            inlineMath: [
-                ['$','$'],
-                ['\\(','\\)']
-            ]
-        }
-    });
-</script>
-
-    
-    
-    
-    
-<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
-<script>
-    (function ($) {
-        $(document).ready(function () {
-            if (typeof($.fn.lightGallery) === 'function') {
-                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
-            }
-            if (typeof($.fn.justifiedGallery) === 'function') {
-                $('.justified-gallery').justifiedGallery();
-            }
-        });
-    })(jQuery);
-</script>
-
-    
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
-    <style>
-        .hljs {
-            position: relative;
-        }
-
-        .hljs .clipboard-btn {
-            float: right;
-            color: #9a9a9a;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        .hljs .clipboard-btn:hover {
-          color: #8a8a8a;
-        }
-
-        .hljs > .clipboard-btn {
-            display: none;
-            position: absolute;
-            right: 4px;
-            top: 4px;
-        }
-
-        .hljs:hover > .clipboard-btn {
-            display: inline;
-        }
-
-        .hljs > figcaption > .clipboard-btn {
-            margin-right: 4px;
-        }
-    </style>
-    <script>
-      $(document).ready(function () {
-        $('figure.hljs').each(function(i, figure) {
-          var codeId = 'code-' + i;
-          var code = figure.querySelector('.code');
-          var copyButton = $('<button>Copy <i class="far fa-clipboard"></i></button>');
-          code.id = codeId;
-          copyButton.addClass('clipboard-btn');
-          copyButton.attr('data-clipboard-target-id', codeId);
-
-          var figcaption = figure.querySelector('figcaption');
-
-          if (figcaption) {
-            figcaption.append(copyButton[0]);
-          } else {
-            figure.prepend(copyButton[0]);
-          }
-        })
-
-        var clipboard = new ClipboardJS('.clipboard-btn', {
-          target: function(trigger) {
-            return document.getElementById(trigger.getAttribute('data-clipboard-target-id'));
-          }
-        });
-        clipboard.on('success', function(e) {
-          e.clearSelection();
-        })
-      })
-    </script>
-
-    
-    
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WNKP76R');</script>
-    <!-- End Google Tag Manager -->
-
-    
-
-
-
-<script src="/js/script.js"></script>
-
-
-    
-    <div class="searchbox ins-search">
-    <div class="searchbox-mask"></div>
-    <div class="searchbox-container ins-search-container">
-        <div class="searchbox-input-wrapper">
-            <input type="text" class="searchbox-input ins-search-input" placeholder="站內搜尋" />
-            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="searchbox-result-wrapper ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
+  </main>
 </div>
-<script>
-    (function (window) {
-        var INSIGHT_CONFIG = {
-            TRANSLATION: {
-                POSTS: '文章',
-                PAGES: '頁面',
-                CATEGORIES: '分類',
-                TAGS: '標籤',
-                UNTITLED: '(無標題)',
-            },
-            CONTENT_URL: '/content.json',
-        };
-        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-    })(window);
-</script>
-
-<script src="/js/insight.js"></script>
-
-    
-    <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WNKP76R"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
 </body>
 </html>

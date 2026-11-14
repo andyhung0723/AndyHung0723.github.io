@@ -1,21 +1,314 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>position:sticky 遇到 overflow 時失效解法 · Andy 的筆記</title><meta name="description" content="資安、技術與程式筆記。"><link rel="stylesheet" href="/css/reading.css?v=20261113-2"><link rel="alternate" type="application/atom+xml" title="訂閱全部文章" href="/atom.xml"><link rel="canonical" href="https://andyhung0723.github.io/2022/06/08/position-sticky-issue/"><meta name="generator" content="Hexo 8.1.2"></head><body><a class="skip" href="#main">跳到主要內容</a><header class="site-header"><a class="brand" href="/">Andy 的筆記</a><nav aria-label="主選單"><a href="/">首頁</a><a href="/archives/">所有文章</a><a href="/about/">關於</a><a href="/atom.xml">RSS ↗</a></nav></header><main id="main"><article class="post"><a class="back" href="/">← 首頁</a><header class="post-header"><h1>position:sticky 遇到 overflow 時失效解法</h1><p class="post-meta">Andy Hung · <time datetime="2022-06-08">2022-06-08</time> · 4 分鐘閱讀</p><p class="notice">舊文章，部分資訊可能已更新。</p></header><div class="post-grid"><div class="prose"><p>今天在處理將 table 表頭凍結在最上方時，找到了使用<code>position: sticky</code>的方式解決，但若我要同時在小畫面時讓這個 table 的 X 軸能夠有 scroll bar 卻出現了問題，以下紀錄一下問題原因與解決方式。</p>
+
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>position:sticky 遇到 overflow 時失效解法 · Andy 的筆記</title>
+<meta name="description" content="今天在處理將 table 表頭凍結在最上方時，找到了使用position: sticky的方式解決，但若我要同時在小畫面時讓這個 table 的 X 軸能夠有 scroll bar 卻出現了問題，以下紀錄一下問題原因與解決方式。">
+<link rel="canonical" href="https://andyhung0723.github.io/2022/06/08/position-sticky-issue/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="position:sticky 遇到 overflow 時失效解法">
+<meta property="og:description" content="今天在處理將 table 表頭凍結在最上方時，找到了使用position: sticky的方式解決，但若我要同時在小畫面時讓這個 table 的 X 軸能夠有 scroll bar 卻出現了問題，以下紀錄一下問題原因與解決方式。">
+<meta property="og:url" content="https://andyhung0723.github.io/2022/06/08/position-sticky-issue/">
+<meta property="og:site_name" content="Andy 的筆記">
+<script>
+  try {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+  } catch {}
+</script>
+<link rel="stylesheet" href="/css/reader.css?v=b8fc5f6b9f">
+<style>[data-stream="security"]{--stream:#9A3F08;--stream-tint:#FDF0E6}[data-stream="tech"]{--stream:#2450C8;--stream-tint:#EAF0FD}[data-stream="notes"]{--stream:#0E6B5F;--stream-tint:#E5F4F1}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root:not([data-theme="light"]) [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root:not([data-theme="light"]) [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}}:root[data-theme="dark"] [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root[data-theme="dark"] [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root[data-theme="dark"] [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}</style>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="Andy 的筆記" href="/atom.xml">
+<script type="speculationrules">
+  {"prerender": [{"source": "document", "where": {"selector_matches": ".pager-link, .post-link"}, "eagerness": "moderate"}]}
+</script>
+<script src="/js/reader.js?v=98ae7b0f53" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body data-stream="notes">
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header">
+  <button class="icon-btn menu-btn" type="button" aria-label="開啟文章列表" aria-controls="sidebar" aria-expanded="false">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+  </button>
+  <a class="brand" href="/">
+    <span class="brand-mark" aria-hidden="true">A/</span>
+    <span class="brand-name">Andy 的筆記</span>
+  </a>
+  <div class="search" role="search">
+    <label class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="搜尋文章、CVE、套件名稱" aria-label="搜尋文章" autocomplete="off" aria-controls="search-results" aria-expanded="false">
+      <kbd>/</kbd>
+    </label>
+    <div class="search-results" id="search-results" hidden></div>
+  </div>
+  <nav class="site-nav" aria-label="主選單">
+    <a href="/archives/">所有文章</a>
+    <a href="/about/">關於</a>
+    <a href="/atom.xml">RSS</a>
+    <button class="icon-btn theme-btn" type="button" aria-label="切換深色模式">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </nav>
+</header>
+
+<div class="progress" aria-hidden="true"><span></span></div>
+<div class="shell">
+  
+
+<aside class="sidebar" id="sidebar" aria-label="文章列表">
+  <div class="stream-tabs" role="tablist" aria-label="分類">
+    
+      <a class="stream-tab" role="tab" id="tab-security" data-stream="security" data-stream-tab="security"
+         href="/security/" aria-controls="panel-security" aria-selected="false">
+        <span class="stream-tab-label">資安週報</span>
+        <span class="stream-tab-count">1 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-tech" data-stream="tech" data-stream-tab="tech"
+         href="/tech/" aria-controls="panel-tech" aria-selected="false">
+        <span class="stream-tab-label">技術雷達</span>
+        <span class="stream-tab-count">1 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-notes" data-stream="notes" data-stream-tab="notes"
+         href="/notes/" aria-controls="panel-notes" aria-selected="true">
+        <span class="stream-tab-label">研究筆記</span>
+        <span class="stream-tab-count">6 篇</span>
+      </a>
+    
+  </div>
+  
+    <section class="stream-panel" id="panel-security" role="tabpanel" aria-labelledby="tab-security" data-stream="security" hidden>
+      <p class="stream-desc">每週整理 CVE、已知遭利用漏洞與修補順序。 <a href="/security/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/security-weekly-2026-11-09/">
+                <span class="post-link-title">資安週報｜2026/11/09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>12 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-tech" role="tabpanel" aria-labelledby="tab-tech" data-stream="tech" hidden>
+      <p class="stream-desc">雲端、AI 工具鏈與前端框架的每週更新。 <a href="/tech/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/tech-radar-2026-11-09/">
+                <span class="post-link-title">技術週報｜2026-11-09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>13 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-notes" role="tabpanel" aria-labelledby="tab-notes" data-stream="notes">
+      <p class="stream-desc">踩坑紀錄與深入探討，一篇解一個問題。 <a href="/notes/">看全部</a></p>
+      
+        <h3 class="year">2023</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2023/04/20/ga/ga4_share_0420/">
+                <span class="post-link-title">GA4 vs GA3 來源/媒介 BigQuery 欄位解析</span>
+                <span class="post-link-meta"><time datetime="2023-04-19T16:00:00.000Z">04-20</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2023/04/16/ga/ga4_share_0416/">
+                <span class="post-link-title">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</span>
+                <span class="post-link-meta"><time datetime="2023-04-15T16:00:00.000Z">04-16</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+        <h3 class="year">2022</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2022/06/08/position-sticky-issue/" aria-current="page">
+                <span class="post-link-title">position:sticky 遇到 overflow 時失效解法</span>
+                <span class="post-link-meta"><time datetime="2022-06-07T16:00:00.000Z">06-08</time><span>2 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/06/01/angular-offsetwidth-bug/">
+                <span class="post-link-title">Angular 取得元素 offsetWidth 時有誤解法</span>
+                <span class="post-link-meta"><time datetime="2022-05-31T16:00:00.000Z">06-01</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/29/angular-lazy-loading/">
+                <span class="post-link-title">Angular Lazy Loading</span>
+                <span class="post-link-meta"><time datetime="2022-05-28T16:00:00.000Z">05-29</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/28/angular-module/">
+                <span class="post-link-title">探討 Angular Module</span>
+                <span class="post-link-meta"><time datetime="2022-05-27T16:00:00.000Z">05-28</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+  <p class="kbd-hint"><kbd>j</kbd><kbd>k</kbd> 上下切換文章 <kbd>/</kbd> 搜尋</p>
+</aside>
+<script>
+  try {
+    document.getElementById('sidebar').scrollTop = Number(sessionStorage.getItem('sidebar-scroll')) || 0;
+  } catch {}
+</script>
+<div class="scrim" hidden></div>
+
+  <main class="main" id="main" tabindex="-1">
+    
+
+
+<div class="post-layout">
+  <article class="post">
+    <header class="post-header">
+      <nav class="crumbs" aria-label="麵包屑">
+        <a class="badge" href="/notes/">研究筆記</a>
+        <span aria-hidden="true">/</span>
+        <time datetime="2022-06-07T16:00:00.000Z">2022-06-08</time>
+      </nav>
+      <h1 class="post-title">position:sticky 遇到 overflow 時失效解法</h1>
+      <p class="post-meta">
+        <span>Andy Hung</span>
+        <span>2 分鐘閱讀</span>
+        <span>研究筆記第 3 / 6 篇</span>
+      </p>
+      
+        <p class="notice">2022 年的舊文章，部分 API 或行為可能已變更。</p>
+      
+      
+      
+    </header>
+
+    
+      <details class="toc-inline">
+        <summary>本頁目錄</summary>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%95%8F%E9%A1%8C"><span class="toc-text">問題</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9B%A0"><span class="toc-text">原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%95"><span class="toc-text">解法</span></a></li></ol>
+      </details>
+    
+
+    <div class="prose"><p>今天在處理將 table 表頭凍結在最上方時，找到了使用<code>position: sticky</code>的方式解決，但若我要同時在小畫面時讓這個 table 的 X 軸能夠有 scroll bar 卻出現了問題，以下紀錄一下問題原因與解決方式。</p>
 <span id="more"></span>
 
 <blockquote>
-<p>範例連結：<a target="_blank" rel="noopener" href="https://codepen.io/andyhung0723/pen/YzeOovW">https://codepen.io/andyhung0723/pen/YzeOovW</a></p>
+<p>範例連結：<a href="https://codepen.io/andyhung0723/pen/YzeOovW" target="_blank" rel="noopener">https://codepen.io/andyhung0723/pen/YzeOovW</a></p>
 </blockquote>
 <h2 id="問題"><a href="#問題" class="headerlink" title="問題"></a>問題</h2><p>假設我有一個 table，若我想將它的表頭凍結在最上方不動，可以使用<code>position: sticky</code>：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.table-sticky</span> <span class="selector-class">.th</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: sticky;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight css"><span class="selector-class">.table-sticky</span> <span class="selector-class">.th</span> &#123;
+  <span class="attribute">position</span>: sticky;
+  <span class="attribute">top</span>: <span class="number">0</span>;
+&#125;</code></pre>
 
 <p>若在小畫面時想要此 table 不要撐開整體寬度，一般會在外層使用<code>overflow-x: auto</code>來讓 X 軸產生 scroll bar：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.table-sticky-container</span> &#123;</span><br><span class="line">  <span class="attribute">overflow-x</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight css"><span class="selector-class">.table-sticky-container</span> &#123;
+  <span class="attribute">overflow-x</span>: auto;
+&#125;</code></pre>
 
 <p>此時就會發現<strong>原本<code>position: sticky</code>的凍結效果卻失效了</strong>。</p>
-<br>
-
 <h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>經測試發現只要<code>position: sticky</code>上所有階層的父元素只要有一個的<code>overflow</code>值是<code>visible</code>以外的其他值，就會導致失效。</p>
-<br>
-
 <h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><p>目前單純使用 CSS 貌似沒有解法，因此我使用 JavaScript 的 scroll 事件來動態 transform 表頭的位置來解決，程式碼如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;scroll&#x27;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> scrollTop = <span class="variable language_">window</span>.<span class="property">pageYOffset</span> || <span class="variable language_">document</span>.<span class="property">documentElement</span>.<span class="property">scrollTop</span> || <span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">scrollTop</span> || <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">var</span> stickyTables = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;.table-sticky&#x27;</span>);</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span> ; i &lt; stickyTables.<span class="property">length</span> ; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> thead = stickyTables[i].<span class="title function_">querySelector</span>(<span class="string">&#x27;thead&#x27;</span>);</span><br><span class="line">    <span class="keyword">var</span> offsetTop = stickyTables[i].<span class="property">offsetTop</span>;</span><br><span class="line">    <span class="keyword">var</span> offsetHeight = stickyTables[i].<span class="property">offsetHeight</span> - thead.<span class="property">offsetHeight</span>;</span><br><span class="line">    <span class="keyword">var</span> transformY = <span class="title function_">getTranslateY</span>(thead);</span><br><span class="line">    <span class="keyword">if</span>(scrollTop &gt;= offsetTop &amp;&amp; scrollTop &lt;= offsetTop + offsetHeight) &#123;</span><br><span class="line">      transformY = scrollTop - offsetTop;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(scrollTop &lt; offsetTop)&#123;</span><br><span class="line">      transformY = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    thead.<span class="property">style</span>.<span class="property">transform</span> = <span class="string">&#x27;translateY(&#x27;</span>+ transformY +<span class="string">&#x27;px)&#x27;</span>;</span><br><span class="line">  &#125; </span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">getTranslateY</span>(<span class="params">element</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> style = <span class="variable language_">window</span>.<span class="title function_">getComputedStyle</span>(element);</span><br><span class="line">  <span class="keyword">var</span> matrix = <span class="keyword">new</span> <span class="title class_">WebKitCSSMatrix</span>(style.<span class="property">transform</span>);</span><br><span class="line">  <span class="keyword">return</span> matrix.<span class="property">m42</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><aside class="toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%95%8F%E9%A1%8C"><span class="toc-text">問題</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9B%A0"><span class="toc-text">原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%95"><span class="toc-text">解法</span></a></li></ol></aside></div><div class="post-end"><a href="/archives/">← 所有文章</a><a href="/atom.xml">訂閱 RSS ↗</a></div></article>
-</main><footer><span>Andy 的筆記</span><a href="/atom.xml">RSS 訂閱</a></footer><script src="/js/reading.js" defer></script></body></html>
+<pre><code class="highlight javascript"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;scroll&#x27;</span>, <span class="keyword">function</span>(<span class="params">event</span>) &#123;
+  <span class="keyword">var</span> scrollTop = <span class="variable language_">window</span>.<span class="property">pageYOffset</span> || <span class="variable language_">document</span>.<span class="property">documentElement</span>.<span class="property">scrollTop</span> || <span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">scrollTop</span> || <span class="number">0</span>;
+  <span class="keyword">var</span> stickyTables = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;.table-sticky&#x27;</span>);
+  <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span> ; i &lt; stickyTables.<span class="property">length</span> ; i++) &#123;
+    <span class="keyword">var</span> thead = stickyTables[i].<span class="title function_">querySelector</span>(<span class="string">&#x27;thead&#x27;</span>);
+    <span class="keyword">var</span> offsetTop = stickyTables[i].<span class="property">offsetTop</span>;
+    <span class="keyword">var</span> offsetHeight = stickyTables[i].<span class="property">offsetHeight</span> - thead.<span class="property">offsetHeight</span>;
+    <span class="keyword">var</span> transformY = <span class="title function_">getTranslateY</span>(thead);
+    <span class="keyword">if</span>(scrollTop &gt;= offsetTop &amp;&amp; scrollTop &lt;= offsetTop + offsetHeight) &#123;
+      transformY = scrollTop - offsetTop;
+    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(scrollTop &lt; offsetTop)&#123;
+      transformY = <span class="number">0</span>;
+    &#125;
+    thead.<span class="property">style</span>.<span class="property">transform</span> = <span class="string">&#x27;translateY(&#x27;</span>+ transformY +<span class="string">&#x27;px)&#x27;</span>;
+  &#125; 
+&#125;);
+
+<span class="keyword">function</span> <span class="title function_">getTranslateY</span>(<span class="params">element</span>) &#123;
+  <span class="keyword">var</span> style = <span class="variable language_">window</span>.<span class="title function_">getComputedStyle</span>(element);
+  <span class="keyword">var</span> matrix = <span class="keyword">new</span> <span class="title class_">WebKitCSSMatrix</span>(style.<span class="property">transform</span>);
+  <span class="keyword">return</span> matrix.<span class="property">m42</span>;
+&#125;</code></pre>
+</div>
+
+    <footer class="post-footer">
+      
+      
+        <a class="source-link" target="_blank" rel="noopener" href="https://github.com/andyhung0723/AndyHung0723.github.io/blob/source/source/_posts/position-sticky-issue.md">在 GitHub 檢視原始檔</a>
+      
+    </footer>
+
+    <nav class="pager" aria-label="同分類的其他文章">
+  
+    <a class="pager-link" rel="prev" data-nav="newer" href="/2023/04/16/ga/ga4_share_0416/">
+      <span class="pager-dir">← 較新一篇</span>
+      <span class="pager-title">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</span>
+    </a>
+  
+  
+    <a class="pager-link pager-link--older" rel="next" data-nav="older" href="/2022/06/01/angular-offsetwidth-bug/">
+      <span class="pager-dir">較舊一篇 →</span>
+      <span class="pager-title">Angular 取得元素 offsetWidth 時有誤解法</span>
+    </a>
+  
+</nav>
+
+  </article>
+
+  
+    <nav class="toc-rail" aria-label="本頁目錄">
+      <p class="toc-title">本頁目錄</p>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%95%8F%E9%A1%8C"><span class="toc-text">問題</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9B%A0"><span class="toc-text">原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%95"><span class="toc-text">解法</span></a></li></ol>
+      <a class="toc-top" href="#main">回到頂端 ↑</a>
+    </nav>
+  
+</div>
+<nav class="pager pager--dock" aria-label="同分類的其他文章">
+  
+    <a class="pager-link" rel="prev" data-nav="newer" href="/2023/04/16/ga/ga4_share_0416/">
+      <span class="pager-dir">← 較新一篇</span>
+      <span class="pager-title">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</span>
+    </a>
+  
+  
+    <a class="pager-link pager-link--older" rel="next" data-nav="older" href="/2022/06/01/angular-offsetwidth-bug/">
+      <span class="pager-dir">較舊一篇 →</span>
+      <span class="pager-title">Angular 取得元素 offsetWidth 時有誤解法</span>
+    </a>
+  
+</nav>
+
+
+  </main>
+</div>
+</body>
+</html>

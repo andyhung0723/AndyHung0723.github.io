@@ -1,33 +1,247 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GA4 vs GA3 來源/媒介 BigQuery 欄位解析 · Andy 的筆記</title><meta name="description" content="資安、技術與程式筆記。"><link rel="stylesheet" href="/css/reading.css?v=20261113-2"><link rel="alternate" type="application/atom+xml" title="訂閱全部文章" href="/atom.xml"><link rel="canonical" href="https://andyhung0723.github.io/2023/04/20/ga/ga4_share_0420/"><meta name="generator" content="Hexo 8.1.2"></head><body><a class="skip" href="#main">跳到主要內容</a><header class="site-header"><a class="brand" href="/">Andy 的筆記</a><nav aria-label="主選單"><a href="/">首頁</a><a href="/archives/">所有文章</a><a href="/about/">關於</a><a href="/atom.xml">RSS ↗</a></nav></header><main id="main"><article class="post"><a class="back" href="/">← 首頁</a><header class="post-header"><h1>GA4 vs GA3 來源/媒介 BigQuery 欄位解析</h1><p class="post-meta">Amy · <time datetime="2023-04-20">2023-04-20</time> · 5 分鐘閱讀</p><p class="notice">舊文章，部分資訊可能已更新。</p></header><div class="post-grid"><div class="prose"><p>👉 文章內容深度 : 3&#x2F;5顆星<br>👉 適用對象 : 有使用 BigQuery 製作來源&#x2F;媒介報表</p>
+
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>GA4 vs GA3 來源/媒介 BigQuery 欄位解析 · Andy 的筆記</title>
+<meta name="description" content="👉 文章內容深度 : 3&amp;#x2F;5顆星👉 適用對象 : 有使用 BigQuery 製作來源&amp;#x2F;媒介報表">
+<link rel="canonical" href="https://andyhung0723.github.io/2023/04/20/ga/ga4_share_0420/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GA4 vs GA3 來源/媒介 BigQuery 欄位解析">
+<meta property="og:description" content="👉 文章內容深度 : 3&amp;#x2F;5顆星👉 適用對象 : 有使用 BigQuery 製作來源&amp;#x2F;媒介報表">
+<meta property="og:url" content="https://andyhung0723.github.io/2023/04/20/ga/ga4_share_0420/">
+<meta property="og:site_name" content="Andy 的筆記">
+<script>
+  try {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+  } catch {}
+</script>
+<link rel="stylesheet" href="/css/reader.css?v=b8fc5f6b9f">
+<style>[data-stream="security"]{--stream:#9A3F08;--stream-tint:#FDF0E6}[data-stream="tech"]{--stream:#2450C8;--stream-tint:#EAF0FD}[data-stream="notes"]{--stream:#0E6B5F;--stream-tint:#E5F4F1}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root:not([data-theme="light"]) [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root:not([data-theme="light"]) [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}}:root[data-theme="dark"] [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root[data-theme="dark"] [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root[data-theme="dark"] [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}</style>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="Andy 的筆記" href="/atom.xml">
+<script type="speculationrules">
+  {"prerender": [{"source": "document", "where": {"selector_matches": ".pager-link, .post-link"}, "eagerness": "moderate"}]}
+</script>
+<script src="/js/reader.js?v=98ae7b0f53" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body data-stream="notes">
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header">
+  <button class="icon-btn menu-btn" type="button" aria-label="開啟文章列表" aria-controls="sidebar" aria-expanded="false">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+  </button>
+  <a class="brand" href="/">
+    <span class="brand-mark" aria-hidden="true">A/</span>
+    <span class="brand-name">Andy 的筆記</span>
+  </a>
+  <div class="search" role="search">
+    <label class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="搜尋文章、CVE、套件名稱" aria-label="搜尋文章" autocomplete="off" aria-controls="search-results" aria-expanded="false">
+      <kbd>/</kbd>
+    </label>
+    <div class="search-results" id="search-results" hidden></div>
+  </div>
+  <nav class="site-nav" aria-label="主選單">
+    <a href="/archives/">所有文章</a>
+    <a href="/about/">關於</a>
+    <a href="/atom.xml">RSS</a>
+    <button class="icon-btn theme-btn" type="button" aria-label="切換深色模式">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </nav>
+</header>
+
+<div class="progress" aria-hidden="true"><span></span></div>
+<div class="shell">
+  
+
+<aside class="sidebar" id="sidebar" aria-label="文章列表">
+  <div class="stream-tabs" role="tablist" aria-label="分類">
+    
+      <a class="stream-tab" role="tab" id="tab-security" data-stream="security" data-stream-tab="security"
+         href="/security/" aria-controls="panel-security" aria-selected="false">
+        <span class="stream-tab-label">資安週報</span>
+        <span class="stream-tab-count">1 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-tech" data-stream="tech" data-stream-tab="tech"
+         href="/tech/" aria-controls="panel-tech" aria-selected="false">
+        <span class="stream-tab-label">技術雷達</span>
+        <span class="stream-tab-count">1 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-notes" data-stream="notes" data-stream-tab="notes"
+         href="/notes/" aria-controls="panel-notes" aria-selected="true">
+        <span class="stream-tab-label">研究筆記</span>
+        <span class="stream-tab-count">6 篇</span>
+      </a>
+    
+  </div>
+  
+    <section class="stream-panel" id="panel-security" role="tabpanel" aria-labelledby="tab-security" data-stream="security" hidden>
+      <p class="stream-desc">每週整理 CVE、已知遭利用漏洞與修補順序。 <a href="/security/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/security-weekly-2026-11-09/">
+                <span class="post-link-title">資安週報｜2026/11/09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>12 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-tech" role="tabpanel" aria-labelledby="tab-tech" data-stream="tech" hidden>
+      <p class="stream-desc">雲端、AI 工具鏈與前端框架的每週更新。 <a href="/tech/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/tech-radar-2026-11-09/">
+                <span class="post-link-title">技術週報｜2026-11-09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>13 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-notes" role="tabpanel" aria-labelledby="tab-notes" data-stream="notes">
+      <p class="stream-desc">踩坑紀錄與深入探討，一篇解一個問題。 <a href="/notes/">看全部</a></p>
+      
+        <h3 class="year">2023</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2023/04/20/ga/ga4_share_0420/" aria-current="page">
+                <span class="post-link-title">GA4 vs GA3 來源/媒介 BigQuery 欄位解析</span>
+                <span class="post-link-meta"><time datetime="2023-04-19T16:00:00.000Z">04-20</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2023/04/16/ga/ga4_share_0416/">
+                <span class="post-link-title">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</span>
+                <span class="post-link-meta"><time datetime="2023-04-15T16:00:00.000Z">04-16</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+        <h3 class="year">2022</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2022/06/08/position-sticky-issue/">
+                <span class="post-link-title">position:sticky 遇到 overflow 時失效解法</span>
+                <span class="post-link-meta"><time datetime="2022-06-07T16:00:00.000Z">06-08</time><span>2 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/06/01/angular-offsetwidth-bug/">
+                <span class="post-link-title">Angular 取得元素 offsetWidth 時有誤解法</span>
+                <span class="post-link-meta"><time datetime="2022-05-31T16:00:00.000Z">06-01</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/29/angular-lazy-loading/">
+                <span class="post-link-title">Angular Lazy Loading</span>
+                <span class="post-link-meta"><time datetime="2022-05-28T16:00:00.000Z">05-29</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/28/angular-module/">
+                <span class="post-link-title">探討 Angular Module</span>
+                <span class="post-link-meta"><time datetime="2022-05-27T16:00:00.000Z">05-28</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+  <p class="kbd-hint"><kbd>j</kbd><kbd>k</kbd> 上下切換文章 <kbd>/</kbd> 搜尋</p>
+</aside>
+<script>
+  try {
+    document.getElementById('sidebar').scrollTop = Number(sessionStorage.getItem('sidebar-scroll')) || 0;
+  } catch {}
+</script>
+<div class="scrim" hidden></div>
+
+  <main class="main" id="main" tabindex="-1">
+    
+
+
+<div class="post-layout">
+  <article class="post">
+    <header class="post-header">
+      <nav class="crumbs" aria-label="麵包屑">
+        <a class="badge" href="/notes/">研究筆記</a>
+        <span aria-hidden="true">/</span>
+        <time datetime="2023-04-19T16:00:00.000Z">2023-04-20</time>
+      </nav>
+      <h1 class="post-title">GA4 vs GA3 來源/媒介 BigQuery 欄位解析</h1>
+      <p class="post-meta">
+        <span>Amy</span>
+        <span>4 分鐘閱讀</span>
+        <span>研究筆記第 1 / 6 篇</span>
+      </p>
+      
+      
+      
+    </header>
+
+    
+      <details class="toc-inline">
+        <summary>本頁目錄</summary>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%96%B6-%E4%BB%80%E9%BA%BC%E6%98%AF%E4%BE%86%E6%BA%90-%E5%AA%92%E4%BB%8B"><span class="toc-text">▶ 什麼是來源&#x2F;媒介 ?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%96%B6-GA3-vs-GA4-BigQuery-%E4%BE%86%E6%BA%90-%E5%AA%92%E4%BB%8B%E6%AC%84%E4%BD%8D%E6%AF%94%E8%BC%83%E8%A1%A8"><span class="toc-text">▶ GA3 vs. GA4 BigQuery 來源&#x2F;媒介欄位比較表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%96%B6%E9%82%A3%E7%AC%AC2%E6%AC%A1%E7%9A%84%E4%BE%86%E6%BA%90%E5%AA%92%E4%BB%8B%E8%A6%81%E6%80%8E%E9%BA%BC%E5%8F%96%E5%BE%97"><span class="toc-text">▶那第2次的來源媒介要怎麼取得?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%96%B62%E7%A8%AE%E6%83%85%E5%A2%83%E8%88%87%E5%B0%8D%E6%87%89%E5%80%BC%EF%BC%8C%E5%88%86%E4%BA%AB%E7%B5%A6%E5%A4%A7%E5%AE%B6"><span class="toc-text">▶2種情境與對應值，分享給大家</span></a></li></ol>
+      </details>
+    
+
+    <div class="prose"><p>👉 文章內容深度 : 3&#x2F;5顆星<br>👉 適用對象 : 有使用 BigQuery 製作來源&#x2F;媒介報表</p>
 <span id="more"></span>
 
-<h3 id="▶-什麼是來源-媒介"><a href="#▶-什麼是來源-媒介" class="headerlink" title="▶ 什麼是來源&#x2F;媒介 ?"></a>▶ <strong>什麼是來源&#x2F;媒介 ?</strong></h3><p>  簡單來說就是判斷這個流量從哪邊來? 是從 Google 搜尋引擎進入網站還是從 FB 粉專進入網站。<br>以下為 GA3 &amp; GA4 的來源&#x2F;媒介報表路徑</p>
+<h3 id="▶-什麼是來源-媒介"><a href="#▶-什麼是來源-媒介" class="headerlink" title="▶ 什麼是來源&#x2F;媒介 ?"></a>▶ <strong>什麼是來源&#x2F;媒介 ?</strong></h3><p>簡單來說就是判斷這個流量從哪邊來? 是從 Google 搜尋引擎進入網站還是從 FB 粉專進入網站。<br>以下為 GA3 &amp; GA4 的來源&#x2F;媒介報表路徑</p>
 <ul>
 <li>GA3 : 獲客 &gt; 所有流量 &gt; 來源&#x2F;媒介</li>
 <li>GA4 : 獲客 &gt; 流量開發 : 工作階段預設管道分組 (如下圖)<br><img src="https://i.imgur.com/hVTllIw.png"></li>
 </ul>
-<h3 id="▶-GA3-vs-GA4-BigQuery-來源-媒介欄位比較表"><a href="#▶-GA3-vs-GA4-BigQuery-來源-媒介欄位比較表" class="headerlink" title="▶ GA3 vs. GA4 BigQuery 來源&#x2F;媒介欄位比較表"></a>▶ <strong>GA3 vs. GA4 BigQuery 來源&#x2F;媒介欄位比較表</strong></h3><p>GA3 時代，從 BigQuery 中提取來源&#x2F;媒介數據時，會使用欄位「trafficSource.source」&amp;「trafficSource.medium」，這是沒有錯的!這兩個欄位代表的是每次進站的渠道。<br>&lt;<a target="_blank" rel="noopener" href="https://support.google.com/analytics/answer/3437719?hl=zh-Hant">附上 GA3 匯出 BigQuery 的結構定義</a>&gt;</p>
-<p>當看到 GA4 匯出到 BigQuery 的 Dataset 中看到「traffic_source.source」&amp;「traffic_source.medium」時，心中是不是無比喜悅，就是他惹 :100: </p>
-<p><strong>但是!</strong> 現在我們來看一下 Google 的官方文件說明(附上截圖&amp;<a target="_blank" rel="noopener" href="https://support.google.com/analytics/answer/7029846?hl=zh-Hant&ref_topic=9359001&sjid=6130283979471431016-AP#zippy=%2Ctraffic-source">文件</a>)，<br><span style="color:grab">補充:這兩個欄位會對應到 GA4 維度為「最初招攬到使用者的來源&#x2F;媒介」</span></p>
+<h3 id="▶-GA3-vs-GA4-BigQuery-來源-媒介欄位比較表"><a href="#▶-GA3-vs-GA4-BigQuery-來源-媒介欄位比較表" class="headerlink" title="▶ GA3 vs. GA4 BigQuery 來源&#x2F;媒介欄位比較表"></a>▶ <strong>GA3 vs. GA4 BigQuery 來源&#x2F;媒介欄位比較表</strong></h3><p>GA3 時代，從 BigQuery 中提取來源&#x2F;媒介數據時，會使用欄位「trafficSource.source」&amp;「trafficSource.medium」，這是沒有錯的!這兩個欄位代表的是每次進站的渠道。<br>&lt;<a href="https://support.google.com/analytics/answer/3437719?hl=zh-Hant" target="_blank" rel="noopener">附上 GA3 匯出 BigQuery 的結構定義</a>&gt;</p>
+<p>當看到 GA4 匯出到 BigQuery 的 Dataset 中看到「traffic_source.source」&amp;「traffic_source.medium」時，心中是不是無比喜悅，就是他惹 :100:</p>
+<p><strong>但是!</strong> 現在我們來看一下 Google 的官方文件說明(附上截圖&amp;<a href="https://support.google.com/analytics/answer/7029846?hl=zh-Hant&ref_topic=9359001&sjid=6130283979471431016-AP#zippy=%2Ctraffic-source" target="_blank" rel="noopener">文件</a>)，<br>補充:這兩個欄位會對應到 GA4 維度為「最初招攬到使用者的來源&#x2F;媒介」</p>
 <ul>
-<li>traffic_source.source	: <span style="color:red">初次招攬</span>到使用者的聯播網名稱。</li>
-<li>traffic_source.medium	: <span style="color:red">初次招攬</span>到使用者的媒介名稱。</li>
+<li>traffic_source.source : 初次招攬到使用者的聯播網名稱。</li>
+<li>traffic_source.medium : 初次招攬到使用者的媒介名稱。</li>
 </ul>
 <p><img src="https://i.imgur.com/6Ukf3Ai.png"></p>
 <p>「初次招攬」指的是第一次進到網站的使用者是從哪個渠道進入網站，是 FB 廣告還是 Google 自然搜尋等等。<br>舉例來說 :<br>小明點了 Google 廣告，<strong>第一次</strong>進到網站中，那欄位值會如下</p>
 <ul>
-<li>traffic_source.source	: google</li>
-<li>traffic_source.medium	: cpc</li>
+<li>traffic_source.source : google</li>
+<li>traffic_source.medium : cpc</li>
 </ul>
-<p>那小明隔天從 LINE 官方帳號進入網站，那欄位值是什麼?<br><span style="color:blue"><em>值還是一樣的 ! 因為「traffic_source.source 和 traffic_source.medium 這兩個欄位就是這兩個欄位僅記錄用戶首次訪問網站時的來源媒介</em></span></p>
+<p>那小明隔天從 LINE 官方帳號進入網站，那欄位值是什麼?<br><em>值還是一樣的 ! 因為「traffic_source.source 和 traffic_source.medium 這兩個欄位就是這兩個欄位僅記錄用戶首次訪問網站時的來源媒介</em></p>
 <ul>
-<li>traffic_source.source	: google</li>
-<li>traffic_source.medium	: cpc</li>
+<li>traffic_source.source : google</li>
+<li>traffic_source.medium : cpc</li>
 </ul>
 <h3 id="▶那第2次的來源媒介要怎麼取得"><a href="#▶那第2次的來源媒介要怎麼取得" class="headerlink" title="▶那第2次的來源媒介要怎麼取得?"></a>▶<strong>那第2次的來源媒介要怎麼取得?</strong></h3><p>GA4 的數據模型是由事件組成，所以每個 event_name 對應一個資料列。<br>event_name &#x3D; page_view 指的就是每一次的網站瀏覽，所以第二次進站的來源媒介，會出現在事件名為 page_view 的資料列中，包含 source 和 medium 參數。</p>
-<h3 id="▶2種情境與對應值，分享給大家"><a href="#▶2種情境與對應值，分享給大家" class="headerlink" title="▶2種情境與對應值，分享給大家"></a>▶<strong>2種情境與對應值，分享給大家</strong></h3><h4 id="情境1-小明從-Google-自然搜尋第1次進站到首頁，點了站內-UTM-Urchin-Tracking-Module-到活動頁"><a href="#情境1-小明從-Google-自然搜尋第1次進站到首頁，點了站內-UTM-Urchin-Tracking-Module-到活動頁" class="headerlink" title="情境1 :小明從 Google 自然搜尋第1次進站到首頁，點了站內 UTM(Urchin Tracking Module) 到活動頁"></a>情境1 :小明從 Google 自然搜尋第1次進站到首頁，點了站內 UTM(Urchin Tracking Module) 到活動頁</h4><!--![](https://i.imgur.com/EVFY6f9.png)-->
-
-<p>下表為 BQ 中的資料列示意</p>
+<h3 id="▶2種情境與對應值，分享給大家"><a href="#▶2種情境與對應值，分享給大家" class="headerlink" title="▶2種情境與對應值，分享給大家"></a>▶<strong>2種情境與對應值，分享給大家</strong></h3><h4 id="情境1-小明從-Google-自然搜尋第1次進站到首頁，點了站內-UTM-Urchin-Tracking-Module-到活動頁"><a href="#情境1-小明從-Google-自然搜尋第1次進站到首頁，點了站內-UTM-Urchin-Tracking-Module-到活動頁" class="headerlink" title="情境1 :小明從 Google 自然搜尋第1次進站到首頁，點了站內 UTM(Urchin Tracking Module) 到活動頁"></a>情境1 :小明從 Google 自然搜尋第1次進站到首頁，點了站內 UTM(Urchin Tracking Module) 到活動頁</h4><p>下表為 BQ 中的資料列示意</p>
 <table>
 <thead>
 <tr>
@@ -105,7 +319,6 @@
 </tr>
 </tbody></table>
 <h4 id="情境2-延續情境1，隔天小明點了-FB-粉專的貼文進入了網站商品頁，粉專貼文的連結有帶-UTM-為-Facebook-post"><a href="#情境2-延續情境1，隔天小明點了-FB-粉專的貼文進入了網站商品頁，粉專貼文的連結有帶-UTM-為-Facebook-post" class="headerlink" title="情境2 : 延續情境1，隔天小明點了 FB 粉專的貼文進入了網站商品頁，粉專貼文的連結有帶 UTM 為 Facebook &#x2F; post"></a>情境2 : 延續情境1，隔天小明點了 FB 粉專的貼文進入了網站商品頁，粉專貼文的連結有帶 UTM 為 Facebook &#x2F; post</h4><p>下表為 BQ 中的資料列示意</p>
-<!--![](https://i.imgur.com/djMJipF.png)-->
 <table>
 <thead>
 <tr>
@@ -150,6 +363,54 @@
 <td></td>
 </tr>
 </tbody></table>
-<h4 id="結論-traffic-source-欄位僅記錄用戶首次訪問網站時的來源媒介，不會因未來用戶進入網站的渠道而改變其值。"><a href="#結論-traffic-source-欄位僅記錄用戶首次訪問網站時的來源媒介，不會因未來用戶進入網站的渠道而改變其值。" class="headerlink" title="結論 : traffic_source 欄位僅記錄用戶首次訪問網站時的來源媒介，不會因未來用戶進入網站的渠道而改變其值。"></a><span style="color:blue">結論 : traffic_source 欄位僅記錄用戶首次訪問網站時的來源媒介，不會因未來用戶進入網站的渠道而改變其值。</span></h4><p>附上查詢 SQL </p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> event_date,event_name, event_params, traffic_source.source, traffic_source.medium</span><br><span class="line"><span class="keyword">FROM</span> `你的工作表名稱`</span><br></pre></td></tr></table></figure></div><aside class="toc"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%96%B6-%E4%BB%80%E9%BA%BC%E6%98%AF%E4%BE%86%E6%BA%90-%E5%AA%92%E4%BB%8B"><span class="toc-text">▶ 什麼是來源&#x2F;媒介 ?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%96%B6-GA3-vs-GA4-BigQuery-%E4%BE%86%E6%BA%90-%E5%AA%92%E4%BB%8B%E6%AC%84%E4%BD%8D%E6%AF%94%E8%BC%83%E8%A1%A8"><span class="toc-text">▶ GA3 vs. GA4 BigQuery 來源&#x2F;媒介欄位比較表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%96%B6%E9%82%A3%E7%AC%AC2%E6%AC%A1%E7%9A%84%E4%BE%86%E6%BA%90%E5%AA%92%E4%BB%8B%E8%A6%81%E6%80%8E%E9%BA%BC%E5%8F%96%E5%BE%97"><span class="toc-text">▶那第2次的來源媒介要怎麼取得?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%96%B62%E7%A8%AE%E6%83%85%E5%A2%83%E8%88%87%E5%B0%8D%E6%87%89%E5%80%BC%EF%BC%8C%E5%88%86%E4%BA%AB%E7%B5%A6%E5%A4%A7%E5%AE%B6"><span class="toc-text">▶2種情境與對應值，分享給大家</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%83%85%E5%A2%831-%E5%B0%8F%E6%98%8E%E5%BE%9E-Google-%E8%87%AA%E7%84%B6%E6%90%9C%E5%B0%8B%E7%AC%AC1%E6%AC%A1%E9%80%B2%E7%AB%99%E5%88%B0%E9%A6%96%E9%A0%81%EF%BC%8C%E9%BB%9E%E4%BA%86%E7%AB%99%E5%85%A7-UTM-Urchin-Tracking-Module-%E5%88%B0%E6%B4%BB%E5%8B%95%E9%A0%81"><span class="toc-text">情境1 :小明從 Google 自然搜尋第1次進站到首頁，點了站內 UTM(Urchin Tracking Module) 到活動頁</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%83%85%E5%A2%832-%E5%BB%B6%E7%BA%8C%E6%83%85%E5%A2%831%EF%BC%8C%E9%9A%94%E5%A4%A9%E5%B0%8F%E6%98%8E%E9%BB%9E%E4%BA%86-FB-%E7%B2%89%E5%B0%88%E7%9A%84%E8%B2%BC%E6%96%87%E9%80%B2%E5%85%A5%E4%BA%86%E7%B6%B2%E7%AB%99%E5%95%86%E5%93%81%E9%A0%81%EF%BC%8C%E7%B2%89%E5%B0%88%E8%B2%BC%E6%96%87%E7%9A%84%E9%80%A3%E7%B5%90%E6%9C%89%E5%B8%B6-UTM-%E7%82%BA-Facebook-post"><span class="toc-text">情境2 : 延續情境1，隔天小明點了 FB 粉專的貼文進入了網站商品頁，粉專貼文的連結有帶 UTM 為 Facebook &#x2F; post</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B5%90%E8%AB%96-traffic-source-%E6%AC%84%E4%BD%8D%E5%83%85%E8%A8%98%E9%8C%84%E7%94%A8%E6%88%B6%E9%A6%96%E6%AC%A1%E8%A8%AA%E5%95%8F%E7%B6%B2%E7%AB%99%E6%99%82%E7%9A%84%E4%BE%86%E6%BA%90%E5%AA%92%E4%BB%8B%EF%BC%8C%E4%B8%8D%E6%9C%83%E5%9B%A0%E6%9C%AA%E4%BE%86%E7%94%A8%E6%88%B6%E9%80%B2%E5%85%A5%E7%B6%B2%E7%AB%99%E7%9A%84%E6%B8%A0%E9%81%93%E8%80%8C%E6%94%B9%E8%AE%8A%E5%85%B6%E5%80%BC%E3%80%82"><span class="toc-text">結論 : traffic_source 欄位僅記錄用戶首次訪問網站時的來源媒介，不會因未來用戶進入網站的渠道而改變其值。</span></a></li></ol></li></ol></aside></div><div class="post-end"><a href="/archives/">← 所有文章</a><a href="/atom.xml">訂閱 RSS ↗</a></div></article>
-</main><footer><span>Andy 的筆記</span><a href="/atom.xml">RSS 訂閱</a></footer><script src="/js/reading.js" defer></script></body></html>
+<h4 id="結論-traffic-source-欄位僅記錄用戶首次訪問網站時的來源媒介，不會因未來用戶進入網站的渠道而改變其值。"><a href="#結論-traffic-source-欄位僅記錄用戶首次訪問網站時的來源媒介，不會因未來用戶進入網站的渠道而改變其值。" class="headerlink" title="結論 : traffic_source 欄位僅記錄用戶首次訪問網站時的來源媒介，不會因未來用戶進入網站的渠道而改變其值。"></a>結論 : traffic_source 欄位僅記錄用戶首次訪問網站時的來源媒介，不會因未來用戶進入網站的渠道而改變其值。</h4><p>附上查詢 SQL</p>
+<pre><code class="highlight sql"><span class="keyword">SELECT</span> event_date,event_name, event_params, traffic_source.source, traffic_source.medium
+<span class="keyword">FROM</span> `你的工作表名稱`</code></pre>
+</div>
+
+    <footer class="post-footer">
+      
+      
+        <a class="source-link" target="_blank" rel="noopener" href="https://github.com/andyhung0723/AndyHung0723.github.io/blob/source/source/_posts/ga/ga4_share_0420.md">在 GitHub 檢視原始檔</a>
+      
+    </footer>
+
+    <nav class="pager" aria-label="同分類的其他文章">
+  
+    <span class="pager-empty">已是最新一篇</span>
+  
+  
+    <a class="pager-link pager-link--older" rel="next" data-nav="older" href="/2023/04/16/ga/ga4_share_0416/">
+      <span class="pager-dir">較舊一篇 →</span>
+      <span class="pager-title">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</span>
+    </a>
+  
+</nav>
+
+  </article>
+
+  
+    <nav class="toc-rail" aria-label="本頁目錄">
+      <p class="toc-title">本頁目錄</p>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%96%B6-%E4%BB%80%E9%BA%BC%E6%98%AF%E4%BE%86%E6%BA%90-%E5%AA%92%E4%BB%8B"><span class="toc-text">▶ 什麼是來源&#x2F;媒介 ?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%96%B6-GA3-vs-GA4-BigQuery-%E4%BE%86%E6%BA%90-%E5%AA%92%E4%BB%8B%E6%AC%84%E4%BD%8D%E6%AF%94%E8%BC%83%E8%A1%A8"><span class="toc-text">▶ GA3 vs. GA4 BigQuery 來源&#x2F;媒介欄位比較表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%96%B6%E9%82%A3%E7%AC%AC2%E6%AC%A1%E7%9A%84%E4%BE%86%E6%BA%90%E5%AA%92%E4%BB%8B%E8%A6%81%E6%80%8E%E9%BA%BC%E5%8F%96%E5%BE%97"><span class="toc-text">▶那第2次的來源媒介要怎麼取得?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%96%B62%E7%A8%AE%E6%83%85%E5%A2%83%E8%88%87%E5%B0%8D%E6%87%89%E5%80%BC%EF%BC%8C%E5%88%86%E4%BA%AB%E7%B5%A6%E5%A4%A7%E5%AE%B6"><span class="toc-text">▶2種情境與對應值，分享給大家</span></a></li></ol>
+      <a class="toc-top" href="#main">回到頂端 ↑</a>
+    </nav>
+  
+</div>
+<nav class="pager pager--dock" aria-label="同分類的其他文章">
+  
+    <span class="pager-empty">已是最新一篇</span>
+  
+  
+    <a class="pager-link pager-link--older" rel="next" data-nav="older" href="/2023/04/16/ga/ga4_share_0416/">
+      <span class="pager-dir">較舊一篇 →</span>
+      <span class="pager-title">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</span>
+    </a>
+  
+</nav>
+
+
+  </main>
+</div>
+</body>
+</html>

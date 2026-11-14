@@ -1,3 +1,215 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Andy 的筆記</title><meta name="description" content="資安、技術與程式筆記。"><link rel="stylesheet" href="/css/reading.css?v=20261113-2"><link rel="alternate" type="application/atom+xml" title="訂閱全部文章" href="/atom.xml"><link rel="canonical" href="https://andyhung0723.github.iotags/CI-CD/index.html"><meta name="generator" content="Hexo 8.1.2"></head><body><a class="skip" href="#main">跳到主要內容</a><header class="site-header"><a class="brand" href="/">Andy 的筆記</a><nav aria-label="主選單"><a href="/">首頁</a><a href="/archives/">所有文章</a><a href="/about/">關於</a><a href="/atom.xml">RSS ↗</a></nav></header><main id="main"><section class="page"><h1>CI/CD</h1><article class="entry" data-search="技術週報｜2026-11-09 本期 20 則：github actions 政策、ai agent 權限與治理、cloud run，以及 python、angular、opentelemetry 更新。 技術雷達 2026/11/02–11/08 的 20 則技術更新。11/13 依官方公告複核；以下建議是適用條件與測試方向，不代表任何特定環境已受影響。 01｜github actions：公開專案的 pull_request_target 政策 11/02 公告｜12/02 生效 github.com 公開 repository 的 pull_request_target 將預設遭封鎖，除非適用的 actions event policy 明確允許。private、internal repository 與 github enterprise server 不在本次範圍。此事件能接觸 base repository 的權限與 secrets，執行 fork 的不可信程式碼尤其需要審慎。 先做什麼： 搜尋 workflow 的觸發事件，查看 actions insights 的影響紀錄。優先評估 pull_request ；必要例外應限縮到特定 workflow。兩次短暫強制測試為台灣時間 11/10、11/17 的 00:00–02:00，第一次已過。 官方公告 02｜gemini code assist：既有綁定權益將結束 11/06 公告｜2027/03/31 截止 既有 gemini enterprise standard／plus 訂閱附帶的 code assist 權益將於 2027/03/31 移除，在此之前僅支援 gemini 3.x 模型系列。自 10/09 起，新訂閱已不再附帶該權益；google 提出 antigravity 作為開發流程的遷移選項。 先做什麼： 核對授權來源，再評估替代工具。這不是所有 code assist 授權都在同一天停用的公告，獨立訂閱需另查適用條款。 gemini enterprise 發布紀錄 03｜opentelemetry javascript sdk 3.0 11/05 發布 最低 node.js 版本提高至 22.15.0，停止支援 node.js 18、20；改善 esm／commonjs 匯出，將 logs api 納入 @opentelemetry/api ，並整併 tracing sdk。部分舊相容套件與 api 移除。穩定版 sdk 2.x 在 3.0 發布後仍有一年支援。 先做什麼： 盤點 node.js runtime、exporter 與 @opentelemetry/* 相依版本，依 migration guide 測試 traces、metrics、logs。這次變更不要求 python sdk 一併升級。 官方發布與遷移說明 04｜container-optimized os：lts 安全更新 11/06 發布 cos 125、129 發布 lts refresh，包含系統與容器相關元件修正。cos 125 的映像版本為 cos-125-19216-801-14 ；實際漏洞清單、runtime 與 kernel 版本應依使用的 milestone 核對，不能跨映像套用。 先做什麼： 查明主機 boot image，安排支援的更新與必要重啟，先驗證容器能正常啟動。ubuntu、debian 等其他映像不適用這份 cos 修補清單。 cos 125 發布紀錄 · cos 129 發布紀錄 05｜api gateway：streaming backend 認證調整 11/03 發布 啟用 streaming 的 gateway，對主機名稱以 .googleapis.com 或 .vertexai.goog 結尾的 backend，改用 gateway service account 的 access token；其他 backend 仍接收 id token。既有 gateway 會在平台下次更新，或切換新 api config 時套用。 先做什麼： 使用 vertex ai 等 google api backend 的流程，應測試 token 類型、iam 權限及更新後的認證結果。未使用 streaming gateway 者不必為此修改服務。 api gateway 發布紀錄 06｜claude code 2.1.319：auto mode 與 mcp 背景任務 11/06 發布 部分停用 telemetry／feature flag 或使用 llm gateway 的 auto mode 情境，伺服器無法檢查的工具呼叫會改為詢問或拒絕，不再自動回退至內建分類器。bedrock、vertex、foundry 的相關行為不變。新版也支援 mcp task 背景執行、 permissions.denyinsteadofprompting ，以及 /claude-api latency-optimize 。 先做什麼： 升級前測試非互動式流程的授權、mcp 任務完成通知與失敗恢復，不要為了讓流程跑完而全面放寬權限。 v2.1.319 release 07｜claude api：ip allowlist beta 11/05 發布 claude console 可設定組織層級的 ip allowlist，支援 ipv4、ipv6 與 cidr，每組織最多 1,000 項。受涵蓋服務會拒絕清單以外的來源，降低 api key 外洩後可被使用的範圍；仍須確認服務涵蓋限制。 先做什麼： 先盤點出口 ip，再測試固定 nat 與來源限制。使用動態出口的工作負載若直接啟用清單，可能被自己擋下。 claude platform 發布紀錄 08｜agent registry：skill 版本與安全治理 ga 11/06 發布 standalone skills 正式 ga，提供 skill 、不可變的 skillrevision 、publisher 資訊，以及註冊、搜尋與版本管理。安全掃描可產生 findings，搭配 organization policy 與 iam 控制使用；skill payload 的 cmek 保護仍為 preview。 先做什麼： 以少量共用 skills 測試版本固定、來源審核、掃描結果與最小權限。掃描通過不等於可免除人工檢查。 agent registry 發布紀錄 09｜claude messages api：message threads beta 11/02 發布 伺服器可暫存對話，後續請求只傳新增訊息，減少 payload 並改善首 token 延遲。使用 message-threads-2026-08-12 beta header；thread 在最後請求後 5 分鐘過期，最後使用後最多 1 小時內刪除。 先做什麼： 用多輪 tool calling 比較延遲、傳輸量及失敗恢復。它不是長期記憶或永久對話儲存。 claude platform 發布紀錄 10｜cloud run：ephemeral disk ga 11/04 發布 cloud run ephemeral disk 已正式 ga，可在 service、job 或 worker pool 掛載只存續於該 instance 生命週期的磁碟 volume。適合文件轉換、批次作業或其他中間產物，不是永久儲存。 先做什麼： 測試容量、效能、費用及 instance 結束後的資料處理。需要持久化的成果應另存 cloud storage 或資料庫。 cloud run 發布紀錄 11｜openai：gpt-6 cyber 11/05 發布 api changelog 新增 gpt-6-cyber ，用途包括漏洞調查、在已授權測試環境重現問題，以及驗證修補。首次使用前需閱讀 daybreak 設定與存取要求。 先做什麼： 先確認資格與授權範圍，再用隔離測試環境評估結果。模型產出不能取代人工驗證，也不應直接對未授權系統執行測試。 openai api changelog 12｜codex cli 0.167.0：agent command center 11/06 發布 新增 codex agents --no-daemon ，可在 command center 與 session picker 辨識未讀結果、切換 backend，並在支援的終端機預覽本機圖片。實驗性的 gcp_setup_wizard 協助設定 vertex ai 的 adc 或憑證檔案。 先做什麼： 測試多 backend 切換、對話恢復與認證權限。這是 cli 版本更新，不代表每項功能都已同步到桌面 app。 0.167.0 release 13｜gemini cli 0.67.0：mcp 權限與 sandbox 修正 11/04 發布 新增 models 指令與 --list-models ，改善容器 sandbox 的 ide companion 連線，修正唯讀檔案／hard link 寫入處理，以及非互動模式取消後仍繼續執行工具的問題。acp 權限請求現在包含 mcp server 與 tool metadata。 先做什麼： 測試檔案保護、取消行為和 mcp 授權畫面，尤其是把 cli 接入自動化的流程。 v0.67.0 release 14｜copilot code review：api 管理與來源追蹤 11/06 發布 rest／graphql api 擴充到企業、組織與 repository 的 code review 設定，並能辨識 copilot review／comment、review effort，以及回報的 skills、mcp、自訂指令來源。不同管理層級的權限不同；企業與組織設定端點尚不支援 github app 或 fine-grained pat。 先做什麼： 用測試 repository 比較審查品質、誤報與人工修改時間，再決定是否擴大使用。來源資訊是可追蹤線索，不是結果正確性的保證。 github 官方公告 15｜dependabot：支援 agent package manager 11/03 發布 dependabot 可更新 apm.yml 中受支援的 git 相依項目，並在存在時重建 apm.lock.yaml ，將 skills、prompts、instructions 的版本更新納入 pr。這次支援的是版本更新， 不包含安全漏洞更新 。 先做什麼： 有使用 apm 才需要新增對應設定；先驗證 lockfile 與審核流程，勿把自動更新 pr 視為相依內容已通過安全審查。 github 官方公告 16｜pydantic 2.14.3：serialization 與相容性修正 版本日期 11/04；github release 顯示 11/05 修正序列資料逐索引使用 include ／ exclude 時的平方級 serialization 時間，並改善 schema generation 與序列化效能。graalpy wheel 也有調整：不再發布 3.11 wheel，改提供 3.13，並保留既有 3.12。 先做什麼： 用代表性的巢狀資料與大型 api response 跑 benchmark，核對驗證結果與 json schema。效能改善需以實際資料量測，不能直接當作所有 api 都會加速。 v2.14.3 release 17｜angular 22.2.5：forms、router 與 resource 11/06 發布 rxresource 新增 debugname ；自訂 formvaluecontrol 改善 updateon: blur ／ submit ，修正 required validator 對應與 router 的 focusreset 處理。圖片、影片的 src 為 null／undefined 時，也調整屬性移除行為。 先做什麼： angular 22 專案應測試表單控制項、導航焦點及 resource 行為。舊 major 版本仍需依完整升級指南處理，不宜只為這次 patch 跨版升級。 v22.2.5 release 18｜secret scanning：新增偵測器、減少誤報 11/05 發布 github 新增 starlink api secret 偵測，spacex 加入合作夥伴計畫。google cloud storage、aws、alibaba、openvsx、pydantic logfire、tencent 等偵測器改善誤報過濾；這不代表涵蓋所有雲端憑證。 先做什麼： 確認適用的 secret scanning 與 push protection 設定，追查尚未處理的外洩告警。正式憑證仍應放在 secret manager，已外洩的金鑰需撤銷或輪替。 github 官方公告 19｜copilot usage api：區分 byok 與企業自訂模型 11/03 公告 用量報表可分開辨識本機 byok、企業自訂模型與 copilot 託管模型。本機 byok 資料依賴 client telemetry，停用遙測或 provider 不回報 token 時會低估；企業自訂模型為伺服器側統計，沒有相同限制。 先做什麼： 整合成本報表時標明資料缺口，避免把未回報用量當成零，也不要把不同付費來源混在一起比較。 github 官方公告 20｜gpt-image-2.6：svg 與動畫 gif 11/04 發布 gpt-image-2.6-sunburst 、 gpt-image-2.6-flare 支援圖片生成／編輯、可調整 complexity，以及 svg、動畫 gif 生成。受支援的 gpt-image-2.5／2.6 模型也擴充 markup-guided editing。 先做什麼： 比較文字正確率、svg 可編輯性、gif 穩定性、生成時間與成本。將產物放進網頁前仍需檢查格式與內容，不直接信任生成的標記。 openai api changelog 後續追蹤 先處理有截止日的 github actions 政策與授權變更，再安排 sdk／cli 相容性測試。agent registry、ip allowlist、ai code review 則適合先用小型測試專案驗證，不必一次全面導入。 本期另追蹤 fastapi、gemini api、mcp／a2a 與 rag／evaluation，原週報未選出額外獨立消息；這不表示這些專案完全沒有更新。cloud run 的 python 3.15 runtime 已於 11/02 進入 preview，但不代表既有 python 服務需要立即升級。 到期與生效日期 以下包含先前已公告的時程，並非全是本週新消息。日期狀態以 11/13 複核為準。 日期 項目 檢查方向 11/10 00:00–02:00（台灣，已過） github actions 第一次短暫封鎖測試 查看失敗紀錄 11/17 00:00–02:00（台灣） github actions 第二次短暫封鎖測試 確認 trigger 與必要例外 11/28 angular 20 lts 結束 規劃受支援版本遷移 11/30 claude sonnet 4.5 在 claude api 退役 查找舊 model id 11/30 claude opus 4.8 fast mode 移除 檢查 speed: &#34;fast&#34; ，不等同整個模型退役 12/02 github actions 新政策生效 完成公開 workflow 相容性檢查 2027/03/31 gemini enterprise 既有綁定 code assist 權益結束 核對授權來源與替代方案 來源： angular 支援時程 、 claude 發布紀錄 ，以及第 01、02 則官方公告。"><div class="entry-meta"><time datetime="2026-11-09">2026.11.09</time><span class="pill tech">技術雷達</span></div><div><h3><a href="/2026/11/09/tech-radar-2026-11-09/">技術週報｜2026-11-09</a></h3><p>本期 20 則：GitHub Actions 政策、AI Agent 權限與治理、Cloud Run，以及 Python、Angular、OpenTelemetry 更新。</p><div class="byline">AI 協助整理 · 14 分鐘閱讀</div></div><a class="entry-arrow" tabindex="-1" aria-hidden="true" href="/2026/11/09/tech-radar-2026-11-09/">↗</a></article>
-<div class="pagination"><span class="page-number current">1</span></div></section>
-</main><footer><span>Andy 的筆記</span><a href="/atom.xml">RSS 訂閱</a></footer><script src="/js/reading.js" defer></script></body></html>
+
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Andy 的筆記</title>
+<meta name="description" content="資安、技術與程式筆記。">
+<link rel="canonical" href="https://andyhung0723.github.io/tags/CI-CD/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Andy 的筆記">
+<meta property="og:description" content="資安、技術與程式筆記。">
+<meta property="og:url" content="https://andyhung0723.github.io/tags/CI-CD/">
+<meta property="og:site_name" content="Andy 的筆記">
+<script>
+  try {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+  } catch {}
+</script>
+<link rel="stylesheet" href="/css/reader.css?v=b8fc5f6b9f">
+<style>[data-stream="security"]{--stream:#9A3F08;--stream-tint:#FDF0E6}[data-stream="tech"]{--stream:#2450C8;--stream-tint:#EAF0FD}[data-stream="notes"]{--stream:#0E6B5F;--stream-tint:#E5F4F1}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root:not([data-theme="light"]) [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root:not([data-theme="light"]) [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}}:root[data-theme="dark"] [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root[data-theme="dark"] [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root[data-theme="dark"] [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}</style>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="Andy 的筆記" href="/atom.xml">
+<script type="speculationrules">
+  {"prerender": [{"source": "document", "where": {"selector_matches": ".pager-link, .post-link"}, "eagerness": "moderate"}]}
+</script>
+<script src="/js/reader.js?v=98ae7b0f53" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body data-stream="">
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header">
+  <button class="icon-btn menu-btn" type="button" aria-label="開啟文章列表" aria-controls="sidebar" aria-expanded="false">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+  </button>
+  <a class="brand" href="/">
+    <span class="brand-mark" aria-hidden="true">A/</span>
+    <span class="brand-name">Andy 的筆記</span>
+  </a>
+  <div class="search" role="search">
+    <label class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="搜尋文章、CVE、套件名稱" aria-label="搜尋文章" autocomplete="off" aria-controls="search-results" aria-expanded="false">
+      <kbd>/</kbd>
+    </label>
+    <div class="search-results" id="search-results" hidden></div>
+  </div>
+  <nav class="site-nav" aria-label="主選單">
+    <a href="/archives/">所有文章</a>
+    <a href="/about/">關於</a>
+    <a href="/atom.xml">RSS</a>
+    <button class="icon-btn theme-btn" type="button" aria-label="切換深色模式">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </nav>
+</header>
+
+
+<div class="shell">
+  
+
+<aside class="sidebar" id="sidebar" aria-label="文章列表">
+  <div class="stream-tabs" role="tablist" aria-label="分類">
+    
+      <a class="stream-tab" role="tab" id="tab-security" data-stream="security" data-stream-tab="security"
+         href="/security/" aria-controls="panel-security" aria-selected="true">
+        <span class="stream-tab-label">資安週報</span>
+        <span class="stream-tab-count">1 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-tech" data-stream="tech" data-stream-tab="tech"
+         href="/tech/" aria-controls="panel-tech" aria-selected="false">
+        <span class="stream-tab-label">技術雷達</span>
+        <span class="stream-tab-count">1 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-notes" data-stream="notes" data-stream-tab="notes"
+         href="/notes/" aria-controls="panel-notes" aria-selected="false">
+        <span class="stream-tab-label">研究筆記</span>
+        <span class="stream-tab-count">6 篇</span>
+      </a>
+    
+  </div>
+  
+    <section class="stream-panel" id="panel-security" role="tabpanel" aria-labelledby="tab-security" data-stream="security">
+      <p class="stream-desc">每週整理 CVE、已知遭利用漏洞與修補順序。 <a href="/security/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/security-weekly-2026-11-09/">
+                <span class="post-link-title">資安週報｜2026/11/09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>12 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-tech" role="tabpanel" aria-labelledby="tab-tech" data-stream="tech" hidden>
+      <p class="stream-desc">雲端、AI 工具鏈與前端框架的每週更新。 <a href="/tech/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/tech-radar-2026-11-09/">
+                <span class="post-link-title">技術週報｜2026-11-09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>13 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-notes" role="tabpanel" aria-labelledby="tab-notes" data-stream="notes" hidden>
+      <p class="stream-desc">踩坑紀錄與深入探討，一篇解一個問題。 <a href="/notes/">看全部</a></p>
+      
+        <h3 class="year">2023</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2023/04/20/ga/ga4_share_0420/">
+                <span class="post-link-title">GA4 vs GA3 來源/媒介 BigQuery 欄位解析</span>
+                <span class="post-link-meta"><time datetime="2023-04-19T16:00:00.000Z">04-20</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2023/04/16/ga/ga4_share_0416/">
+                <span class="post-link-title">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</span>
+                <span class="post-link-meta"><time datetime="2023-04-15T16:00:00.000Z">04-16</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+        <h3 class="year">2022</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2022/06/08/position-sticky-issue/">
+                <span class="post-link-title">position:sticky 遇到 overflow 時失效解法</span>
+                <span class="post-link-meta"><time datetime="2022-06-07T16:00:00.000Z">06-08</time><span>2 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/06/01/angular-offsetwidth-bug/">
+                <span class="post-link-title">Angular 取得元素 offsetWidth 時有誤解法</span>
+                <span class="post-link-meta"><time datetime="2022-05-31T16:00:00.000Z">06-01</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/29/angular-lazy-loading/">
+                <span class="post-link-title">Angular Lazy Loading</span>
+                <span class="post-link-meta"><time datetime="2022-05-28T16:00:00.000Z">05-29</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/28/angular-module/">
+                <span class="post-link-title">探討 Angular Module</span>
+                <span class="post-link-meta"><time datetime="2022-05-27T16:00:00.000Z">05-28</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+  <p class="kbd-hint"><kbd>j</kbd><kbd>k</kbd> 上下切換文章 <kbd>/</kbd> 搜尋</p>
+</aside>
+<script>
+  try {
+    document.getElementById('sidebar').scrollTop = Number(sessionStorage.getItem('sidebar-scroll')) || 0;
+  } catch {}
+</script>
+<div class="scrim" hidden></div>
+
+  <main class="main" id="main" tabindex="-1">
+    <div class="listing">
+  <header class="listing-header">
+    <p class="listing-kicker">標籤</p>
+    <h1 class="listing-title">#CI/CD</h1>
+    <p class="listing-desc">共 1 篇。</p>
+  </header>
+  <ol class="entries">
+  
+    <li class="entry" data-stream="tech">
+      <a class="entry-link" href="/2026/11/09/tech-radar-2026-11-09/">
+        <span class="entry-meta">
+          <span class="badge">技術雷達</span>
+          <time datetime="2026-11-08T16:00:00.000Z">2026-11-09</time>
+          <span>13 分鐘</span>
+        </span>
+        <span class="entry-title">技術週報｜2026-11-09</span>
+        <span class="entry-summary">本期 20 則：GitHub Actions 政策、AI Agent 權限與治理、Cloud Run，以及 Python、Angular、OpenTelemetry 更新。</span>
+      </a>
+    </li>
+  
+</ol>
+
+</div>
+
+  </main>
+</div>
+</body>
+</html>

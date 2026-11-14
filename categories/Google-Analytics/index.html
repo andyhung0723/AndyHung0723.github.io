@@ -1,4 +1,227 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Andy 的筆記</title><meta name="description" content="資安、技術與程式筆記。"><link rel="stylesheet" href="/css/reading.css?v=20261113-2"><link rel="alternate" type="application/atom+xml" title="訂閱全部文章" href="/atom.xml"><link rel="canonical" href="https://andyhung0723.github.iocategories/Google-Analytics/index.html"><meta name="generator" content="Hexo 8.1.2"></head><body><a class="skip" href="#main">跳到主要內容</a><header class="site-header"><a class="brand" href="/">Andy 的筆記</a><nav aria-label="主選單"><a href="/">首頁</a><a href="/archives/">所有文章</a><a href="/about/">關於</a><a href="/atom.xml">RSS ↗</a></nav></header><main id="main"><section class="page"><h1>Google Analytics</h1><article class="entry" data-search="ga4 vs ga3 來源/媒介 bigquery 欄位解析  google analytics 👉 文章內容深度 : 3/5顆星 👉 適用對象 : 有使用 bigquery 製作來源/媒介報表 ▶ 什麼是來源/媒介 ? 簡單來說就是判斷這個流量從哪邊來? 是從 google 搜尋引擎進入網站還是從 fb 粉專進入網站。 以下為 ga3 &amp; ga4 的來源/媒介報表路徑 ga3 : 獲客 &gt; 所有流量 &gt; 來源/媒介 ga4 : 獲客 &gt; 流量開發 : 工作階段預設管道分組 (如下圖) ▶ ga3 vs. ga4 bigquery 來源/媒介欄位比較表 ga3 時代，從 bigquery 中提取來源/媒介數據時，會使用欄位「trafficsource.source」&amp;「trafficsource.medium」，這是沒有錯的!這兩個欄位代表的是每次進站的渠道。 &lt; 附上 ga3 匯出 bigquery 的結構定義 &gt; 當看到 ga4 匯出到 bigquery 的 dataset 中看到「traffic_source.source」&amp;「traffic_source.medium」時，心中是不是無比喜悅，就是他惹 :100: 但是! 現在我們來看一下 google 的官方文件說明(附上截圖&amp; 文件 )， 補充:這兩個欄位會對應到 ga4 維度為「最初招攬到使用者的來源/媒介」 traffic_source.source : 初次招攬 到使用者的聯播網名稱。 traffic_source.medium : 初次招攬 到使用者的媒介名稱。 「初次招攬」指的是第一次進到網站的使用者是從哪個渠道進入網站，是 fb 廣告還是 google 自然搜尋等等。 舉例來說 : 小明點了 google 廣告， 第一次 進到網站中，那欄位值會如下 traffic_source.source : google traffic_source.medium : cpc 那小明隔天從 line 官方帳號進入網站，那欄位值是什麼? 值還是一樣的 ! 因為「traffic_source.source 和 traffic_source.medium 這兩個欄位就是這兩個欄位僅記錄用戶首次訪問網站時的來源媒介 traffic_source.source : google traffic_source.medium : cpc ▶ 那第2次的來源媒介要怎麼取得? ga4 的數據模型是由事件組成，所以每個 event_name 對應一個資料列。 event_name = page_view 指的就是每一次的網站瀏覽，所以第二次進站的來源媒介，會出現在事件名為 page_view 的資料列中，包含 source 和 medium 參數。 ▶ 2種情境與對應值，分享給大家 情境1 :小明從 google 自然搜尋第1次進站到首頁，點了站內 utm(urchin tracking module) 到活動頁 下表為 bq 中的資料列示意 event_date event_name event_params.key event_params_value.string_value traffic_source.source traffic_source.medium 20230222 first_visit page_location 首頁網址 google organic 20230222 session_start page_location 首頁網址 google organic 20230222 page_view page_location 首頁網址 google organic source google medium organic 20230222 page_view page_location 站內utm活動頁 google organic source amy1 medium test1 情境2 : 延續情境1，隔天小明點了 fb 粉專的貼文進入了網站商品頁，粉專貼文的連結有帶 utm 為 facebook / post 下表為 bq 中的資料列示意 event_date event_name event_params.key event_params_value.string_value traffic_source.source traffic_source.medium 20230223 session_start page_location 商品頁 google organic 20230223 page_view page_location 商品頁 google organic source facebook medium post 結論 : traffic_source 欄位僅記錄用戶首次訪問網站時的來源媒介，不會因未來用戶進入網站的渠道而改變其值。 附上查詢 sql 1 2 select event_date,event_name, event_params, traffic_source.source, traffic_source.medium from `你的工作表名稱`"><div class="entry-meta"><time datetime="2023-04-20">2023.04.20</time><span class="pill note">研究筆記</span></div><div><h3><a href="/2023/04/20/ga/ga4_share_0420/">GA4 vs GA3 來源/媒介 BigQuery 欄位解析</a></h3><p>👉 文章內容深度 : 3/5顆星 👉 適用對象 : 有使用 BigQuery 製作來源/媒介報表</p><div class="byline">Amy · 5 分鐘閱讀</div></div><a class="entry-arrow" tabindex="-1" aria-hidden="true" href="/2023/04/20/ga/ga4_share_0420/">↗</a></article>
-<article class="entry" data-search="google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!  google analytics 👉 文章內容深度 : 3/5顆星 👉 適用對象 : ga4 有做電子商務事件 ▶ 什麼是項目範圍自訂維度(item scope) ? 項目範圍的維度，是指專門用來追蹤 ga4 電子商務事件中商品的資訊，例如 : 商品名稱、商品id、顏色、尺寸、重量等等。 在項目範圍的維度中，有分 ga4 預設維度 &amp; 最近才公布的自訂維度。 舉例來說 : ga4 預設維度 : 商品名稱(item_name)、商品編號(item_id)、商品價格(price)等等。 官方文件 自訂維度 : 用來補足 ga4 預設維度中沒有的維度，由自己定義，例如 : 課程長度、售票種類、商品關鍵字等等。 數量限制 : 免費版資源 : 10個 / 付費版資源 : 25個 ▶ 項目範圍自訂維度(item scope)情境舉例 以這一個商品舉例，右邊 items 陣列中的參數(item_name、item_id、price 等)都屬於 ga4 的預設項目範圍維度。 若想多追蹤杯子的容量，ga4 預設的項目範圍維度又沒有提供對應參數，這時候，就可以自訂一個項目範圍的自訂維度，datalayer 調整後如下圖，新增的參數一定要放在 items 陣列中。 ▶ 項目範圍自訂維度(item scope)要如何在 ga4 中設定 ? 確認有把自訂的參數送到 ga4 後，接下來就是要在 ga4 中設定自訂維度， 設定路徑 : 管理(左下角齒輪) &gt; 自訂定義 &gt; 建立自訂維度(藍底按鈕) &gt; 範圍選 : 項目 &gt; 按下儲存 可參考以下圖片，依序設定。 (下圖)記得範圍要選「項目」，項目參數需要填寫您在網站中傳送的參數名稱，以本次範例為例，則是填入 capacity (並非照填寫 capacity) 。 (下圖)儲存後，會出現範圍為「項目」的自訂維度。 ▶ 項目範圍自訂維度(item scope)在 ga4 探索報表中的呈現 目前還無法在預設報表中，透過次要維度或是利用自訂報表功能拉取項目範圍維度，所以設定完的項目範圍自訂維度無法呈現在電子商務報表中，只能在探索報表使用，這部分較可惜，希望未來能更新上去。 補充提醒，電子商務相關的維度都只能搭配使用部分指標，所以建議先拉取項目範圍的維度後，再選擇指標(無法使用的指標會被反灰)。 此外looker studio 中也無法拉取項目範圍的自訂維度，以上的限制待未來更新後，再分享給大家~"><div class="entry-meta"><time datetime="2023-04-16">2023.04.16</time><span class="pill note">研究筆記</span></div><div><h3><a href="/2023/04/16/ga/ga4_share_0416/">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</a></h3><p>👉 文章內容深度 : 3/5顆星 👉 適用對象 : GA4 有做電子商務事件</p><div class="byline">Amy · 3 分鐘閱讀</div></div><a class="entry-arrow" tabindex="-1" aria-hidden="true" href="/2023/04/16/ga/ga4_share_0416/">↗</a></article>
-<div class="pagination"><span class="page-number current">1</span></div></section>
-</main><footer><span>Andy 的筆記</span><a href="/atom.xml">RSS 訂閱</a></footer><script src="/js/reading.js" defer></script></body></html>
+
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Andy 的筆記</title>
+<meta name="description" content="資安、技術與程式筆記。">
+<link rel="canonical" href="https://andyhung0723.github.io/categories/Google-Analytics/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Andy 的筆記">
+<meta property="og:description" content="資安、技術與程式筆記。">
+<meta property="og:url" content="https://andyhung0723.github.io/categories/Google-Analytics/">
+<meta property="og:site_name" content="Andy 的筆記">
+<script>
+  try {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+  } catch {}
+</script>
+<link rel="stylesheet" href="/css/reader.css?v=b8fc5f6b9f">
+<style>[data-stream="security"]{--stream:#9A3F08;--stream-tint:#FDF0E6}[data-stream="tech"]{--stream:#2450C8;--stream-tint:#EAF0FD}[data-stream="notes"]{--stream:#0E6B5F;--stream-tint:#E5F4F1}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root:not([data-theme="light"]) [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root:not([data-theme="light"]) [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}}:root[data-theme="dark"] [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root[data-theme="dark"] [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root[data-theme="dark"] [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}</style>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="Andy 的筆記" href="/atom.xml">
+<script type="speculationrules">
+  {"prerender": [{"source": "document", "where": {"selector_matches": ".pager-link, .post-link"}, "eagerness": "moderate"}]}
+</script>
+<script src="/js/reader.js?v=98ae7b0f53" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body data-stream="">
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header">
+  <button class="icon-btn menu-btn" type="button" aria-label="開啟文章列表" aria-controls="sidebar" aria-expanded="false">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+  </button>
+  <a class="brand" href="/">
+    <span class="brand-mark" aria-hidden="true">A/</span>
+    <span class="brand-name">Andy 的筆記</span>
+  </a>
+  <div class="search" role="search">
+    <label class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="搜尋文章、CVE、套件名稱" aria-label="搜尋文章" autocomplete="off" aria-controls="search-results" aria-expanded="false">
+      <kbd>/</kbd>
+    </label>
+    <div class="search-results" id="search-results" hidden></div>
+  </div>
+  <nav class="site-nav" aria-label="主選單">
+    <a href="/archives/">所有文章</a>
+    <a href="/about/">關於</a>
+    <a href="/atom.xml">RSS</a>
+    <button class="icon-btn theme-btn" type="button" aria-label="切換深色模式">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </nav>
+</header>
+
+
+<div class="shell">
+  
+
+<aside class="sidebar" id="sidebar" aria-label="文章列表">
+  <div class="stream-tabs" role="tablist" aria-label="分類">
+    
+      <a class="stream-tab" role="tab" id="tab-security" data-stream="security" data-stream-tab="security"
+         href="/security/" aria-controls="panel-security" aria-selected="true">
+        <span class="stream-tab-label">資安週報</span>
+        <span class="stream-tab-count">1 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-tech" data-stream="tech" data-stream-tab="tech"
+         href="/tech/" aria-controls="panel-tech" aria-selected="false">
+        <span class="stream-tab-label">技術雷達</span>
+        <span class="stream-tab-count">1 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-notes" data-stream="notes" data-stream-tab="notes"
+         href="/notes/" aria-controls="panel-notes" aria-selected="false">
+        <span class="stream-tab-label">研究筆記</span>
+        <span class="stream-tab-count">6 篇</span>
+      </a>
+    
+  </div>
+  
+    <section class="stream-panel" id="panel-security" role="tabpanel" aria-labelledby="tab-security" data-stream="security">
+      <p class="stream-desc">每週整理 CVE、已知遭利用漏洞與修補順序。 <a href="/security/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/security-weekly-2026-11-09/">
+                <span class="post-link-title">資安週報｜2026/11/09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>12 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-tech" role="tabpanel" aria-labelledby="tab-tech" data-stream="tech" hidden>
+      <p class="stream-desc">雲端、AI 工具鏈與前端框架的每週更新。 <a href="/tech/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/tech-radar-2026-11-09/">
+                <span class="post-link-title">技術週報｜2026-11-09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>13 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-notes" role="tabpanel" aria-labelledby="tab-notes" data-stream="notes" hidden>
+      <p class="stream-desc">踩坑紀錄與深入探討，一篇解一個問題。 <a href="/notes/">看全部</a></p>
+      
+        <h3 class="year">2023</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2023/04/20/ga/ga4_share_0420/">
+                <span class="post-link-title">GA4 vs GA3 來源/媒介 BigQuery 欄位解析</span>
+                <span class="post-link-meta"><time datetime="2023-04-19T16:00:00.000Z">04-20</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2023/04/16/ga/ga4_share_0416/">
+                <span class="post-link-title">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</span>
+                <span class="post-link-meta"><time datetime="2023-04-15T16:00:00.000Z">04-16</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+        <h3 class="year">2022</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2022/06/08/position-sticky-issue/">
+                <span class="post-link-title">position:sticky 遇到 overflow 時失效解法</span>
+                <span class="post-link-meta"><time datetime="2022-06-07T16:00:00.000Z">06-08</time><span>2 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/06/01/angular-offsetwidth-bug/">
+                <span class="post-link-title">Angular 取得元素 offsetWidth 時有誤解法</span>
+                <span class="post-link-meta"><time datetime="2022-05-31T16:00:00.000Z">06-01</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/29/angular-lazy-loading/">
+                <span class="post-link-title">Angular Lazy Loading</span>
+                <span class="post-link-meta"><time datetime="2022-05-28T16:00:00.000Z">05-29</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/28/angular-module/">
+                <span class="post-link-title">探討 Angular Module</span>
+                <span class="post-link-meta"><time datetime="2022-05-27T16:00:00.000Z">05-28</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+  <p class="kbd-hint"><kbd>j</kbd><kbd>k</kbd> 上下切換文章 <kbd>/</kbd> 搜尋</p>
+</aside>
+<script>
+  try {
+    document.getElementById('sidebar').scrollTop = Number(sessionStorage.getItem('sidebar-scroll')) || 0;
+  } catch {}
+</script>
+<div class="scrim" hidden></div>
+
+  <main class="main" id="main" tabindex="-1">
+    <div class="listing">
+  <header class="listing-header">
+    <p class="listing-kicker">分類</p>
+    <h1 class="listing-title">Google Analytics</h1>
+    <p class="listing-desc">共 2 篇。</p>
+  </header>
+  <ol class="entries">
+  
+    <li class="entry" data-stream="notes">
+      <a class="entry-link" href="/2023/04/20/ga/ga4_share_0420/">
+        <span class="entry-meta">
+          <span class="badge">研究筆記</span>
+          <time datetime="2023-04-19T16:00:00.000Z">2023-04-20</time>
+          <span>4 分鐘</span>
+        </span>
+        <span class="entry-title">GA4 vs GA3 來源/媒介 BigQuery 欄位解析</span>
+        <span class="entry-summary">👉 文章內容深度 : 3&amp;#x2F;5顆星👉 適用對象 : 有使用 BigQuery 製作來源&amp;#x2F;媒介報表</span>
+      </a>
+    </li>
+  
+    <li class="entry" data-stream="notes">
+      <a class="entry-link" href="/2023/04/16/ga/ga4_share_0416/">
+        <span class="entry-meta">
+          <span class="badge">研究筆記</span>
+          <time datetime="2023-04-15T16:00:00.000Z">2023-04-16</time>
+          <span>3 分鐘</span>
+        </span>
+        <span class="entry-title">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</span>
+        <span class="entry-summary">👉 文章內容深度 : 3&amp;#x2F;5顆星👉 適用對象 : GA4 有做電子商務事件</span>
+      </a>
+    </li>
+  
+</ol>
+
+</div>
+
+  </main>
+</div>
+</body>
+</html>
