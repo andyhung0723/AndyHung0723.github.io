@@ -1,0 +1,438 @@
+
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>技術週報｜2026-11-16 · Andy 的筆記</title>
+<meta name="description" content="18 則更新：FastAPI、Angular、GitHub 政策、Claude Code、Gemini CLI、GCP 與 AI Agent 安全架構。">
+<link rel="canonical" href="https://andyhung0723.github.io/2026/11/16/tech-radar-2026-11-16/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技術週報｜2026-11-16">
+<meta property="og:description" content="18 則更新：FastAPI、Angular、GitHub 政策、Claude Code、Gemini CLI、GCP 與 AI Agent 安全架構。">
+<meta property="og:url" content="https://andyhung0723.github.io/2026/11/16/tech-radar-2026-11-16/">
+<meta property="og:site_name" content="Andy 的筆記">
+<script>
+  try {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+  } catch {}
+</script>
+<link rel="stylesheet" href="/css/reader.css?v=b8fc5f6b9f">
+<style>[data-stream="security"]{--stream:#9A3F08;--stream-tint:#FDF0E6}[data-stream="tech"]{--stream:#2450C8;--stream-tint:#EAF0FD}[data-stream="notes"]{--stream:#0E6B5F;--stream-tint:#E5F4F1}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root:not([data-theme="light"]) [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root:not([data-theme="light"]) [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}}:root[data-theme="dark"] [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root[data-theme="dark"] [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root[data-theme="dark"] [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}</style>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="Andy 的筆記" href="/atom.xml">
+<script type="speculationrules">
+  {"prerender": [{"source": "document", "where": {"selector_matches": ".pager-link, .post-link"}, "eagerness": "moderate"}]}
+</script>
+<script src="/js/reader.js?v=98ae7b0f53" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body data-stream="tech">
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header">
+  <button class="icon-btn menu-btn" type="button" aria-label="開啟文章列表" aria-controls="sidebar" aria-expanded="false">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+  </button>
+  <a class="brand" href="/">
+    <span class="brand-mark" aria-hidden="true">A/</span>
+    <span class="brand-name">Andy 的筆記</span>
+  </a>
+  <div class="search" role="search">
+    <label class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="搜尋文章、CVE、套件名稱" aria-label="搜尋文章" autocomplete="off" aria-controls="search-results" aria-expanded="false">
+      <kbd>/</kbd>
+    </label>
+    <div class="search-results" id="search-results" hidden></div>
+  </div>
+  <nav class="site-nav" aria-label="主選單">
+    <a href="/archives/">所有文章</a>
+    <a href="/about/">關於</a>
+    <a href="/atom.xml">RSS</a>
+    <button class="icon-btn theme-btn" type="button" aria-label="切換深色模式">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </nav>
+</header>
+
+<div class="progress" aria-hidden="true"><span></span></div>
+<div class="shell">
+  
+
+<aside class="sidebar" id="sidebar" aria-label="文章列表">
+  <div class="stream-tabs" role="tablist" aria-label="分類">
+    
+      <a class="stream-tab" role="tab" id="tab-security" data-stream="security" data-stream-tab="security"
+         href="/security/" aria-controls="panel-security" aria-selected="false">
+        <span class="stream-tab-label">資安週報</span>
+        <span class="stream-tab-count">2 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-tech" data-stream="tech" data-stream-tab="tech"
+         href="/tech/" aria-controls="panel-tech" aria-selected="true">
+        <span class="stream-tab-label">技術雷達</span>
+        <span class="stream-tab-count">2 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-notes" data-stream="notes" data-stream-tab="notes"
+         href="/notes/" aria-controls="panel-notes" aria-selected="false">
+        <span class="stream-tab-label">研究筆記</span>
+        <span class="stream-tab-count">6 篇</span>
+      </a>
+    
+  </div>
+  
+    <section class="stream-panel" id="panel-security" role="tabpanel" aria-labelledby="tab-security" data-stream="security" hidden>
+      <p class="stream-desc">每週整理 CVE、已知遭利用漏洞與修補順序。 <a href="/security/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/16/security-weekly-2026-11-16/">
+                <span class="post-link-title">資安週報｜2026/11/16</span>
+                <span class="post-link-meta"><time datetime="2026-11-15T16:00:00.000Z">11-16</time><span>12 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/security-weekly-2026-11-09/">
+                <span class="post-link-title">資安週報｜2026/11/09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>12 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-tech" role="tabpanel" aria-labelledby="tab-tech" data-stream="tech">
+      <p class="stream-desc">雲端、AI 工具鏈與前端框架的每週更新。 <a href="/tech/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/16/tech-radar-2026-11-16/" aria-current="page">
+                <span class="post-link-title">技術週報｜2026-11-16</span>
+                <span class="post-link-meta"><time datetime="2026-11-15T16:00:00.000Z">11-16</time><span>12 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/tech-radar-2026-11-09/">
+                <span class="post-link-title">技術週報｜2026-11-09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>13 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-notes" role="tabpanel" aria-labelledby="tab-notes" data-stream="notes" hidden>
+      <p class="stream-desc">踩坑紀錄與深入探討，一篇解一個問題。 <a href="/notes/">看全部</a></p>
+      
+        <h3 class="year">2023</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2023/04/20/ga/ga4_share_0420/">
+                <span class="post-link-title">GA4 vs GA3 來源/媒介 BigQuery 欄位解析</span>
+                <span class="post-link-meta"><time datetime="2023-04-19T16:00:00.000Z">04-20</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2023/04/16/ga/ga4_share_0416/">
+                <span class="post-link-title">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</span>
+                <span class="post-link-meta"><time datetime="2023-04-15T16:00:00.000Z">04-16</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+        <h3 class="year">2022</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2022/06/08/position-sticky-issue/">
+                <span class="post-link-title">position:sticky 遇到 overflow 時失效解法</span>
+                <span class="post-link-meta"><time datetime="2022-06-07T16:00:00.000Z">06-08</time><span>2 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/06/01/angular-offsetwidth-bug/">
+                <span class="post-link-title">Angular 取得元素 offsetWidth 時有誤解法</span>
+                <span class="post-link-meta"><time datetime="2022-05-31T16:00:00.000Z">06-01</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/29/angular-lazy-loading/">
+                <span class="post-link-title">Angular Lazy Loading</span>
+                <span class="post-link-meta"><time datetime="2022-05-28T16:00:00.000Z">05-29</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/28/angular-module/">
+                <span class="post-link-title">探討 Angular Module</span>
+                <span class="post-link-meta"><time datetime="2022-05-27T16:00:00.000Z">05-28</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+  <p class="kbd-hint"><kbd>j</kbd><kbd>k</kbd> 上下切換文章 <kbd>/</kbd> 搜尋</p>
+</aside>
+<script>
+  try {
+    document.getElementById('sidebar').scrollTop = Number(sessionStorage.getItem('sidebar-scroll')) || 0;
+  } catch {}
+</script>
+<div class="scrim" hidden></div>
+
+  <main class="main" id="main" tabindex="-1">
+    
+
+
+<div class="post-layout">
+  <article class="post">
+    <header class="post-header">
+      <nav class="crumbs" aria-label="麵包屑">
+        <a class="badge" href="/tech/">技術雷達</a>
+        <span aria-hidden="true">/</span>
+        <time datetime="2026-11-15T16:00:00.000Z">2026-11-16</time>
+      </nav>
+      <h1 class="post-title">技術週報｜2026-11-16</h1>
+      <p class="post-meta">
+        <span>AI 協助整理</span>
+        <span>12 分鐘閱讀</span>
+        <span>技術雷達第 1 / 2 篇</span>
+      </p>
+      
+      <p class="lede">18 則更新：FastAPI、Angular、GitHub 政策、Claude Code、Gemini CLI、GCP 與 AI Agent 安全架構。</p>
+      
+    </header>
+
+    
+      <details class="toc-inline">
+        <summary>本頁目錄</summary>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#P0%EF%BD%9C%E5%84%AA%E5%85%88%E7%A2%BA%E8%AA%8D%E9%A2%A8%E9%9A%AA%E8%88%87-Breaking-Changes"><span class="toc-text">P0｜優先確認風險與 Breaking Changes</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#01%EF%BD%9CDependabot%EF%BC%9A12-8-%E8%B5%B7%E6%9A%AB%E5%81%9C%E9%83%A8%E5%88%86%E9%96%92%E7%BD%AE%E5%B0%88%E6%A1%88%E5%91%8A%E8%AD%A6"><span class="toc-text">01｜Dependabot：12&#x2F;8 起暫停部分閒置專案告警</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#02%EF%BD%9CCopilot%EF%BC%9A%E5%85%AD%E6%AC%BE%E6%A8%A1%E5%9E%8B-12-14-%E5%81%9C%E7%94%A8"><span class="toc-text">02｜Copilot：六款模型 12&#x2F;14 停用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#03%EF%BD%9CGitHub-Actions%EF%BC%9AARM32-Hosted-Runner-%E6%94%AF%E6%8F%B4%E7%B5%90%E6%9D%9F"><span class="toc-text">03｜GitHub Actions：ARM32 Hosted Runner 支援結束</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#04%EF%BD%9CFastAPI-0-162-6%EF%BC%9A%E5%81%9C%E6%AD%A2%E6%94%AF%E6%8F%B4-Python-3-10"><span class="toc-text">04｜FastAPI 0.162.6：停止支援 Python 3.10</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#P1%EF%BD%9C%E5%84%AA%E5%85%88%E8%A9%95%E4%BC%B0%E7%9A%84%E6%9B%B4%E6%96%B0"><span class="toc-text">P1｜優先評估的更新</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#05%EF%BD%9CAngular-Hybrid%EF%BC%9A-angular-upgrade-XSS-%E5%85%AC%E5%91%8A"><span class="toc-text">05｜Angular Hybrid：@angular&#x2F;upgrade XSS 公告</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#06%EF%BD%9CClaude-Code%EF%BC%9AOAuth%E3%80%81Sandbox%E3%80%81zstd-%E5%AE%89%E5%85%A8%E4%BF%AE%E6%AD%A3"><span class="toc-text">06｜Claude Code：OAuth、Sandbox、zstd 安全修正</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#07%EF%BD%9CFastAPI-0-163%EF%BC%9ADependency-Concurrency"><span class="toc-text">07｜FastAPI 0.163：Dependency Concurrency</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#08%EF%BD%9CCloud-Run%EF%BC%9A%E5%AE%B9%E5%99%A8%E6%BC%8F%E6%B4%9E%E8%88%87-Secret-%E6%AA%A2%E6%B8%AC"><span class="toc-text">08｜Cloud Run：容器漏洞與 Secret 檢測</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#09%EF%BD%9CAPI-Keys-Remote-MCP-Server-GA"><span class="toc-text">09｜API Keys Remote MCP Server GA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10%EF%BD%9CGitHub%EF%BC%9AActions-Workflow-Log-Secret-Scanning"><span class="toc-text">10｜GitHub：Actions Workflow Log Secret Scanning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11%EF%BD%9CGemini-CLI-v0-68-0"><span class="toc-text">11｜Gemini CLI v0.68.0</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12%EF%BD%9CGitHub-AI-Scan%EF%BC%9AREST-API-%E7%AE%A1%E7%90%86"><span class="toc-text">12｜GitHub AI Scan：REST API 管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#13%EF%BD%9CGemini-Enterprise-Agent-Platform%EF%BC%9A%E8%B7%A8-Project-%E6%B2%BB%E7%90%86"><span class="toc-text">13｜Gemini Enterprise Agent Platform：跨 Project 治理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14%EF%BD%9CModel-Armor%EF%BC%9Av4-Latest-Filter-%E6%9B%B4%E6%96%B0"><span class="toc-text">14｜Model Armor：v4 Latest Filter 更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#15%EF%BD%9CCopilot%EF%BC%9AGemini-4-Carbon%EF%BC%8FHydrogen"><span class="toc-text">15｜Copilot：Gemini 4 Carbon／Hydrogen</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#P2%EF%BD%9C%E6%9E%B6%E6%A7%8B%E8%88%87%E5%AF%A6%E9%A9%97%E8%83%BD%E5%8A%9B"><span class="toc-text">P2｜架構與實驗能力</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#16%EF%BD%9CClaude-Code%EF%BC%9A%E5%AF%A6%E9%A9%97%E6%80%A7-Code-Mode"><span class="toc-text">16｜Claude Code：實驗性 Code Mode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#17%EF%BD%9CCloud-Run%EF%BC%9AAmbient-Networking%EF%BC%8FExpress-Links"><span class="toc-text">17｜Cloud Run：Ambient Networking／Express Links</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#18%EF%BD%9COpenAI%EF%BC%9APersistent-Agent-%E5%AE%89%E5%85%A8%E9%83%A8%E7%BD%B2%E6%9E%B6%E6%A7%8B"><span class="toc-text">18｜OpenAI：Persistent Agent 安全部署架構</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E9%80%B1%E5%B7%A5%E7%A8%8B%E5%BE%85%E8%BE%A6"><span class="toc-text">本週工程待辦</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E8%A6%81%E6%9C%9F%E9%99%90%E5%BB%B6%E7%BA%8C%E8%BF%BD%E8%B9%A4"><span class="toc-text">重要期限延續追蹤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AF%84%E5%9C%8D%E8%88%87%E7%B5%90%E8%AB%96"><span class="toc-text">範圍與結論</span></a></li></ol>
+      </details>
+    
+
+    <div class="prose"><p>2026&#x2F;11&#x2F;09–11&#x2F;15 的 18 則工程與 AI 開發更新，於 11&#x2F;16 依官方來源複核。4 項 P0 是需優先確認的相容性、EOL 與監控政策，不代表全部都是安全漏洞；另有 11 項 P1 與 3 項 P2。</p>
+<p>日期採<strong>官方來源標示日期</strong>，GitHub Release 的 UTC 日期換算台灣時間可能是隔日。以下是通用、條件式影響分析，未檢查任何特定企業資產。</p>
+<span id="more"></span>
+
+<h2 id="P0｜優先確認風險與-Breaking-Changes"><a href="#P0｜優先確認風險與-Breaking-Changes" class="headerlink" title="P0｜優先確認風險與 Breaking Changes"></a>P0｜優先確認風險與 Breaking Changes</h2><h3 id="01｜Dependabot：12-8-起暫停部分閒置專案告警"><a href="#01｜Dependabot：12-8-起暫停部分閒置專案告警" class="headerlink" title="01｜Dependabot：12&#x2F;8 起暫停部分閒置專案告警"></a>01｜Dependabot：12&#x2F;8 起暫停部分閒置專案告警</h3><p><strong>11&#x2F;10 公告；12&#x2F;08 生效</strong></p>
+<p>過去一年無活動的多數 repository 將暫停 Dependabot Alerts，既有告警封存而非刪除，推送 commit 或重新啟用可恢復。強制安全設定及部分 Enterprise Policy 有例外；GitHub Enterprise Server 不在本次範圍。</p>
+<p><strong>影響與行動：</strong> 仍部署但很少修改的專案可能失去持續告警。盤點這類服務，建立適用的強制政策或獨立 dependency scan，不依賴無實質內容的 commit 維持監控。</p>
+<p><a href="https://github.blog/changelog/2026-11-10-dependabot-alerts-will-pause-on-inactive-repositories/" target="_blank" rel="noopener">官方公告</a></p>
+<h3 id="02｜Copilot：六款模型-12-14-停用"><a href="#02｜Copilot：六款模型-12-14-停用" class="headerlink" title="02｜Copilot：六款模型 12&#x2F;14 停用"></a>02｜Copilot：六款模型 12&#x2F;14 停用</h3><p><strong>11&#x2F;13 公告；12&#x2F;14 生效</strong></p>
+<table>
+<thead>
+<tr>
+<th>停用模型</th>
+<th>建議替代</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Claude Fable 5</td>
+<td>Claude Fable 5.2</td>
+</tr>
+<tr>
+<td>Claude Haiku 4.5</td>
+<td>Claude Haiku 5.5</td>
+</tr>
+<tr>
+<td>Gemini 3.8 Flash</td>
+<td>Gemini 4 Hydrogen</td>
+</tr>
+<tr>
+<td>Gemini 4 Argon</td>
+<td>Gemini 4 Carbon</td>
+</tr>
+<tr>
+<td>Grok 4.6</td>
+<td>Grok 4.7</td>
+</tr>
+<tr>
+<td>Kimi K3</td>
+<td>尚未公告</td>
+</tr>
+</tbody></table>
+<p>Haiku 4.5 部分個人年度方案有例外。這是 <strong>Copilot 平台</strong>的停用，不等於原生模型 API 全部停用。</p>
+<p><strong>影響與行動：</strong> 檢查模型政策、Agent 與 IDE 固定模型設定；用相同開發任務比較替代模型的測試通過率、人工修正時間與成本。</p>
+<p><a href="https://github.blog/changelog/2026-11-13-upcoming-deprecation-of-selected-github-copilot-models-in-december/" target="_blank" rel="noopener">官方公告</a></p>
+<h3 id="03｜GitHub-Actions：ARM32-Hosted-Runner-支援結束"><a href="#03｜GitHub-Actions：ARM32-Hosted-Runner-支援結束" class="headerlink" title="03｜GitHub Actions：ARM32 Hosted Runner 支援結束"></a>03｜GitHub Actions：ARM32 Hosted Runner 支援結束</h3><p><strong>11&#x2F;12 公告；12&#x2F;08 生效</strong></p>
+<p>Windows／Linux Hosted Runner 將不再支援原生 ARM32（AArch32）userspace 工作負載，與 Node.js 20 EOL、Node.js 24 不支援 ARM32 有關。一般 AMD64／ARM64 CI 並非主要對象。</p>
+<p><strong>影響與行動：</strong> 搜尋 workflow 的 <code>armv7</code>、<code>armhf</code>、<code>linux/arm/v7</code> 與 AArch32；按實際需求遷移至 ARM64、AMD64 或自行管理的相容 runner。</p>
+<p><a href="https://github.blog/changelog/2026-11-12-actions-for-arm32-linux-windows-retirement/" target="_blank" rel="noopener">官方公告</a></p>
+<h3 id="04｜FastAPI-0-162-6：停止支援-Python-3-10"><a href="#04｜FastAPI-0-162-6：停止支援-Python-3-10" class="headerlink" title="04｜FastAPI 0.162.6：停止支援 Python 3.10"></a>04｜FastAPI 0.162.6：停止支援 Python 3.10</h3><p><strong>11&#x2F;13 發布；Breaking Change</strong></p>
+<p>0.162.6 移除 Python 3.10 支援。同週 0.162.3 新增 Python 3.15 支援，0.162.7 修正請求取消時非同步 <code>yield</code> dependency 清理。既有已部署舊版不會因公告立即停止。</p>
+<p><strong>影響與行動：</strong> 盤點 Python runtime；尚不能升級的 3.10 專案暫時鎖定相依版本，同時規劃遷移。測試 Pydantic、資料庫 driver、Uvicorn、Docker image 與 CI。</p>
+<p><a href="https://fastapi.tiangolo.com/release-notes/" target="_blank" rel="noopener">FastAPI 發布紀錄</a></p>
+<h2 id="P1｜優先評估的更新"><a href="#P1｜優先評估的更新" class="headerlink" title="P1｜優先評估的更新"></a>P1｜優先評估的更新</h2><h3 id="05｜Angular-Hybrid：-angular-upgrade-XSS-公告"><a href="#05｜Angular-Hybrid：-angular-upgrade-XSS-公告" class="headerlink" title="05｜Angular Hybrid：@angular&#x2F;upgrade XSS 公告"></a>05｜Angular Hybrid：@angular&#x2F;upgrade XSS 公告</h3><p><strong>11&#x2F;09｜GHSA-ffj9-42qx-f38h｜CVSS 4.0：6.3</strong></p>
+<p>Angular／AngularJS 混合應用使用 <code>downgradeComponent()</code>，在特定 DOM binding 條件下可能將不可信內容當作 AngularJS template 執行。修補版為 <strong>22.2.4、21.2.26、20.3.35</strong>；19.2.25 以下已 EOL 分支無修補。純 Angular 應用不受這項漏洞影響。</p>
+<p><strong>影響與行動：</strong> 搜尋 <code>@angular/upgrade</code>、<code>downgradeComponent</code>、<code>ng-bind-html</code>，升級適用專案並檢查使用者輸入是否進入 template 路徑。</p>
+<p><a href="https://github.com/angular/angular/security/advisories/GHSA-ffj9-42qx-f38h" target="_blank" rel="noopener">Angular 安全公告</a></p>
+<h3 id="06｜Claude-Code：OAuth、Sandbox、zstd-安全修正"><a href="#06｜Claude-Code：OAuth、Sandbox、zstd-安全修正" class="headerlink" title="06｜Claude Code：OAuth、Sandbox、zstd 安全修正"></a>06｜Claude Code：OAuth、Sandbox、zstd 安全修正</h3><p><strong>v2.1.321–v2.1.325｜11&#x2F;09–11&#x2F;13 UTC 發布日期</strong></p>
+<p>2.1.321 修正 MCP OAuth redirect 可能把 refresh token 傳至其他 host、部分唯讀 Bash 指令繞過 sandbox 授權提示及檔案寫入檢查問題；2.1.325 修正 zstd 解碼安全問題並改善 subagent、session 恢復與權限行為。</p>
+<p><strong>影響與行動：</strong> 優先更新使用 MCP／Shell 的開發環境，驗證 OAuth、sandbox、worktree 與自動 session。官方未公開所有嚴重程度，不推定全部可遠端利用。</p>
+<p>來源：<a href="https://github.com/anthropics/claude-code/releases/tag/v2.1.321" target="_blank" rel="noopener">2.1.321</a>、<a href="https://github.com/anthropics/claude-code/releases/tag/v2.1.325" target="_blank" rel="noopener">2.1.325</a>。</p>
+<h3 id="07｜FastAPI-0-163：Dependency-Concurrency"><a href="#07｜FastAPI-0-163：Dependency-Concurrency" class="headerlink" title="07｜FastAPI 0.163：Dependency Concurrency"></a>07｜FastAPI 0.163：Dependency Concurrency</h3><p><strong>0.163.0：11&#x2F;14；0.163.1：11&#x2F;15</strong></p>
+<p>新增 <code>Depends(max_concurrency=...)</code> 限制 dependency 執行並行度；0.163.1 修正巢狀 computed field response model 的 OpenAPI schema。</p>
+<p><strong>影響與行動：</strong> 可評估外部 AI API、資料庫等有限容量 dependency 的負載控制。比較 P95、吞吐、排隊與錯誤率。這不是跨 instance 的分散式全域 rate limiter，不能直接替代整體配額管理。</p>
+<p><a href="https://fastapi.tiangolo.com/release-notes/" target="_blank" rel="noopener">FastAPI 發布紀錄</a></p>
+<h3 id="08｜Cloud-Run：容器漏洞與-Secret-檢測"><a href="#08｜Cloud-Run：容器漏洞與-Secret-檢測" class="headerlink" title="08｜Cloud Run：容器漏洞與 Secret 檢測"></a>08｜Cloud Run：容器漏洞與 Secret 檢測</h3><p><strong>11&#x2F;09｜Vulnerability Assessment Preview</strong></p>
+<p>掃描 Cloud Run services、jobs、worker pools 所用映像中的漏洞與暴露 secret。</p>
+<p><strong>影響與行動：</strong> 先以非正式環境映像驗證掃描結果、區域、IAM、費用及與 Artifact Registry／既有 CI 掃描的重疊。Preview 不應作為唯一安全防線。</p>
+<p><a href="https://docs.cloud.google.com/run/docs/release-notes/" target="_blank" rel="noopener">Cloud Run 發布紀錄</a></p>
+<h3 id="09｜API-Keys-Remote-MCP-Server-GA"><a href="#09｜API-Keys-Remote-MCP-Server-GA" class="headerlink" title="09｜API Keys Remote MCP Server GA"></a>09｜API Keys Remote MCP Server GA</h3><p><strong>11&#x2F;12｜Google Cloud</strong></p>
+<p>Agent 可透過 MCP 建立、檢視、限制與管理 project API key。這提高雲端自動化能力，也引入憑證生命週期操作風險。</p>
+<p><strong>影響與行動：</strong> 先測唯讀盤點；建立、改限制及刪除採獨立 service account、最小 IAM 與明確核准，不讓模型自行擴張正式環境憑證權限。</p>
+<p><a href="https://docs.cloud.google.com/release-notes" target="_blank" rel="noopener">Google Cloud 發布紀錄</a></p>
+<h3 id="10｜GitHub：Actions-Workflow-Log-Secret-Scanning"><a href="#10｜GitHub：Actions-Workflow-Log-Secret-Scanning" class="headerlink" title="10｜GitHub：Actions Workflow Log Secret Scanning"></a>10｜GitHub：Actions Workflow Log Secret Scanning</h3><p><strong>11&#x2F;09｜Public Preview</strong></p>
+<p>執行完成後掃描 provider secret，結果顯示在 repository alerts。需適用 Enterprise Cloud、Secret Protection／Advanced Security 授權；不回溯舊 log，不偵測已遮罩、generic／custom／AI-detected 類型，Preview 不主動通知。</p>
+<p><strong>影響與行動：</strong> 在測試 repository 驗證資格與結果並分派定期檢視責任。這增加偵測層，不取代 masking、push protection 與憑證輪替。</p>
+<p><a href="https://github.blog/changelog/2026-11-09-secret-scanning-detects-secrets-in-github-actions-workflow-logs/" target="_blank" rel="noopener">官方公告</a></p>
+<h3 id="11｜Gemini-CLI-v0-68-0"><a href="#11｜Gemini-CLI-v0-68-0" class="headerlink" title="11｜Gemini CLI v0.68.0"></a>11｜Gemini CLI v0.68.0</h3><p><strong>11&#x2F;10 UTC｜Stable</strong></p>
+<p>新增 extension validation command、安裝鎖定、HTTP 429 冷卻倒數，改善模型選擇狀態、SubagentStop hook 與 rootless Podman sandbox。</p>
+<p><strong>影響與行動：</strong> 使用 extension、MCP 或程式碼自動化的環境，先驗證自訂 hook、安裝流程及 sandbox；確認升級沒有改變既有工具授權邊界。</p>
+<p><a href="https://github.com/google-gemini/gemini-cli/releases/tag/v0.68.0" target="_blank" rel="noopener">官方 Release</a></p>
+<h3 id="12｜GitHub-AI-Scan：REST-API-管理"><a href="#12｜GitHub-AI-Scan：REST-API-管理" class="headerlink" title="12｜GitHub AI Scan：REST API 管理"></a>12｜GitHub AI Scan：REST API 管理</h3><p><strong>11&#x2F;13｜Public Preview</strong></p>
+<p>新增組織／repository 層級 <code>repository_scan</code> 設定。啟用不會自動掃描，仍需有寫入權限的使用者啟動；<strong>每次掃描會消耗 Code Security AI Credits</strong>，GitHub Enterprise Server 不在範圍。</p>
+<p><strong>影響與行動：</strong> 多專案團隊可統一管理開關，但應先在測試專案驗證權限、結果與成本，再評估納入 IaC。</p>
+<p><a href="https://github.blog/changelog/2026-11-13-manage-ai-scan-for-repositories-using-the-rest-api/" target="_blank" rel="noopener">官方公告</a></p>
+<h3 id="13｜Gemini-Enterprise-Agent-Platform：跨-Project-治理"><a href="#13｜Gemini-Enterprise-Agent-Platform：跨-Project-治理" class="headerlink" title="13｜Gemini Enterprise Agent Platform：跨 Project 治理"></a>13｜Gemini Enterprise Agent Platform：跨 Project 治理</h3><p><strong>11&#x2F;10</strong></p>
+<p>Resource Manager management boundary 的 <code>AGENT_MANAGEMENT</code> 讓中央 Agent Registry 發現成員 project agent、保留 runtime identity，再以共用 Agent Gateway 與 Policy Engine 套用語意治理政策。</p>
+<p><strong>影響與行動：</strong> 適合評估多 project agent 架構；先以兩個測試 project 驗證 discovery、IAM、跨專案政策與 audit log，並確認區域與費用。</p>
+<p><a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/release-notes" target="_blank" rel="noopener">官方發布紀錄</a></p>
+<h3 id="14｜Model-Armor：v4-Latest-Filter-更新"><a href="#14｜Model-Armor：v4-Latest-Filter-更新" class="headerlink" title="14｜Model Armor：v4 Latest Filter 更新"></a>14｜Model Armor：v4 Latest Filter 更新</h3><p><strong>11&#x2F;12</strong></p>
+<p>改善間接 prompt injection、tool call、多輪對話攻擊偵測與部分誤報。</p>
+<p><strong>影響與行動：</strong> 使用 RAG 文件或 MCP tool response 的 agent，可建立正常／惡意輸入及敏感資料測試集，量測偵測率與誤報。使用自動更新的 <code>Latest</code> alias 時持續監測漂移，不能把過濾器當作授權控制替代品。</p>
+<p><a href="https://docs.cloud.google.com/model-armor/release-notes" target="_blank" rel="noopener">官方發布紀錄</a></p>
+<h3 id="15｜Copilot：Gemini-4-Carbon／Hydrogen"><a href="#15｜Copilot：Gemini-4-Carbon／Hydrogen" class="headerlink" title="15｜Copilot：Gemini 4 Carbon／Hydrogen"></a>15｜Copilot：Gemini 4 Carbon／Hydrogen</h3><p><strong>Carbon：11&#x2F;10；Hydrogen：11&#x2F;13｜GA，逐步推出</strong></p>
+<p>Carbon 定位複雜 coding、推理與安全相關工作；Hydrogen 定位快速 agentic coding、工具使用與多步驟任務。採 usage-based billing，方案與 policy 決定可用性；Carbon 不包含 Pro，Hydrogen 包含 Pro。</p>
+<p><strong>影響與行動：</strong> 用相同 refactoring、測試產生與小型修改工作比較完成率、人工修正及成本。Copilot 能力不等於所有原生 Gemini API 接入方式完全相同。</p>
+<p>來源：<a href="https://github.blog/changelog/2026-11-10-gemini-4-carbon-in-github-copilot/" target="_blank" rel="noopener">Carbon</a>、<a href="https://github.blog/changelog/2026-11-13-gemini-4-hydrogen-in-github-copilot/" target="_blank" rel="noopener">Hydrogen</a>。</p>
+<h2 id="P2｜架構與實驗能力"><a href="#P2｜架構與實驗能力" class="headerlink" title="P2｜架構與實驗能力"></a>P2｜架構與實驗能力</h2><h3 id="16｜Claude-Code：實驗性-Code-Mode"><a href="#16｜Claude-Code：實驗性-Code-Mode" class="headerlink" title="16｜Claude Code：實驗性 Code Mode"></a>16｜Claude Code：實驗性 Code Mode</h3><p><strong>v2.1.323｜11&#x2F;12 UTC</strong></p>
+<p>模型可透過撰寫 JavaScript 協調工具。Plugin 亦可指定 Claude Code 版本範圍，validation 增加 TypeScript hook 檢查。</p>
+<p><strong>影響與行動：</strong> 在隔離環境比較 code mode 與一般 tool calling 的權限、可觀測性、錯誤處理與工具可靠性，暫不作為正式自動化唯一執行模式。</p>
+<p><a href="https://github.com/anthropics/claude-code/releases/tag/v2.1.323" target="_blank" rel="noopener">官方 Release</a></p>
+<h3 id="17｜Cloud-Run：Ambient-Networking／Express-Links"><a href="#17｜Cloud-Run：Ambient-Networking／Express-Links" class="headerlink" title="17｜Cloud Run：Ambient Networking／Express Links"></a>17｜Cloud Run：Ambient Networking／Express Links</h3><p><strong>11&#x2F;13｜Preview</strong></p>
+<p>平台管理的每 instance Envoy sidecar 提供部分流量、安全與可觀測性能力；Express Links 簡化服務間連線。</p>
+<p><strong>影響與行動：</strong> 多個 API、agent、MCP service 可評估是否減少自行管理連線驗證的負擔。先以兩個測試服務量測 authentication、延遲、trace、網路政策與費用，與 IAM token + HTTPS 比較。</p>
+<p><a href="https://docs.cloud.google.com/run/docs/release-notes/" target="_blank" rel="noopener">Cloud Run 發布紀錄</a></p>
+<h3 id="18｜OpenAI：Persistent-Agent-安全部署架構"><a href="#18｜OpenAI：Persistent-Agent-安全部署架構" class="headerlink" title="18｜OpenAI：Persistent Agent 安全部署架構"></a>18｜OpenAI：Persistent Agent 安全部署架構</h3><p><strong>11&#x2F;12｜工程文章，非新 API Release</strong></p>
+<p>重點是可信 control plane／不可信 runtime 分離、sandbox 網路與檔案限制、動作 auto-review、agent identity 與使用者身分區分，以及完整行為紀錄。</p>
+<p><strong>影響與行動：</strong> 轉為 Agent Security Checklist：憑證經 broker 而非直接暴露 runtime，阻擋非必要 metadata endpoint 存取，外部寫入有明確核准，保留可稽核紀錄。</p>
+<p><a href="https://developers.openai.com/blog/securing-persistent-agents-like-openclaw-at-openai" target="_blank" rel="noopener">OpenAI 工程文章</a></p>
+<h2 id="本週工程待辦"><a href="#本週工程待辦" class="headerlink" title="本週工程待辦"></a>本週工程待辦</h2><table>
+<thead>
+<tr>
+<th>優先級</th>
+<th>工作</th>
+<th>可驗證產出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P0</td>
+<td>Python 3.10／FastAPI 盤點</td>
+<td>Runtime 遷移與相容性清單</td>
+</tr>
+<tr>
+<td>P0</td>
+<td>閒置 repository、Copilot、ARM32</td>
+<td>監控覆蓋與 EOL 遷移清單</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>Claude Code、Angular Hybrid</td>
+<td>升級及適用條件測試</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>Cloud Run 掃描、FastAPI concurrency</td>
+<td>安全與壓力測試結果</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>Agent 跨 project 治理</td>
+<td>IAM／policy／audit PoC</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>Persistent Agent 隔離</td>
+<td>安全邊界與核准檢查表</td>
+</tr>
+</tbody></table>
+<h2 id="重要期限延續追蹤"><a href="#重要期限延續追蹤" class="headerlink" title="重要期限延續追蹤"></a>重要期限延續追蹤</h2><ul>
+<li><strong>11&#x2F;28：</strong> <a href="https://angular.dev/reference/releases" target="_blank" rel="noopener">Angular 20 LTS 結束</a>。</li>
+<li><strong>11&#x2F;30：</strong> <a href="https://platform.claude.com/docs/en/about-claude/model-deprecations" target="_blank" rel="noopener">Claude Sonnet 4.5 API 停用</a>、<a href="https://platform.claude.com/docs/en/release-notes/overview" target="_blank" rel="noopener">Opus 4.8 Fast Mode 移除</a>。</li>
+<li><strong>12&#x2F;02：</strong> 公開 repository 的 <a href="https://github.blog/changelog/2026-11-02-pull_request_target-blocked-by-default-december-2/" target="_blank" rel="noopener"><code>pull_request_target</code> 預設政策變更</a>。下一次短暫強制測試為<strong>台灣時間 11&#x2F;17 00:00–02:00</strong>。</li>
+<li><strong>12&#x2F;08：</strong> Dependabot 閒置專案與 ARM32 政策生效。</li>
+<li><strong>12&#x2F;14：</strong> 六款 Copilot 模型停用，按方案例外安排。</li>
+</ul>
+<h2 id="範圍與結論"><a href="#範圍與結論" class="headerlink" title="範圍與結論"></a>範圍與結論</h2><p>Pydantic Core、TypeScript、Docker Engine、OpenAI Core API、Claude Platform API、RAG／Evaluation framework 與 A2A 本期未另闢專節，這是選題範圍，<strong>不表示沒有新公告</strong>。FastAPI 0.163.1 與 Gemini CLI 小修正已合併，避免湊數。</p>
+<p>先完成 Python／FastAPI 相容性與 GitHub 監控／EOL 盤點，再投入 Cloud Run 掃描、Agent Registry／MCP 治理及 concurrency PoC。新能力的價值應以測試與成本確認，而不是直接把 Preview 或實驗功能當成正式環境依賴。</p>
+</div>
+
+    <footer class="post-footer">
+      
+        <ul class="tags" aria-label="標籤">
+          <li><a href="/tags/AI/">#AI</a></li><li><a href="/tags/CI-CD/">#CI/CD</a></li><li><a href="/tags/DevOps/">#DevOps</a></li><li><a href="/tags/GCP/">#GCP</a></li><li><a href="/tags/Python/">#Python</a></li>
+        </ul>
+      
+      
+        <a class="source-link" target="_blank" rel="noopener" href="https://github.com/andyhung0723/AndyHung0723.github.io/blob/source/source/_posts/tech-radar-2026-11-16.md">在 GitHub 檢視原始檔</a>
+      
+    </footer>
+
+    <nav class="pager" aria-label="同分類的其他文章">
+  
+    <span class="pager-empty">已是最新一篇</span>
+  
+  
+    <a class="pager-link pager-link--older" rel="next" data-nav="older" href="/2026/11/09/tech-radar-2026-11-09/">
+      <span class="pager-dir">較舊一篇 →</span>
+      <span class="pager-title">技術週報｜2026-11-09</span>
+    </a>
+  
+</nav>
+
+  </article>
+
+  
+    <nav class="toc-rail" aria-label="本頁目錄">
+      <p class="toc-title">本頁目錄</p>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#P0%EF%BD%9C%E5%84%AA%E5%85%88%E7%A2%BA%E8%AA%8D%E9%A2%A8%E9%9A%AA%E8%88%87-Breaking-Changes"><span class="toc-text">P0｜優先確認風險與 Breaking Changes</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#01%EF%BD%9CDependabot%EF%BC%9A12-8-%E8%B5%B7%E6%9A%AB%E5%81%9C%E9%83%A8%E5%88%86%E9%96%92%E7%BD%AE%E5%B0%88%E6%A1%88%E5%91%8A%E8%AD%A6"><span class="toc-text">01｜Dependabot：12&#x2F;8 起暫停部分閒置專案告警</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#02%EF%BD%9CCopilot%EF%BC%9A%E5%85%AD%E6%AC%BE%E6%A8%A1%E5%9E%8B-12-14-%E5%81%9C%E7%94%A8"><span class="toc-text">02｜Copilot：六款模型 12&#x2F;14 停用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#03%EF%BD%9CGitHub-Actions%EF%BC%9AARM32-Hosted-Runner-%E6%94%AF%E6%8F%B4%E7%B5%90%E6%9D%9F"><span class="toc-text">03｜GitHub Actions：ARM32 Hosted Runner 支援結束</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#04%EF%BD%9CFastAPI-0-162-6%EF%BC%9A%E5%81%9C%E6%AD%A2%E6%94%AF%E6%8F%B4-Python-3-10"><span class="toc-text">04｜FastAPI 0.162.6：停止支援 Python 3.10</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#P1%EF%BD%9C%E5%84%AA%E5%85%88%E8%A9%95%E4%BC%B0%E7%9A%84%E6%9B%B4%E6%96%B0"><span class="toc-text">P1｜優先評估的更新</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#05%EF%BD%9CAngular-Hybrid%EF%BC%9A-angular-upgrade-XSS-%E5%85%AC%E5%91%8A"><span class="toc-text">05｜Angular Hybrid：@angular&#x2F;upgrade XSS 公告</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#06%EF%BD%9CClaude-Code%EF%BC%9AOAuth%E3%80%81Sandbox%E3%80%81zstd-%E5%AE%89%E5%85%A8%E4%BF%AE%E6%AD%A3"><span class="toc-text">06｜Claude Code：OAuth、Sandbox、zstd 安全修正</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#07%EF%BD%9CFastAPI-0-163%EF%BC%9ADependency-Concurrency"><span class="toc-text">07｜FastAPI 0.163：Dependency Concurrency</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#08%EF%BD%9CCloud-Run%EF%BC%9A%E5%AE%B9%E5%99%A8%E6%BC%8F%E6%B4%9E%E8%88%87-Secret-%E6%AA%A2%E6%B8%AC"><span class="toc-text">08｜Cloud Run：容器漏洞與 Secret 檢測</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#09%EF%BD%9CAPI-Keys-Remote-MCP-Server-GA"><span class="toc-text">09｜API Keys Remote MCP Server GA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10%EF%BD%9CGitHub%EF%BC%9AActions-Workflow-Log-Secret-Scanning"><span class="toc-text">10｜GitHub：Actions Workflow Log Secret Scanning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11%EF%BD%9CGemini-CLI-v0-68-0"><span class="toc-text">11｜Gemini CLI v0.68.0</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12%EF%BD%9CGitHub-AI-Scan%EF%BC%9AREST-API-%E7%AE%A1%E7%90%86"><span class="toc-text">12｜GitHub AI Scan：REST API 管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#13%EF%BD%9CGemini-Enterprise-Agent-Platform%EF%BC%9A%E8%B7%A8-Project-%E6%B2%BB%E7%90%86"><span class="toc-text">13｜Gemini Enterprise Agent Platform：跨 Project 治理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14%EF%BD%9CModel-Armor%EF%BC%9Av4-Latest-Filter-%E6%9B%B4%E6%96%B0"><span class="toc-text">14｜Model Armor：v4 Latest Filter 更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#15%EF%BD%9CCopilot%EF%BC%9AGemini-4-Carbon%EF%BC%8FHydrogen"><span class="toc-text">15｜Copilot：Gemini 4 Carbon／Hydrogen</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#P2%EF%BD%9C%E6%9E%B6%E6%A7%8B%E8%88%87%E5%AF%A6%E9%A9%97%E8%83%BD%E5%8A%9B"><span class="toc-text">P2｜架構與實驗能力</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#16%EF%BD%9CClaude-Code%EF%BC%9A%E5%AF%A6%E9%A9%97%E6%80%A7-Code-Mode"><span class="toc-text">16｜Claude Code：實驗性 Code Mode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#17%EF%BD%9CCloud-Run%EF%BC%9AAmbient-Networking%EF%BC%8FExpress-Links"><span class="toc-text">17｜Cloud Run：Ambient Networking／Express Links</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#18%EF%BD%9COpenAI%EF%BC%9APersistent-Agent-%E5%AE%89%E5%85%A8%E9%83%A8%E7%BD%B2%E6%9E%B6%E6%A7%8B"><span class="toc-text">18｜OpenAI：Persistent Agent 安全部署架構</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E9%80%B1%E5%B7%A5%E7%A8%8B%E5%BE%85%E8%BE%A6"><span class="toc-text">本週工程待辦</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E8%A6%81%E6%9C%9F%E9%99%90%E5%BB%B6%E7%BA%8C%E8%BF%BD%E8%B9%A4"><span class="toc-text">重要期限延續追蹤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AF%84%E5%9C%8D%E8%88%87%E7%B5%90%E8%AB%96"><span class="toc-text">範圍與結論</span></a></li></ol>
+      <a class="toc-top" href="#main">回到頂端 ↑</a>
+    </nav>
+  
+</div>
+<nav class="pager pager--dock" aria-label="同分類的其他文章">
+  
+    <span class="pager-empty">已是最新一篇</span>
+  
+  
+    <a class="pager-link pager-link--older" rel="next" data-nav="older" href="/2026/11/09/tech-radar-2026-11-09/">
+      <span class="pager-dir">較舊一篇 →</span>
+      <span class="pager-title">技術週報｜2026-11-09</span>
+    </a>
+  
+</nav>
+
+
+  </main>
+</div>
+</body>
+</html>

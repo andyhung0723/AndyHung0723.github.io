@@ -1,0 +1,495 @@
+
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>資安週報｜2026/11/16 · Andy 的筆記</title>
+<meta name="description" content="14 個主題：Chrome、Outlook、OpenSSH、PostgreSQL、Ubuntu Kernel、GCP、MCP、Apache、AWS、GitHub 與 NGINX。">
+<link rel="canonical" href="https://andyhung0723.github.io/2026/11/16/security-weekly-2026-11-16/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="資安週報｜2026/11/16">
+<meta property="og:description" content="14 個主題：Chrome、Outlook、OpenSSH、PostgreSQL、Ubuntu Kernel、GCP、MCP、Apache、AWS、GitHub 與 NGINX。">
+<meta property="og:url" content="https://andyhung0723.github.io/2026/11/16/security-weekly-2026-11-16/">
+<meta property="og:site_name" content="Andy 的筆記">
+<script>
+  try {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+  } catch {}
+</script>
+<link rel="stylesheet" href="/css/reader.css?v=b8fc5f6b9f">
+<style>[data-stream="security"]{--stream:#9A3F08;--stream-tint:#FDF0E6}[data-stream="tech"]{--stream:#2450C8;--stream-tint:#EAF0FD}[data-stream="notes"]{--stream:#0E6B5F;--stream-tint:#E5F4F1}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root:not([data-theme="light"]) [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root:not([data-theme="light"]) [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}}:root[data-theme="dark"] [data-stream="security"]{--stream:#F4A66B;--stream-tint:#3A2416}:root[data-theme="dark"] [data-stream="tech"]{--stream:#8FB0FF;--stream-tint:#1B2540}:root[data-theme="dark"] [data-stream="notes"]{--stream:#5FD0BC;--stream-tint:#12302B}</style>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="Andy 的筆記" href="/atom.xml">
+<script type="speculationrules">
+  {"prerender": [{"source": "document", "where": {"selector_matches": ".pager-link, .post-link"}, "eagerness": "moderate"}]}
+</script>
+<script src="/js/reader.js?v=98ae7b0f53" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body data-stream="security">
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header">
+  <button class="icon-btn menu-btn" type="button" aria-label="開啟文章列表" aria-controls="sidebar" aria-expanded="false">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+  </button>
+  <a class="brand" href="/">
+    <span class="brand-mark" aria-hidden="true">A/</span>
+    <span class="brand-name">Andy 的筆記</span>
+  </a>
+  <div class="search" role="search">
+    <label class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="搜尋文章、CVE、套件名稱" aria-label="搜尋文章" autocomplete="off" aria-controls="search-results" aria-expanded="false">
+      <kbd>/</kbd>
+    </label>
+    <div class="search-results" id="search-results" hidden></div>
+  </div>
+  <nav class="site-nav" aria-label="主選單">
+    <a href="/archives/">所有文章</a>
+    <a href="/about/">關於</a>
+    <a href="/atom.xml">RSS</a>
+    <button class="icon-btn theme-btn" type="button" aria-label="切換深色模式">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </nav>
+</header>
+
+<div class="progress" aria-hidden="true"><span></span></div>
+<div class="shell">
+  
+
+<aside class="sidebar" id="sidebar" aria-label="文章列表">
+  <div class="stream-tabs" role="tablist" aria-label="分類">
+    
+      <a class="stream-tab" role="tab" id="tab-security" data-stream="security" data-stream-tab="security"
+         href="/security/" aria-controls="panel-security" aria-selected="true">
+        <span class="stream-tab-label">資安週報</span>
+        <span class="stream-tab-count">2 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-tech" data-stream="tech" data-stream-tab="tech"
+         href="/tech/" aria-controls="panel-tech" aria-selected="false">
+        <span class="stream-tab-label">技術雷達</span>
+        <span class="stream-tab-count">2 篇</span>
+      </a>
+    
+      <a class="stream-tab" role="tab" id="tab-notes" data-stream="notes" data-stream-tab="notes"
+         href="/notes/" aria-controls="panel-notes" aria-selected="false">
+        <span class="stream-tab-label">研究筆記</span>
+        <span class="stream-tab-count">6 篇</span>
+      </a>
+    
+  </div>
+  
+    <section class="stream-panel" id="panel-security" role="tabpanel" aria-labelledby="tab-security" data-stream="security">
+      <p class="stream-desc">每週整理 CVE、已知遭利用漏洞與修補順序。 <a href="/security/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/16/security-weekly-2026-11-16/" aria-current="page">
+                <span class="post-link-title">資安週報｜2026/11/16</span>
+                <span class="post-link-meta"><time datetime="2026-11-15T16:00:00.000Z">11-16</time><span>12 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/security-weekly-2026-11-09/">
+                <span class="post-link-title">資安週報｜2026/11/09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>12 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-tech" role="tabpanel" aria-labelledby="tab-tech" data-stream="tech" hidden>
+      <p class="stream-desc">雲端、AI 工具鏈與前端框架的每週更新。 <a href="/tech/">看全部</a></p>
+      
+        <h3 class="year">2026</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2026/11/16/tech-radar-2026-11-16/">
+                <span class="post-link-title">技術週報｜2026-11-16</span>
+                <span class="post-link-meta"><time datetime="2026-11-15T16:00:00.000Z">11-16</time><span>12 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2026/11/09/tech-radar-2026-11-09/">
+                <span class="post-link-title">技術週報｜2026-11-09</span>
+                <span class="post-link-meta"><time datetime="2026-11-08T16:00:00.000Z">11-09</time><span>13 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+    <section class="stream-panel" id="panel-notes" role="tabpanel" aria-labelledby="tab-notes" data-stream="notes" hidden>
+      <p class="stream-desc">踩坑紀錄與深入探討，一篇解一個問題。 <a href="/notes/">看全部</a></p>
+      
+        <h3 class="year">2023</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2023/04/20/ga/ga4_share_0420/">
+                <span class="post-link-title">GA4 vs GA3 來源/媒介 BigQuery 欄位解析</span>
+                <span class="post-link-meta"><time datetime="2023-04-19T16:00:00.000Z">04-20</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2023/04/16/ga/ga4_share_0416/">
+                <span class="post-link-title">Google 官方正式宣布「項目範圍的自訂維度 (item scope)」上線啦!</span>
+                <span class="post-link-meta"><time datetime="2023-04-15T16:00:00.000Z">04-16</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+        <h3 class="year">2022</h3>
+        <ol class="post-nav">
+          
+            <li>
+              <a class="post-link" href="/2022/06/08/position-sticky-issue/">
+                <span class="post-link-title">position:sticky 遇到 overflow 時失效解法</span>
+                <span class="post-link-meta"><time datetime="2022-06-07T16:00:00.000Z">06-08</time><span>2 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/06/01/angular-offsetwidth-bug/">
+                <span class="post-link-title">Angular 取得元素 offsetWidth 時有誤解法</span>
+                <span class="post-link-meta"><time datetime="2022-05-31T16:00:00.000Z">06-01</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/29/angular-lazy-loading/">
+                <span class="post-link-title">Angular Lazy Loading</span>
+                <span class="post-link-meta"><time datetime="2022-05-28T16:00:00.000Z">05-29</time><span>3 min</span></span>
+              </a>
+            </li>
+          
+            <li>
+              <a class="post-link" href="/2022/05/28/angular-module/">
+                <span class="post-link-title">探討 Angular Module</span>
+                <span class="post-link-meta"><time datetime="2022-05-27T16:00:00.000Z">05-28</time><span>4 min</span></span>
+              </a>
+            </li>
+          
+        </ol>
+      
+    </section>
+  
+  <p class="kbd-hint"><kbd>j</kbd><kbd>k</kbd> 上下切換文章 <kbd>/</kbd> 搜尋</p>
+</aside>
+<script>
+  try {
+    document.getElementById('sidebar').scrollTop = Number(sessionStorage.getItem('sidebar-scroll')) || 0;
+  } catch {}
+</script>
+<div class="scrim" hidden></div>
+
+  <main class="main" id="main" tabindex="-1">
+    
+
+
+<div class="post-layout">
+  <article class="post">
+    <header class="post-header">
+      <nav class="crumbs" aria-label="麵包屑">
+        <a class="badge" href="/security/">資安週報</a>
+        <span aria-hidden="true">/</span>
+        <time datetime="2026-11-15T16:00:00.000Z">2026-11-16</time>
+      </nav>
+      <h1 class="post-title">資安週報｜2026/11/16</h1>
+      <p class="post-meta">
+        <span>AI 協助整理</span>
+        <span>12 分鐘閱讀</span>
+        <span>資安週報第 1 / 2 篇</span>
+      </p>
+      
+      <p class="lede">14 個主題：Chrome、Outlook、OpenSSH、PostgreSQL、Ubuntu Kernel、GCP、MCP、Apache、AWS、GitHub 與 NGINX。</p>
+      
+    </header>
+
+    
+      <details class="toc-inline">
+        <summary>本頁目錄</summary>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B7%8A%E6%80%A5%E8%99%95%E7%90%86-P0"><span class="toc-text">緊急處理 P0</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#01%EF%BD%9CChrome%EF%BC%9AXML-Zero-day-%E5%B7%B2%E9%81%AD%E5%88%A9%E7%94%A8"><span class="toc-text">01｜Chrome：XML Zero-day 已遭利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#02%EF%BD%9COutlook%EF%BC%9A%E5%B7%B2%E9%81%AD%E5%88%A9%E7%94%A8%E7%9A%84-Spoofing-%E6%BC%8F%E6%B4%9E"><span class="toc-text">02｜Outlook：已遭利用的 Spoofing 漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#03%EF%BD%9COpenSSH%EF%BC%9A%E7%89%B9%E5%AE%9A-Alpine%EF%BC%8Fmusl-%E7%92%B0%E5%A2%83%E9%A9%97%E8%AD%89%E7%B9%9E%E9%81%8E"><span class="toc-text">03｜OpenSSH：特定 Alpine／musl 環境驗證繞過</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E9%80%B1%E8%99%95%E7%90%86-P1"><span class="toc-text">本週處理 P1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#04%EF%BD%9CPostgreSQL%EF%BC%9A52-%E9%A0%85%E5%AE%89%E5%85%A8%E4%BF%AE%E8%A3%9C%E8%88%87-14-%E7%89%88-EOL"><span class="toc-text">04｜PostgreSQL：52 項安全修補與 14 版 EOL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#05%EF%BD%9CUbuntu-Kernel%EF%BC%9Alinux-gcp-%E4%BF%AE%E8%A3%9C%E7%8B%80%E6%85%8B%E6%9B%B4%E6%96%B0"><span class="toc-text">05｜Ubuntu Kernel：linux-gcp 修補狀態更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#06%EF%BD%9CGCP%EF%BC%9AAMD-EPYC-%E8%B3%87%E6%96%99%E6%B4%A9%E6%BC%8F%E9%A2%A8%E9%9A%AA"><span class="toc-text">06｜GCP：AMD EPYC 資料洩漏風險</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#07%EF%BD%9CMCP-Gateway-Registry%EF%BC%9A%E6%AC%8A%E9%99%90%E6%8F%90%E5%8D%87%E8%88%87-SSRF"><span class="toc-text">07｜MCP Gateway Registry：權限提升與 SSRF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#08%EF%BD%9CAWS-API-MCP-Server%EF%BC%9A%E5%AE%89%E5%85%A8%E7%AD%96%E7%95%A5%E7%B9%9E%E9%81%8E"><span class="toc-text">08｜AWS API MCP Server：安全策略繞過</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#09%EF%BD%9CUbuntu%EF%BC%8FDebian%EF%BC%9AApache-HTTP-Server-%E6%9B%B4%E6%96%B0"><span class="toc-text">09｜Ubuntu／Debian：Apache HTTP Server 更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10%EF%BD%9CAWS-SDK-for-pandas%EF%BC%9AEMR-Log-Bucket-%E9%A2%A8%E9%9A%AA"><span class="toc-text">10｜AWS SDK for pandas：EMR Log Bucket 風險</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%81%E7%BA%8C%E8%A7%80%E5%AF%9F-P2"><span class="toc-text">持續觀察 P2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#11%EF%BD%9CGitHub-Secret-Scanning%EF%BC%9AActions-Log-%E6%8E%83%E6%8F%8F"><span class="toc-text">11｜GitHub Secret Scanning：Actions Log 掃描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12%EF%BD%9CDependabot%EF%BC%9A%E9%96%92%E7%BD%AE%E5%B0%88%E6%A1%88%E5%91%8A%E8%AD%A6%E6%94%BF%E7%AD%96%E8%AE%8A%E6%9B%B4"><span class="toc-text">12｜Dependabot：閒置專案告警政策變更</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#13%EF%BD%9CKiro-CLI%EF%BC%9A%E5%B0%8D%E8%A9%B1%E8%88%87-Prompt-History-%E6%AC%8A%E9%99%90%E9%81%8E%E5%AF%AC"><span class="toc-text">13｜Kiro CLI：對話與 Prompt History 權限過寬</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14%EF%BD%9CNGINX%EF%BC%9ADebian-12-%E5%89%8D%E6%9C%9F%E6%BC%8F%E6%B4%9E%E5%BB%B6%E7%BA%8C%E8%BF%BD%E8%B9%A4"><span class="toc-text">14｜NGINX：Debian 12 前期漏洞延續追蹤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%B9%B3%E5%8F%B0%E8%BF%BD%E8%B9%A4"><span class="toc-text">其他平台追蹤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E5%94%AF%E8%AE%80%E6%AA%A2%E6%9F%A5%E8%88%87%E6%9C%AC%E9%80%B1%E5%BE%85%E8%BE%A6"><span class="toc-text">通用唯讀檢查與本週待辦</span></a></li></ol>
+      </details>
+    
+
+    <div class="prose"><p>本期涵蓋 2026&#x2F;11&#x2F;09–11&#x2F;15 的 14 個主題與平台追蹤，於 11&#x2F;16 依官方來源重新核對。優先處理已遭利用的 Chrome、Outlook 與特定 OpenSSH 環境，再安排 PostgreSQL、核心與 MCP 元件更新。</p>
+<p>以下日期採<strong>原始公告標示日期</strong>；AWS 公告使用 PST，換算台灣時間可能是隔日。優先級與影響均為條件式評估，不代表任何個別資產已受影響或完成修補。</p>
+<span id="more"></span>
+
+<h2 id="緊急處理-P0"><a href="#緊急處理-P0" class="headerlink" title="緊急處理 P0"></a>緊急處理 P0</h2><h3 id="01｜Chrome：XML-Zero-day-已遭利用"><a href="#01｜Chrome：XML-Zero-day-已遭利用" class="headerlink" title="01｜Chrome：XML Zero-day 已遭利用"></a>01｜Chrome：XML Zero-day 已遭利用</h3><p><strong>CVE-2026-125350｜11&#x2F;09 修補、11&#x2F;10 列入 KEV</strong></p>
+<p>XML 元件的 use-after-free 可由特製網頁觸發。Google 確認已有實際利用；11&#x2F;11 的新版另修補 83 項安全問題，但不能把全部新增漏洞都視為已遭利用。</p>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>最初修補版本</th>
+<th>本期較新 Stable</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Windows／macOS</td>
+<td>157.0.8103.50／.51</td>
+<td>157.0.8103.78／.79</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>157.0.8103.50</td>
+<td>157.0.8103.78</td>
+</tr>
+</tbody></table>
+<p><strong>建議：</strong> 更新並重新啟動瀏覽器；其他 Chromium 瀏覽器須依各廠商公告核對，不直接套用 Chrome 版號。</p>
+<p>來源：<a href="https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_018223192.html" target="_blank" rel="noopener">11&#x2F;09 Chrome 公告</a>、<a href="https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_01744469280.html" target="_blank" rel="noopener">11&#x2F;11 Chrome 公告</a>。</p>
+<h3 id="02｜Outlook：已遭利用的-Spoofing-漏洞"><a href="#02｜Outlook：已遭利用的-Spoofing-漏洞" class="headerlink" title="02｜Outlook：已遭利用的 Spoofing 漏洞"></a>02｜Outlook：已遭利用的 Spoofing 漏洞</h3><p><strong>CVE-2026-124194｜11&#x2F;10｜Microsoft CVSS 3.1：6.5</strong></p>
+<p>此問題涉及認證資訊暴露風險，須使用者互動；<strong>預覽窗格不是攻擊途徑</strong>。受影響 Office／Outlook 版本及適用更新應依 MSRC 清單判斷，不能只依應用程式名稱推定全部版本都受影響。</p>
+<p><strong>建議：</strong> 優先安裝對應 Office 安全更新，依環境政策限制不必要的對外 NTLM 認證，並檢查異常對外 SMB／認證連線。本期不把未完整核對的攻擊細節當作已證實事實。</p>
+<p>來源：<a href="https://msrc.microsoft.com/security-guidance/advisory/CVE-2026-124194" target="_blank" rel="noopener">MSRC</a>、<a href="https://nvd.nist.gov/vuln/detail/CVE-2026-124194" target="_blank" rel="noopener">NVD／KEV 記錄</a>。</p>
+<h3 id="03｜OpenSSH：特定-Alpine／musl-環境驗證繞過"><a href="#03｜OpenSSH：特定-Alpine／musl-環境驗證繞過" class="headerlink" title="03｜OpenSSH：特定 Alpine／musl 環境驗證繞過"></a>03｜OpenSSH：特定 Alpine／musl 環境驗證繞過</h3><p><strong>CVE-2026-123158｜11&#x2F;09 加入 KEV｜Amazon Linux 評分 9.8；Ubuntu 頁面評分 8.1</strong></p>
+<p>主要條件是 musl libc、未啟用 PAM、受影響版本，以及特定帳號密碼欄位與驗證設定。不是所有 Linux OpenSSH 都受影響；Ubuntu 官方列為不受影響。Alpine 容器若執行 SSH Server，仍應獨立盤點。</p>
+<p><strong>修補：</strong> OpenSSH 10.6p2 或發行版已修補套件，更新後重啟 sshd。無法立即更新時可停用 SSH 密碼驗證，但須先確保替代登入方式可用。</p>
+<p>來源：<a href="https://alpinelinux.org/posts/2026-11-05-openssh-password-authentication-bypass/" target="_blank" rel="noopener">Alpine</a>、<a href="https://ubuntu.com/security/CVE-2026-123158" target="_blank" rel="noopener">Ubuntu</a>、<a href="https://explore.alas.aws.amazon.com/CVE-2026-123158.html" target="_blank" rel="noopener">Amazon Linux</a>、<a href="https://content.govdelivery.com/accounts/USDHSCISA/bulletins/4323900" target="_blank" rel="noopener">CISA</a>。</p>
+<h2 id="本週處理-P1"><a href="#本週處理-P1" class="headerlink" title="本週處理 P1"></a>本週處理 P1</h2><h3 id="04｜PostgreSQL：52-項安全修補與-14-版-EOL"><a href="#04｜PostgreSQL：52-項安全修補與-14-版-EOL" class="headerlink" title="04｜PostgreSQL：52 項安全修補與 14 版 EOL"></a>04｜PostgreSQL：52 項安全修補與 14 版 EOL</h3><p><strong>11&#x2F;12 安全更新</strong></p>
+<p>官方修補 52 項安全問題與超過 140 項錯誤。部分漏洞在特定資料庫權限條件下可能導致程式碼執行，不應一概稱為未驗證遠端 RCE；本期未確認野外利用。</p>
+<table>
+<thead>
+<tr>
+<th>分支</th>
+<th>本期安全版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>18</td>
+<td>18.7</td>
+</tr>
+<tr>
+<td>17</td>
+<td>17.12</td>
+</tr>
+<tr>
+<td>16</td>
+<td>16.16</td>
+</tr>
+<tr>
+<td>15</td>
+<td>15.20</td>
+</tr>
+<tr>
+<td>14</td>
+<td>14.25，最後安全版本，已 EOL</td>
+</tr>
+</tbody></table>
+<p>Debian 12 的 PostgreSQL 15 修補套件為 <code>15.20-0+deb12u1</code>。本次亦有條件式 <code>REINDEX</code> 需求；使用增量備份者應依官方指引重新建立完整備份基礎。</p>
+<p><strong>建議：</strong> 同時驗證 Extension、備份還原、應用相容性及索引維護，並把 14 版主版本升級列入計畫。完整 CVE 與個別前提以官方清單為準。</p>
+<p>來源：<a href="https://www.postgresql.org/about/news/postgresql-187-1712-1616-1520-1425-and-19-rc-2-released-3442/" target="_blank" rel="noopener">PostgreSQL 發布公告</a>、<a href="https://security-tracker.debian.org/tracker/DLA-4905-1" target="_blank" rel="noopener">Debian DLA-4905-1</a>。</p>
+<h3 id="05｜Ubuntu-Kernel：linux-gcp-修補狀態更新"><a href="#05｜Ubuntu-Kernel：linux-gcp-修補狀態更新" class="headerlink" title="05｜Ubuntu Kernel：linux-gcp 修補狀態更新"></a>05｜Ubuntu Kernel：linux-gcp 修補狀態更新</h3><p><strong>CVE-2026-98432｜11&#x2F;14 頁面更新｜CVSS 3.1：9.8</strong></p>
+<p>延續追蹤 Linux IPv4 TCP 記憶體安全問題。各核心 flavor 必須分別確認；以下僅是 <code>linux-gcp</code>，不能套用到 generic、HWE、FIPS。</p>
+<table>
+<thead>
+<tr>
+<th>Ubuntu</th>
+<th>linux-gcp 修補版本／狀態</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>26.10</td>
+<td>7.3.0-1004.4</td>
+</tr>
+<tr>
+<td>26.04 LTS</td>
+<td>7.0.0-1017.19</td>
+</tr>
+<tr>
+<td>24.04 LTS</td>
+<td>6.8.0-1073.81</td>
+</tr>
+<tr>
+<td>22.04 LTS</td>
+<td>5.15.0-1121.131</td>
+</tr>
+<tr>
+<td>20.04 LTS</td>
+<td>此 flavor 仍標示 Vulnerable</td>
+</tr>
+<tr>
+<td>18.04／16.04 等</td>
+<td>依 flavor 與維護資格逐一確認</td>
+</tr>
+</tbody></table>
+<p><strong>建議：</strong> 安裝修補後安排重啟，並以 <code>uname -r</code> 確認正在執行的新核心。APT 沒有待更新套件不等於執行中的核心已更新。本期未確認實際利用。</p>
+<p>來源：<a href="https://ubuntu.com/security/CVE-2026-98432" target="_blank" rel="noopener">Ubuntu CVE 狀態</a>。</p>
+<h3 id="06｜GCP：AMD-EPYC-資料洩漏風險"><a href="#06｜GCP：AMD-EPYC-資料洩漏風險" class="headerlink" title="06｜GCP：AMD EPYC 資料洩漏風險"></a>06｜GCP：AMD EPYC 資料洩漏風險</h3><p><strong>GCP-2026-081｜11&#x2F;10｜CVE-2024-36350、CVE-2024-36357、CVE-2026-0004</strong></p>
+<p>涉及 C4D、N4D、H4D、Z4D、G4 及特定 Bare Metal 機型。Google 已提供跨 VM／Host 緩解；VM 內程序間防護仍需更新 Guest OS。</p>
+<p><strong>建議：</strong> 依官方指引確認 CPU 資訊更新已送達 VM 後，再安排 Stop／Start；單純 Guest OS Reboot 不足夠。先檢查 IP、磁碟與服務依賴及停機影響。Cloud Run 不需採取此項動作。公告未列統一 CVSS，本期未確認實際利用。</p>
+<p>來源：<a href="https://docs.cloud.google.com/support/bulletins/index#gcp-2026-081" target="_blank" rel="noopener">GCP 安全公告</a>。</p>
+<h3 id="07｜MCP-Gateway-Registry：權限提升與-SSRF"><a href="#07｜MCP-Gateway-Registry：權限提升與-SSRF" class="headerlink" title="07｜MCP Gateway Registry：權限提升與 SSRF"></a>07｜MCP Gateway Registry：權限提升與 SSRF</h3><p><strong>11&#x2F;11 揭露，不等同修補發布日</strong></p>
+<table>
+<thead>
+<tr>
+<th>CVE</th>
+<th>問題</th>
+<th>受影響版本</th>
+<th>修補版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CVE-2026-100307</td>
+<td>管理 API 授權不足</td>
+<td>1.0.9–1.24.7</td>
+<td>1.25.0</td>
+</tr>
+<tr>
+<td>CVE-2026-125926</td>
+<td>Server Registration SSRF</td>
+<td>1.0.3–1.34.0</td>
+<td>1.35.0</td>
+</tr>
+</tbody></table>
+<p>1.25.0 早於 6&#x2F;27 發布，不能稱為本週才釋出。<strong>建議至少採用 1.35.0 或更新版本</strong>，並檢查既有權限對應、已註冊 upstream URL、日誌與憑證：更新不會自動清除過去寫入的惡意權限，也不會重新驗證所有既有 URL。公告未列 CVSS，本期未確認野外利用。</p>
+<p>來源：<a href="https://aws.amazon.com/security/security-bulletins/2026-179-aws/" target="_blank" rel="noopener">權限提升公告</a>、<a href="https://aws.amazon.com/security/security-bulletins/2026-180-aws/" target="_blank" rel="noopener">SSRF 公告</a>。</p>
+<h3 id="08｜AWS-API-MCP-Server：安全策略繞過"><a href="#08｜AWS-API-MCP-Server：安全策略繞過" class="headerlink" title="08｜AWS API MCP Server：安全策略繞過"></a>08｜AWS API MCP Server：安全策略繞過</h3><p><strong>CVE-2026-125271｜11&#x2F;10</strong></p>
+<p>Operation Name 正規化錯誤可能使特定連續大寫字母操作未匹配 <code>denyList</code>／<code>elicitList</code>。影響 <code>awslabs.aws-api-mcp-server &gt;=0.2.13,&lt;1.5.1</code>，修補版為 <strong>1.5.1</strong>。</p>
+<p><strong>建議：</strong> 更新並測試禁止與要求確認的操作是否確實被攔截；官方沒有替代 workaround。尤其能操作 IAM、儲存或部署的 Agent 應優先處理。公告未列 CVSS，本期未確認實際利用。</p>
+<p>來源：<a href="https://aws.amazon.com/security/security-bulletins/2026-176-aws/" target="_blank" rel="noopener">AWS 公告</a>。</p>
+<h3 id="09｜Ubuntu／Debian：Apache-HTTP-Server-更新"><a href="#09｜Ubuntu／Debian：Apache-HTTP-Server-更新" class="headerlink" title="09｜Ubuntu／Debian：Apache HTTP Server 更新"></a>09｜Ubuntu／Debian：Apache HTTP Server 更新</h3><p><strong>11&#x2F;12｜USN-9090-1、DSA-6620-1</strong></p>
+<p>包含 CVE-2026-42528、CVE-2026-109163、CVE-2026-106023、CVE-2026-119618、CVE-2026-42356，涉及 DoS、記憶體毀損與特定條件下的程式碼執行。</p>
+<table>
+<thead>
+<tr>
+<th>Ubuntu</th>
+<th>apache2 修補版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>26.10</td>
+<td>2.4.68-1ubuntu6.2</td>
+</tr>
+<tr>
+<td>26.04 LTS</td>
+<td>2.4.66-2ubuntu2.8</td>
+</tr>
+<tr>
+<td>24.04 LTS</td>
+<td>2.4.58-1ubuntu8.19</td>
+</tr>
+<tr>
+<td>22.04 LTS</td>
+<td>2.4.52-1ubuntu4.27</td>
+</tr>
+<tr>
+<td>20.04 LTS</td>
+<td>2.4.41-4ubuntu3.23+esm11</td>
+</tr>
+<tr>
+<td>18.04 LTS</td>
+<td>2.4.29-1ubuntu4.27+esm15</td>
+</tr>
+<tr>
+<td>16.04／14.04</td>
+<td>依 USN 對應 ESM 套件</td>
+</tr>
+</tbody></table>
+<p><strong>建議：</strong> 先確認是否安裝及啟用 Apache，再安排更新；20.04 及較舊版本須核對 Ubuntu Pro／ESM 資格。本期未確認實際利用。</p>
+<p>來源：<a href="https://ubuntu.com/security/notices/USN-9090-1" target="_blank" rel="noopener">Ubuntu USN</a>、<a href="https://lists.debian.org/debian-security-announce/2026/msg00540.html" target="_blank" rel="noopener">Debian DSA</a>。</p>
+<h3 id="10｜AWS-SDK-for-pandas：EMR-Log-Bucket-風險"><a href="#10｜AWS-SDK-for-pandas：EMR-Log-Bucket-風險" class="headerlink" title="10｜AWS SDK for pandas：EMR Log Bucket 風險"></a>10｜AWS SDK for pandas：EMR Log Bucket 風險</h3><p><strong>CVE-2026-127119｜11&#x2F;12</strong></p>
+<p><code>awswrangler &gt;=1.1.0,&lt;3.18.0</code> 在未指定 EMR Log S3 Bucket 時使用可預測名稱且未驗證擁有者，攻擊者搶先建立 bucket 可能取得工作日誌。修補版為 <strong>3.18.0</strong>。</p>
+<p><strong>建議：</strong> 升級或明確指定自己帳號持有的 log bucket，檢查既有日誌位置。新版預設 bucket 擁有者驗證需要 <code>s3:ListBucket</code>，應一併檢查 IAM。公告未列 CVSS，本期未確認實際利用。</p>
+<p>來源：<a href="https://aws.amazon.com/security/security-bulletins/2026-181-aws/" target="_blank" rel="noopener">AWS 公告</a>。</p>
+<h2 id="持續觀察-P2"><a href="#持續觀察-P2" class="headerlink" title="持續觀察 P2"></a>持續觀察 P2</h2><h3 id="11｜GitHub-Secret-Scanning：Actions-Log-掃描"><a href="#11｜GitHub-Secret-Scanning：Actions-Log-掃描" class="headerlink" title="11｜GitHub Secret Scanning：Actions Log 掃描"></a>11｜GitHub Secret Scanning：Actions Log 掃描</h3><p><strong>11&#x2F;09 Public Preview；11&#x2F;12 新增 Cloudflare detector</strong></p>
+<p>符合 Enterprise Cloud 與 Secret Protection／Advanced Security 授權的環境，可啟用 workflow log 掃描。Preview 不回掃歷史執行紀錄，也不主動通知這類告警，需查看 Secret Scanning Alerts。</p>
+<p><strong>建議：</strong> 驗證資格並建立告警檢視責任；不要取代既有遮罩與憑證管理。這是防護能力更新，不是 GitHub 外洩事件。</p>
+<p>來源：<a href="https://github.blog/changelog/2026-11-09-secret-scanning-detects-secrets-in-github-actions-workflow-logs/" target="_blank" rel="noopener">Actions Log 掃描</a>、<a href="https://github.blog/changelog/2026-11-12-secret-scanning-adds-a-detector-for-cloudflare/" target="_blank" rel="noopener">Cloudflare detector</a>。</p>
+<h3 id="12｜Dependabot：閒置專案告警政策變更"><a href="#12｜Dependabot：閒置專案告警政策變更" class="headerlink" title="12｜Dependabot：閒置專案告警政策變更"></a>12｜Dependabot：閒置專案告警政策變更</h3><p><strong>11&#x2F;10 公告；12&#x2F;08 起生效</strong></p>
+<p>多數超過一年無活動的 repository 將暫停 Dependabot Alerts；既有告警封存而非刪除，可恢復。強制安全設定及部分企業政策有例外。</p>
+<p><strong>建議：</strong> 盤點仍部署但長期不更新的專案，確保持續有相依套件掃描，而非用無實質內容的 commit 維持監控。</p>
+<p>來源：<a href="https://github.blog/changelog/2026-11-10-dependabot-alerts-will-pause-on-inactive-repositories/" target="_blank" rel="noopener">GitHub 公告</a>。</p>
+<h3 id="13｜Kiro-CLI：對話與-Prompt-History-權限過寬"><a href="#13｜Kiro-CLI：對話與-Prompt-History-權限過寬" class="headerlink" title="13｜Kiro CLI：對話與 Prompt History 權限過寬"></a>13｜Kiro CLI：對話與 Prompt History 權限過寬</h3><p><strong>CVE-2026-124848｜11&#x2F;10</strong></p>
+<p>macOS／Linux 的 Kiro CLI <code>&gt;=1.16.0,&lt;2.27.0</code> 可能讓其他本機使用者讀取 session transcript 與 prompt history。更新至 <strong>2.27.0</strong>，並至少啟動一次新版 CLI 以限制既有 session 權限；舊 Amazon Q CLI history 可能需額外處理。</p>
+<p><strong>建議：</strong> 共用開發主機提高至 P1，檢查是否曾包含憑證。公告未列 CVSS，本期未確認實際利用。</p>
+<p>來源：<a href="https://aws.amazon.com/security/security-bulletins/2026-178-aws/" target="_blank" rel="noopener">AWS 公告</a>。</p>
+<h3 id="14｜NGINX：Debian-12-前期漏洞延續追蹤"><a href="#14｜NGINX：Debian-12-前期漏洞延續追蹤" class="headerlink" title="14｜NGINX：Debian 12 前期漏洞延續追蹤"></a>14｜NGINX：Debian 12 前期漏洞延續追蹤</h3><p><strong>CVE-2026-15176｜非本週新漏洞</strong></p>
+<p>截至本期查核，Bookworm Security <code>1.22.1-9+deb12u10</code> 仍標示 vulnerable；Debian 13 <code>1.26.3-3+deb13u10</code> 已 fixed。Ubuntu 22.04 先前已提供 <code>1.18.0-6ubuntu14.22</code>。</p>
+<p><strong>建議：</strong> 對照實際套件及 <code>alias</code>、<code>rewrite</code>、<code>$request_filename</code> 等特定組合；不是出現任何 <code>alias</code> 就一定可利用。無可升級套件也不能直接等同所有漏洞已解決。</p>
+<p>來源：<a href="https://security-tracker.debian.org/tracker/CVE-2026-15176" target="_blank" rel="noopener">Debian Tracker</a>、<a href="https://ubuntu.com/security/notices/USN-8955-1" target="_blank" rel="noopener">Ubuntu USN-8955-1</a>。</p>
+<h2 id="其他平台追蹤"><a href="#其他平台追蹤" class="headerlink" title="其他平台追蹤"></a>其他平台追蹤</h2><p>Docker、Figma、OpenAI、Anthropic、Gemini 與 Azure 仍列入追蹤；本期未另列可充分核對的重大新事件，<strong>不代表沒有漏洞或保證安全</strong>。Docker Desktop 前期 token log 問題仍應依<a href="https://docs.docker.com/security/security-announcements/" target="_blank" rel="noopener">官方安全公告</a>追蹤。Java／Maven 環境應查閱 <a href="https://www.debian.org/security/" target="_blank" rel="noopener">Debian 安全公告</a>中的 Tomcat 更新，按實際依賴判斷，不能推定所有 Java 專案受影響。AI 參與漏洞研究不等於模型供應商自身發生事件。</p>
+<h2 id="通用唯讀檢查與本週待辦"><a href="#通用唯讀檢查與本週待辦" class="headerlink" title="通用唯讀檢查與本週待辦"></a>通用唯讀檢查與本週待辦</h2><p>適用 Debian／Ubuntu 管理者的唯讀盤點範例，不表示任何特定使用者部署了下列服務：</p>
+<pre><code class="highlight bash"><span class="built_in">cat</span> /etc/os-release
+<span class="built_in">uname</span> -r
+apt-cache policy nginx nginx-core linux-image-gcp linux-gcp apache2 postgresql-15
+pg_lsclusters 2&gt;/dev/null
+apt list --upgradable 2&gt;/dev/null</code></pre>
+
+<p>Debian／Ubuntu 使用 backport，必須核對<strong>完整套件版本、發行版狀態與執行中的服務／核心</strong>，不可只比較上游版號。自動更新日誌可佐證流程，不能替代修補驗證。</p>
+<ol>
+<li><strong>P0：</strong> 更新 Chrome、Outlook；盤點適用的 Alpine SSH Server。</li>
+<li><strong>P1：</strong> 更新 PostgreSQL 並確認備份／索引；驗證 Ubuntu Kernel；依 GCP 公告安排必要 Stop／Start。</li>
+<li><strong>P1：</strong> 更新 MCP Gateway、AWS API MCP Server，審查存量權限與 URL；按使用情形處理 Apache、Tomcat、awswrangler。</li>
+<li><strong>P2：</strong> 建立 GitHub 掃描告警檢視、盤點閒置 repository、處理 Kiro 本機歷史權限，持續追蹤 Debian 12 NGINX。</li>
+</ol>
+<p>本期重點不只是更新版本，也包括更新後的狀態驗證與既有資料清查。Agent 工具清單限制不能取代授權、URL 驗證與雲端 IAM 邊界。</p>
+</div>
+
+    <footer class="post-footer">
+      
+        <ul class="tags" aria-label="標籤">
+          <li><a href="/tags/Linux/">#Linux</a></li><li><a href="/tags/Ubuntu/">#Ubuntu</a></li><li><a href="/tags/%E9%9B%B2%E7%AB%AF%E5%AE%89%E5%85%A8/">#雲端安全</a></li><li><a href="/tags/AI/">#AI</a></li><li><a href="/tags/GitHub-Actions/">#GitHub Actions</a></li>
+        </ul>
+      
+      
+        <a class="source-link" target="_blank" rel="noopener" href="https://github.com/andyhung0723/AndyHung0723.github.io/blob/source/source/_posts/security-weekly-2026-11-16.md">在 GitHub 檢視原始檔</a>
+      
+    </footer>
+
+    <nav class="pager" aria-label="同分類的其他文章">
+  
+    <span class="pager-empty">已是最新一篇</span>
+  
+  
+    <a class="pager-link pager-link--older" rel="next" data-nav="older" href="/2026/11/09/security-weekly-2026-11-09/">
+      <span class="pager-dir">較舊一篇 →</span>
+      <span class="pager-title">資安週報｜2026/11/09</span>
+    </a>
+  
+</nav>
+
+  </article>
+
+  
+    <nav class="toc-rail" aria-label="本頁目錄">
+      <p class="toc-title">本頁目錄</p>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B7%8A%E6%80%A5%E8%99%95%E7%90%86-P0"><span class="toc-text">緊急處理 P0</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#01%EF%BD%9CChrome%EF%BC%9AXML-Zero-day-%E5%B7%B2%E9%81%AD%E5%88%A9%E7%94%A8"><span class="toc-text">01｜Chrome：XML Zero-day 已遭利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#02%EF%BD%9COutlook%EF%BC%9A%E5%B7%B2%E9%81%AD%E5%88%A9%E7%94%A8%E7%9A%84-Spoofing-%E6%BC%8F%E6%B4%9E"><span class="toc-text">02｜Outlook：已遭利用的 Spoofing 漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#03%EF%BD%9COpenSSH%EF%BC%9A%E7%89%B9%E5%AE%9A-Alpine%EF%BC%8Fmusl-%E7%92%B0%E5%A2%83%E9%A9%97%E8%AD%89%E7%B9%9E%E9%81%8E"><span class="toc-text">03｜OpenSSH：特定 Alpine／musl 環境驗證繞過</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E9%80%B1%E8%99%95%E7%90%86-P1"><span class="toc-text">本週處理 P1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#04%EF%BD%9CPostgreSQL%EF%BC%9A52-%E9%A0%85%E5%AE%89%E5%85%A8%E4%BF%AE%E8%A3%9C%E8%88%87-14-%E7%89%88-EOL"><span class="toc-text">04｜PostgreSQL：52 項安全修補與 14 版 EOL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#05%EF%BD%9CUbuntu-Kernel%EF%BC%9Alinux-gcp-%E4%BF%AE%E8%A3%9C%E7%8B%80%E6%85%8B%E6%9B%B4%E6%96%B0"><span class="toc-text">05｜Ubuntu Kernel：linux-gcp 修補狀態更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#06%EF%BD%9CGCP%EF%BC%9AAMD-EPYC-%E8%B3%87%E6%96%99%E6%B4%A9%E6%BC%8F%E9%A2%A8%E9%9A%AA"><span class="toc-text">06｜GCP：AMD EPYC 資料洩漏風險</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#07%EF%BD%9CMCP-Gateway-Registry%EF%BC%9A%E6%AC%8A%E9%99%90%E6%8F%90%E5%8D%87%E8%88%87-SSRF"><span class="toc-text">07｜MCP Gateway Registry：權限提升與 SSRF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#08%EF%BD%9CAWS-API-MCP-Server%EF%BC%9A%E5%AE%89%E5%85%A8%E7%AD%96%E7%95%A5%E7%B9%9E%E9%81%8E"><span class="toc-text">08｜AWS API MCP Server：安全策略繞過</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#09%EF%BD%9CUbuntu%EF%BC%8FDebian%EF%BC%9AApache-HTTP-Server-%E6%9B%B4%E6%96%B0"><span class="toc-text">09｜Ubuntu／Debian：Apache HTTP Server 更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10%EF%BD%9CAWS-SDK-for-pandas%EF%BC%9AEMR-Log-Bucket-%E9%A2%A8%E9%9A%AA"><span class="toc-text">10｜AWS SDK for pandas：EMR Log Bucket 風險</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%81%E7%BA%8C%E8%A7%80%E5%AF%9F-P2"><span class="toc-text">持續觀察 P2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#11%EF%BD%9CGitHub-Secret-Scanning%EF%BC%9AActions-Log-%E6%8E%83%E6%8F%8F"><span class="toc-text">11｜GitHub Secret Scanning：Actions Log 掃描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12%EF%BD%9CDependabot%EF%BC%9A%E9%96%92%E7%BD%AE%E5%B0%88%E6%A1%88%E5%91%8A%E8%AD%A6%E6%94%BF%E7%AD%96%E8%AE%8A%E6%9B%B4"><span class="toc-text">12｜Dependabot：閒置專案告警政策變更</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#13%EF%BD%9CKiro-CLI%EF%BC%9A%E5%B0%8D%E8%A9%B1%E8%88%87-Prompt-History-%E6%AC%8A%E9%99%90%E9%81%8E%E5%AF%AC"><span class="toc-text">13｜Kiro CLI：對話與 Prompt History 權限過寬</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14%EF%BD%9CNGINX%EF%BC%9ADebian-12-%E5%89%8D%E6%9C%9F%E6%BC%8F%E6%B4%9E%E5%BB%B6%E7%BA%8C%E8%BF%BD%E8%B9%A4"><span class="toc-text">14｜NGINX：Debian 12 前期漏洞延續追蹤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%B9%B3%E5%8F%B0%E8%BF%BD%E8%B9%A4"><span class="toc-text">其他平台追蹤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E5%94%AF%E8%AE%80%E6%AA%A2%E6%9F%A5%E8%88%87%E6%9C%AC%E9%80%B1%E5%BE%85%E8%BE%A6"><span class="toc-text">通用唯讀檢查與本週待辦</span></a></li></ol>
+      <a class="toc-top" href="#main">回到頂端 ↑</a>
+    </nav>
+  
+</div>
+<nav class="pager pager--dock" aria-label="同分類的其他文章">
+  
+    <span class="pager-empty">已是最新一篇</span>
+  
+  
+    <a class="pager-link pager-link--older" rel="next" data-nav="older" href="/2026/11/09/security-weekly-2026-11-09/">
+      <span class="pager-dir">較舊一篇 →</span>
+      <span class="pager-title">資安週報｜2026/11/09</span>
+    </a>
+  
+</nav>
+
+
+  </main>
+</div>
+</body>
+</html>
